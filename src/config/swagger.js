@@ -15,6 +15,24 @@ const swaggerDefinition = {
   ],
   components: {
     parameters: {
+      limit: {
+        in: 'query',
+        name: 'limit',
+        description: 'Limits the amount of items returned. [Default: limit = 30]',
+        schema: {
+          type: 'integer'
+        },
+        required: false
+      },
+      page: {
+        in: 'query',
+        name: 'page',
+        description: 'Get items for a defined range, based on the limit. [Default: page = 0]',
+        schema: {
+          type: 'integer'
+        },
+        required: false
+      },      
       thumbnailUrl: {
         in: 'query',
         name: 'thumbnailUrl',

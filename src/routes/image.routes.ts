@@ -13,6 +13,8 @@ imageRouter.route('/images')
  *      - images
  *    description: Gets all images based on query
  *    parameters:
+ *      - $ref: '#/components/parameters/limit'
+ *      - $ref: '#/components/parameters/page'
  *      - $ref: '#/components/parameters/thumbnailUrl'
  *      - $ref: '#/components/parameters/imageUrl'
  *      - $ref: '#/components/parameters/title'

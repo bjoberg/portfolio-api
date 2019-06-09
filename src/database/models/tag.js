@@ -1,4 +1,8 @@
 'use strict';
+
+const omitBy = require('lodash').omitBy;
+const isNil = require('lodash').isNil;
+
 module.exports = (sequelize, DataTypes) => {
   const tag = sequelize.define('tag', {
     id: {
@@ -11,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true
       }
     },
-    name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -19,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {});
+
   tag.associate = function(models) {
     tag.belongsToMany(models.group, {
       through: models.groupTag,
@@ -30,5 +35,36 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'tagId'
     });    
   };
+
+    /**
+   * Get all of the tags that match a certain query
+   * @param {Object} json object with properties to query with
+   * @returns all of the tags containing the specified query items
+   * @throws error if query fails
+   */
+  tag.getAll = ({page, limit, title}) => {
+    try {
+      const options = omitBy({
+        title
+      }, isNil);
+  
+      const getAllOptions = {
+        where: options
+      };
+  
+      if (page && limit) {
+        getAllOptions.offset = page * limit;
+        getAllOptions.limit = limit;
+      } else {
+        getAllOptions.page = 0;
+        getAllOptions.limit = 30;
+      };
+  
+      return tag.findAll(getAllOptions); 
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return tag;
 };

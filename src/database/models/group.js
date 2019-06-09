@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the groups containing the specified query items
    * @throws error if query fails
    */
-  group.getAll = ({page, perPage, thumbnailUrl, imageUrl, title, description}) => {
+  group.getAll = ({page, limit, thumbnailUrl, imageUrl, title, description}) => {
     try {
       const options = omitBy({
         thumbnailUrl, imageUrl, title, description
@@ -70,9 +70,12 @@ module.exports = (sequelize, DataTypes) => {
         where: options
       };
   
-      if (page && perPage) {
-        getAllOptions.offset = (page - 1) * perPage;
-        getAllOptions.limit = perPage;
+      if (page && limit) {
+        getAllOptions.offset = page * limit;
+        getAllOptions.limit = limit;
+      } else {
+        getAllOptions.page = 0;
+        getAllOptions.limit = 30;
       };
   
       return group.findAll(getAllOptions); 

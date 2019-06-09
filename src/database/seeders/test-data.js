@@ -4,6 +4,32 @@ const uuidv4 = require('uuid/v4');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
+    queryInterface.bulkInsert('tags', [
+      {
+        id: uuidv4(),
+        title: 'landscape',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuidv4(),
+        title: 'urban',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuidv4(),
+        title: 'mountians',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: uuidv4(),
+        title: 'water',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ], {});
     queryInterface.bulkInsert('groups', [{
       id: uuidv4(),
       thumbnailUrl: 'https://www.testUrl.com',
@@ -26,6 +52,7 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
+    queryInterface.bulkDelete('tags', null, {});
     queryInterface.bulkDelete('groups', null, {});
     return queryInterface.bulkDelete('images', null, {});
   }
