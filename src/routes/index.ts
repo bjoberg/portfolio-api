@@ -1,3 +1,4 @@
+import groupRouter from './group.routes';
 import imageRouter from './image.routes';
 
-export { imageRouter };
+export { groupRouter, imageRouter };

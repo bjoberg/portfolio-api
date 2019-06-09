@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction} from 'express';
 
-export default class ImageController {
-  private readonly model = require('../database/models').image;
+export default class GroupController {
+  private readonly model = require('../database/models').group;
 
   public getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {

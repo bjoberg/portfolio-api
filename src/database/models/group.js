@@ -1,4 +1,8 @@
 'use strict';
+
+const omitBy = require('lodash').omitBy;
+const isNil = require('lodash').isNil;
+
 module.exports = (sequelize, DataTypes) => {
   const group = sequelize.define('group', {
     id: {
@@ -38,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(1234),
     }
   }, {});
+
   group.associate = function(models) {
     group.belongsToMany(models.image, {
       through: models.imageGroup,
@@ -48,5 +53,33 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'groupId'
     });
   };
+
+  /**
+   * Get all of the groups that match a certain query
+   * @param {Object} json object with properties to query with
+   * @returns all of the groups containing the specified query items
+   * @throws error if query fails
+   */
+  group.getAll = ({page, perPage, thumbnailUrl, imageUrl, title, description}) => {
+    try {
+      const options = omitBy({
+        thumbnailUrl, imageUrl, title, description
+      }, isNil);
+  
+      const getAllOptions = {
+        where: options
+      };
+  
+      if (page && perPage) {
+        getAllOptions.offset = (page - 1) * perPage;
+        getAllOptions.limit = perPage;
+      };
+  
+      return group.findAll(getAllOptions); 
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return group;
 };
