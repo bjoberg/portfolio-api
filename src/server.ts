@@ -11,7 +11,14 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import express from 'express';
 import helmet from 'helmet';
-import { groupRouter, imageRouter, tagRouter } from './routes';
+import {
+  groupRouter,
+  imageRouter,
+  tagRouter,
+  imageGroupRouter,
+  groupTagRouter,
+  imageTagRouter
+} from './routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
 import mapKeys from 'lodash/mapKeys';
@@ -50,6 +57,9 @@ const baseUrl = '/api/v1';
 app.use(baseUrl, imageRouter);
 app.use(baseUrl, groupRouter);
 app.use(baseUrl, tagRouter);
+app.use(baseUrl, groupTagRouter);
+app.use(baseUrl, imageGroupRouter);
+app.use(baseUrl, imageTagRouter);
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);

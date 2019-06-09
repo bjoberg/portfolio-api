@@ -72,7 +72,31 @@ const swaggerDefinition = {
           type: 'string'
         },
         required: false
-      }      
+      },
+      groupId: {
+        in: 'query',
+        name: 'groupId',
+        schema: {
+          type: 'uuid'
+        },
+        required: false
+      },
+      imageId: {
+        in: 'query',
+        name: 'imageId',
+        schema: {
+          type: 'uuid'
+        },
+        required: false
+      },
+      tagId: {
+        in: 'query',
+        name: 'tagId',
+        schema: {
+          type: 'uuid'
+        },
+        required: false
+      }         
     }
   }
 };

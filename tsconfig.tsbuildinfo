@@ -349,25 +349,49 @@
         "version": "8260f668b5f4bf0998add9ba5eac7454ee8d90b20399e89268f7f76a4fbc6f46",
         "signature": "7a055b69ef7ee1e5f101feda087d860d94d0673b661604988884393a8773d85c"
       },
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/grouptag.controller.ts": {
+        "version": "b3409dc3d8d5b549628f0299bdcc9df18e04037259dd6666c1285a4fdd6668ed",
+        "signature": "68230aa4204508675e937e24983620a107e33bb55bd1fe401aaed36d7ab19b66"
+      },
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagegroup.controller.ts": {
+        "version": "5e4f9f293b1e6dc09df32b88c85472dc443a1ff1e871ccdb3c458712c8b86de4",
+        "signature": "f13af784b436ab80a2cac50abf82c9533664bfb40a2f977185f26ba0590ffe7b"
+      },
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagetag.controller.ts": {
+        "version": "aa1659e43c361cf0770cb70e553af531d8a50b69d069d21feb6530e1603676eb",
+        "signature": "4950856f2ebe993ec7a0955c6b40ec1638da067dcd301239f036d1a54e4a7a7b"
+      },
       "/users/brettoberg/desktop/development/portfolio-api/src/controllers/index.ts": {
-        "version": "dc2080461b46adc58c7b54ef11c42cf2787357eec72d9465e7537ba9e34fd09e",
-        "signature": "3a478b28f982cb987ab3d706ad9e331a499a57dc5a1ec59e605ac5119b2a8360"
+        "version": "71bb0a76d95707744b0c90a7bc08c99cf0d8538ad4b8b85314603dd219c9baf7",
+        "signature": "cd5cad9de4e4aee2d624f93007d4309c04915099786a847dbf148f70f6bb057a"
       },
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/group.routes.ts": {
         "version": "6502cda827c88c7e077f4f0b15a72d3b7f91542024ccae369913435d0df220fb",
         "signature": "fb916952f83987e9e814d97c30b4f829e282bc6b712a7ff14acd212692b83883"
       },
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/grouptag.routes.ts": {
+        "version": "1b3ded6942214d1ca67a7da9e62335d9899981877a3272f04455169364ef515f",
+        "signature": "8b12bb5b1fceab9d0dae40b9ebfab1a63c4364f79f4bdc2f168dc967bda758c5"
+      },
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/image.routes.ts": {
         "version": "970191074e40b1e9e99e0d1c35c7437d7c326482610e0ed641dc8fe7ee51b536",
         "signature": "4d05efc2b52a410b6cf5edbaa07086c17444efb80267ce29b77003f6b43d7b24"
+      },
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagegroup.routes.ts": {
+        "version": "63af1f347faa28678a9cd2b546ac90f855618c323c81d46ce5ed160ae1a44d35",
+        "signature": "898e05371ac2a78925c321778cf8e66462468c3cc0c762425a1f8ee675465763"
       },
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/tag.routes.ts": {
         "version": "6c37f5d3d41ecc26809716cd6d46c262d5b6813952d2f41cc55029928f15e7ac",
         "signature": "8d9c6079507b784e45922e5a61b941aa05fb6c07053441aa8966ec37f2b5caf8"
       },
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagetag.routes.ts": {
+        "version": "703e648bf5d59689b7cb25d82982a30394ea40a504d9ed2b3817fbac3369145b",
+        "signature": "05d4bf7f1581632519d544d7effbf9f80b905c80aab65f33e42d3562bf8c32ad"
+      },
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/index.ts": {
-        "version": "7389e9bc514b152a7e10e5183cabd8966ee978e2dee206d1d768477d411af5e4",
-        "signature": "14c2bca8c5d764a7b1ace898506536276ed03c05e9d40d9aee08eebd48011362"
+        "version": "10510902e1c65e46cb76e2ded276baf04c63d456e9e87805f029ef1fc1af06c0",
+        "signature": "b9baff86fc3d1074172948dc73d26c977840a54fd1ecd0cf118d18ff5e6c74f4"
       },
       "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/swagger-ui-express/index.d.ts": {
         "version": "074dedf5e15219ad2c7451833e271211e8cb7c4c849d782153b0a74dfaeb96d2",
@@ -378,7 +402,7 @@
         "signature": "3a80e336c2a4b3d2efae39e6a592b76d5975cd5fc9cf6a8e7132d2afeeda083c"
       },
       "/users/brettoberg/desktop/development/portfolio-api/src/config/swagger.js": {
-        "version": "291c409520dd502853e18e8eacecb575c5b7810e3230a59a90c56d67c6ed655e"
+        "version": "b1523258538c3727d2592689043fec1f7402de8222f511aa401c6375280ff48a"
       },
       "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/lodash/ts3.1/common/common.d.ts": {
         "version": "4025cf62742c5bb3d383c8a62342481622c87e3397ea5e7b7baab18b9efd5798",
@@ -548,7 +572,7 @@
         "version": "ec1e412f014a899bcb11c272d8a31f8ce07a799dc6656fa3ac059a1a873c3aa2"
       },
       "/users/brettoberg/desktop/development/portfolio-api/src/server.ts": {
-        "version": "741d32a3985f52ee5541b04895a8e4f1560a72dad8234f45ce3a3be171b3dc1f",
+        "version": "3b414ffbfa677ce5bc1b626b6f77036dc9a7615a6b2bb04c1764f8431347cc1d",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
       },
       "/users/brettoberg/desktop/development/portfolio-api/src/database/config/config.js": {
@@ -576,22 +600,25 @@
         "version": "8930b9a2f88a76f3eed671546c2bcba9cb099430339f30f2dce0c204c1c1604b"
       },
       "/users/brettoberg/desktop/development/portfolio-api/src/database/models/grouptag.js": {
-        "version": "a0069e876b3cbb94c4af09d2e73bcc6a9c967b99eda6615a9b65fc6453b388f8"
+        "version": "55760b6dbb21ee82829b1ab00385a51153268ac5df5301a9a5e735cd266eedfd"
       },
       "/users/brettoberg/desktop/development/portfolio-api/src/database/models/image.js": {
         "version": "90d98e575c13c9be1afa0fb85b07ddc897e06bfadeac4743bcbfa150b27efa34"
       },
       "/users/brettoberg/desktop/development/portfolio-api/src/database/models/imagegroup.js": {
-        "version": "82245cf57022a4aa5977a097c611a146f05e8e16d5d11a016ddd76742470bc2d"
+        "version": "c09713b6e0123d550378aabdcdac1aa15398932cd6057a093622f31b2cbe144d"
       },
       "/users/brettoberg/desktop/development/portfolio-api/src/database/models/imagetag.js": {
-        "version": "b5fd24b44bd65cbb3605fca77be643c959371e8e2bb4e5c3bd0eb760de4ca1a7"
+        "version": "929ca4298f89e1897111fc274e008568f5da14f680c5abfd7cbc42e0e5e50396"
       },
       "/users/brettoberg/desktop/development/portfolio-api/src/database/models/tag.js": {
         "version": "719e72eedbf2fa42a2780ddb385fdd44e9cd8f42b59cafad0a44bb97b050d59e"
       },
+      "/users/brettoberg/desktop/development/portfolio-api/src/database/seeders/helpers/seederhelper.js": {
+        "version": "340a6117ef11d63e8a2b50b3f396d36b848d00a1744dd9cc891677786a76702f"
+      },
       "/users/brettoberg/desktop/development/portfolio-api/src/database/seeders/test-data.js": {
-        "version": "8f7c37cf734b924727083b2a7b61babc19b746b1b4c5dc875226d678c5df817a"
+        "version": "524a3ac486a2ae350c2fb7182dc6052d8f8b711e3f944deb64f042140bac65ab"
       }
     },
     "options": {
@@ -1074,14 +1101,38 @@
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
       ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/grouptag.controller.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagegroup.controller.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagetag.controller.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
+      ],
       "/users/brettoberg/desktop/development/portfolio-api/src/controllers/index.ts": [
         "/users/brettoberg/desktop/development/portfolio-api/src/controllers/group.controller.ts",
         "/users/brettoberg/desktop/development/portfolio-api/src/controllers/image.controller.ts",
         "/users/brettoberg/desktop/development/portfolio-api/src/controllers/tag.controller.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/controllers/grouptag.controller.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagegroup.controller.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagetag.controller.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
       ],
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/group.routes.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/controllers/index.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/grouptag.routes.ts": [
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/src/controllers/index.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
@@ -1093,7 +1144,19 @@
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
       ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagegroup.routes.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/controllers/index.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
+      ],
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/tag.routes.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/controllers/index.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagetag.routes.ts": [
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/src/controllers/index.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
@@ -1101,8 +1164,11 @@
       ],
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/index.ts": [
         "/users/brettoberg/desktop/development/portfolio-api/src/routes/group.routes.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/routes/grouptag.routes.ts",
         "/users/brettoberg/desktop/development/portfolio-api/src/routes/image.routes.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagegroup.routes.ts",
         "/users/brettoberg/desktop/development/portfolio-api/src/routes/tag.routes.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagetag.routes.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
       ],
@@ -1583,6 +1649,7 @@
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
       ],
       "/users/brettoberg/desktop/development/portfolio-api/src/database/models/grouptag.js": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/lodash/ts3.1/index.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
       ],
@@ -1592,10 +1659,12 @@
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
       ],
       "/users/brettoberg/desktop/development/portfolio-api/src/database/models/imagegroup.js": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/lodash/ts3.1/index.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
       ],
       "/users/brettoberg/desktop/development/portfolio-api/src/database/models/imagetag.js": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/lodash/ts3.1/index.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
       ],
@@ -1604,7 +1673,12 @@
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
       ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/database/seeders/helpers/seederhelper.js": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
+      ],
       "/users/brettoberg/desktop/development/portfolio-api/src/database/seeders/test-data.js": [
+        "/users/brettoberg/desktop/development/portfolio-api/src/database/seeders/helpers/seederhelper.js",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/util.d.ts",
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/node/ts3.2/util.d.ts"
       ]
@@ -2062,24 +2136,48 @@
       "/users/brettoberg/desktop/development/portfolio-api/src/controllers/tag.controller.ts": [
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts"
       ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/grouptag.controller.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts"
+      ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagegroup.controller.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts"
+      ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagetag.controller.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts"
+      ],
       "/users/brettoberg/desktop/development/portfolio-api/src/controllers/index.ts": [
         "/users/brettoberg/desktop/development/portfolio-api/src/controllers/group.controller.ts",
         "/users/brettoberg/desktop/development/portfolio-api/src/controllers/image.controller.ts",
-        "/users/brettoberg/desktop/development/portfolio-api/src/controllers/tag.controller.ts"
+        "/users/brettoberg/desktop/development/portfolio-api/src/controllers/tag.controller.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/controllers/grouptag.controller.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagegroup.controller.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagetag.controller.ts"
       ],
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/group.routes.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express-serve-static-core/index.d.ts"
+      ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/grouptag.routes.ts": [
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express-serve-static-core/index.d.ts"
       ],
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/image.routes.ts": [
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express-serve-static-core/index.d.ts"
       ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagegroup.routes.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express-serve-static-core/index.d.ts"
+      ],
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/tag.routes.ts": [
+        "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express-serve-static-core/index.d.ts"
+      ],
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagetag.routes.ts": [
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express-serve-static-core/index.d.ts"
       ],
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/index.ts": [
         "/users/brettoberg/desktop/development/portfolio-api/src/routes/group.routes.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/routes/grouptag.routes.ts",
         "/users/brettoberg/desktop/development/portfolio-api/src/routes/image.routes.ts",
-        "/users/brettoberg/desktop/development/portfolio-api/src/routes/tag.routes.ts"
+        "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagegroup.routes.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/routes/tag.routes.ts",
+        "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagetag.routes.ts"
       ],
       "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/swagger-ui-express/index.d.ts": [
         "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/express/index.d.ts",
@@ -2586,10 +2684,16 @@
       "/users/brettoberg/desktop/development/portfolio-api/src/controllers/group.controller.ts",
       "/users/brettoberg/desktop/development/portfolio-api/src/controllers/image.controller.ts",
       "/users/brettoberg/desktop/development/portfolio-api/src/controllers/tag.controller.ts",
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/grouptag.controller.ts",
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagegroup.controller.ts",
+      "/users/brettoberg/desktop/development/portfolio-api/src/controllers/imagetag.controller.ts",
       "/users/brettoberg/desktop/development/portfolio-api/src/controllers/index.ts",
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/group.routes.ts",
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/grouptag.routes.ts",
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/image.routes.ts",
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagegroup.routes.ts",
       "/users/brettoberg/desktop/development/portfolio-api/src/routes/tag.routes.ts",
-      "/users/brettoberg/desktop/development/portfolio-api/src/routes/index.ts",
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/imagetag.routes.ts",
       "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/swagger-ui-express/index.d.ts",
       "/users/brettoberg/desktop/development/portfolio-api/node_modules/@types/swagger-jsdoc/index.d.ts",
       "/users/brettoberg/desktop/development/portfolio-api/src/config/swagger.js",
@@ -2649,8 +2753,9 @@
       "/users/brettoberg/desktop/development/portfolio-api/src/database/models/imagegroup.js",
       "/users/brettoberg/desktop/development/portfolio-api/src/database/models/imagetag.js",
       "/users/brettoberg/desktop/development/portfolio-api/src/database/models/tag.js",
+      "/users/brettoberg/desktop/development/portfolio-api/src/database/seeders/helpers/seederhelper.js",
       "/users/brettoberg/desktop/development/portfolio-api/src/database/seeders/test-data.js",
-      "/users/brettoberg/desktop/development/portfolio-api/src/routes/group.routes.ts"
+      "/users/brettoberg/desktop/development/portfolio-api/src/routes/index.ts"
     ]
   },
   "version": "3.5.1"

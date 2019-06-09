@@ -1,59 +1,28 @@
 'use strict';
 
-const uuidv4 = require('uuid/v4');
+const SeederHelper = require('./helpers/seederHelper');
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    queryInterface.bulkInsert('tags', [
-      {
-        id: uuidv4(),
-        title: 'landscape',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: uuidv4(),
-        title: 'urban',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: uuidv4(),
-        title: 'mountians',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: uuidv4(),
-        title: 'water',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ], {});
-    queryInterface.bulkInsert('groups', [{
-      id: uuidv4(),
-      thumbnailUrl: 'https://www.testUrl.com',
-      imageUrl: 'https://www.testUrl.com',
-      title: 'Natural Landscape',
-      description: 'This is a group',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }], {});
-    return queryInterface.bulkInsert('images', [{
-      id: uuidv4(),
-      thumbnailUrl: 'https://www.testUrl.com',
-      imageUrl: 'https://www.testUrl.com',
-      title: 'Test Image',
-      description: 'This is a super awesome image!',
-      location: 'Chicago, IL',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }], {});
+  up: async (queryInterface, Sequelize) => {
+    try {
+      const helper = new SeederHelper(queryInterface);
+      await helper.createTags();
+      await helper.createGroups();
+      await helper.createImages();
+      await helper.createGroupTags();
+      await helper.createImageTags();
+      return await helper.createImageGroups();
+    } catch (error) {
+      console.log(error);
+    }
   },
 
-  down: (queryInterface, Sequelize) => {
-    queryInterface.bulkDelete('tags', null, {});
-    queryInterface.bulkDelete('groups', null, {});
-    return queryInterface.bulkDelete('images', null, {});
+  down: async (queryInterface, Sequelize) => {
+    try {
+      const helper = new SeederHelper(queryInterface);
+      return await helper.deleteAll(queryInterface);
+    } catch (error) {
+      console.log(error);
+    }
   }
 };

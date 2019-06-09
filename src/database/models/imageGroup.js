@@ -1,4 +1,8 @@
 'use strict';
+
+const omitBy = require('lodash').omitBy;
+const isNil = require('lodash').isNil;
+
 module.exports = (sequelize, DataTypes) => {
   const imageGroup = sequelize.define('imageGroup', {
     id: {
@@ -36,8 +40,40 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {});
+
   imageGroup.associate = function(models) {
     // associations can be defined here
   };
+
+  /**
+   * Get all of the imageGroups that match a certain query
+   * @param {Object} json object with properties to query with
+   * @returns all of the imageGroups containing the specified query items
+   * @throws error if query fails
+   */
+  imageGroup.getAll = ({page, limit, imageId, groupId}) => {
+    try {
+      const options = omitBy({
+        imageId, groupId
+      }, isNil);
+  
+      const getAllOptions = {
+        where: options
+      };
+  
+      if (page && limit) {
+        getAllOptions.offset = page * limit;
+        getAllOptions.limit = limit;
+      } else {
+        getAllOptions.page = 0;
+        getAllOptions.limit = 30;
+      };
+  
+      return imageGroup.findAll(getAllOptions); 
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return imageGroup;
 };

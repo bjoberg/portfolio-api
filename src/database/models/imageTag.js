@@ -1,4 +1,8 @@
 'use strict';
+
+const omitBy = require('lodash').omitBy;
+const isNil = require('lodash').isNil;
+
 module.exports = (sequelize, DataTypes) => {
   const imageTag = sequelize.define('imageTag', {
     id: {
@@ -36,8 +40,40 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {});
+
   imageTag.associate = function(models) {
     // associations can be defined here
   };
+
+  /**
+   * Get all of the imageTags that match a certain query
+   * @param {Object} json object with properties to query with
+   * @returns all of the imageTags containing the specified query items
+   * @throws error if query fails
+   */
+  imageTag.getAll = ({page, limit, imageId, tagId}) => {
+    try {
+      const options = omitBy({
+        imageId, tagId
+      }, isNil);
+  
+      const getAllOptions = {
+        where: options
+      };
+  
+      if (page && limit) {
+        getAllOptions.offset = page * limit;
+        getAllOptions.limit = limit;
+      } else {
+        getAllOptions.page = 0;
+        getAllOptions.limit = 30;
+      };
+  
+      return imageTag.findAll(getAllOptions); 
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return imageTag;
 };
