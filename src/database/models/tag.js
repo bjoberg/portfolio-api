@@ -1,5 +1,6 @@
 'use strict';
 
+const httpStatus  = require('http-status');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 
@@ -66,6 +67,31 @@ module.exports = (sequelize, DataTypes) => {
         status: httpStatus.INTERNAL_SERVER_ERROR,
         message: `Error fetching tags.`
       };
+    }
+  };
+
+  /**
+   * Try and find a tag by its id.
+   * @param {string} id of the tag being searched for
+   * @returns tag item
+   * @throws error if query fails
+   */
+  tag.get = async (id) => {
+    try {
+      let item = await tag.findOne({
+        where: {
+          id: id
+        }
+      });
+      
+      if (item) return item;
+  
+      throw {
+        status: httpStatus.NOT_FOUND,
+        message: `Tag, ${id}, deleted or does not exist.`
+      };
+    } catch (error) {
+      throw error;
     }
   };
 

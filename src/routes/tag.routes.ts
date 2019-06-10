@@ -12,7 +12,7 @@ tagRouter.route('/tags')
  * /tags:
  *  get:
  *    tags:
- *      - tags
+ *      - Tags
  *    description: Gets all tags based on query
  *    parameters:
  *      - $ref: '#/components/parameters/limit'
@@ -25,5 +25,32 @@ tagRouter.route('/tags')
  *           $ref: '#/definitions/tag'
  */
 .get(controller.list);
+
+tagRouter.route('/tag/:id')
+/**
+ * @swagger
+ * /tag/{id}:
+ *  get:
+ *    tags:
+ *      - Tags
+ *    description: Find tag by id
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        description: id of the tag to return
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: Tag item as JSON
+ *        schema: 
+ *           $ref: '#/definitions/tag'
+ *      '404':
+ *        description: Tag deleted or does not exist
+ *        schema: 
+ *           $ref: '#/definitions/tag'
+ */
+.get(controller.get);
 
 export default tagRouter;
