@@ -50,6 +50,10 @@ imageRouter.route('/image/:id')
  *        description: Image item as JSON
  *        schema: 
  *           $ref: '#/definitions/image'
+ *      '404':
+ *        description: Image deleted or does not exist
+ *        schema: 
+ *           $ref: '#/definitions/image'
  */
 .get(controller.get);
 

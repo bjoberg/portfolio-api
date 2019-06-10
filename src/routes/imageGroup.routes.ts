@@ -12,7 +12,7 @@ imageGroupRouter.route('/imageGroups')
  * /imageGroups:
  *  get:
  *    tags:
- *      - imageGroups
+ *      - Image Groups
  *    description: Gets all imageGroups based on query
  *    parameters:
  *      - $ref: '#/components/parameters/limit'
@@ -26,5 +26,32 @@ imageGroupRouter.route('/imageGroups')
  *           $ref: '#/definitions/imageGroup'
  */
 .get(controller.list);
+
+imageGroupRouter.route('/imageGroup/:id')
+/**
+ * @swagger
+ * /imageGroup/{id}:
+ *  get:
+ *    tags:
+ *      - Image Groups
+ *    description: Find imageGroup by id
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        description: id of the imageGroup to return
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: imageGroup item as JSON
+ *        schema: 
+ *           $ref: '#/definitions/imageGroup'
+ *      '404':
+ *        description: imageGroup deleted or does not exist
+ *        schema: 
+ *           $ref: '#/definitions/imageGroup'
+ */
+.get(controller.get);
 
 export default imageGroupRouter;

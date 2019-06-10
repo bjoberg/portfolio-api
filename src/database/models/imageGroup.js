@@ -1,5 +1,6 @@
 'use strict';
 
+const httpStatus  = require('http-status');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 
@@ -77,6 +78,31 @@ module.exports = (sequelize, DataTypes) => {
       };
     }
   };
+
+  /**
+   * Try and find a imageGroup by its id.
+   * @param {string} id of the imageGroup being searched for
+   * @returns imageGroup item
+   * @throws error if query fails
+   */
+  imageGroup.get = async (id) => {
+    try {
+      let item = await imageGroup.findOne({
+        where: {
+          id: id
+        }
+      });
+      
+      if (item) return item;
+  
+      throw {
+        status: httpStatus.NOT_FOUND,
+        message: `imageGroup, ${id}, deleted or does not exist.`
+      };
+    } catch (error) {
+      throw error;
+    }
+  };  
 
   return imageGroup;
 };
