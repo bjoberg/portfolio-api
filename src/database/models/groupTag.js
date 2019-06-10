@@ -1,5 +1,6 @@
 'use strict';
 
+const httpStatus  = require('http-status');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 
@@ -77,6 +78,34 @@ module.exports = (sequelize, DataTypes) => {
       };
     }
   };
+
+  /**
+   * Try and find a group by its id.
+   * @param {string} id of the group being searched for
+   * @returns group item
+   * @throws error if query fails
+   */
+  groupTag.get = async (id) => {
+    try {
+      let item = await groupTag.findOne({
+        where: {
+          id: id
+        }
+      });
+      
+      if (item) return item;
+  
+      throw {
+        status: httpStatus.NOT_FOUND,
+        message: `groupTag, ${id}, deleted or does not exist.`
+      };
+    } catch (error) {
+      throw {
+        status: httpStatus.NOT_FOUND,
+        message: `groupTag, ${id}, deleted or does not exist.`
+      };
+    }
+  };  
 
   return groupTag;
 };

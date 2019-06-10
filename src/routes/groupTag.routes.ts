@@ -12,7 +12,7 @@ groupTagRouter.route('/groupTags')
  * /groupTags:
  *  get:
  *    tags:
- *      - groupTags
+ *      - Group Tags
  *    description: Gets all groupTags based on query
  *    parameters:
  *      - $ref: '#/components/parameters/limit'
@@ -26,5 +26,32 @@ groupTagRouter.route('/groupTags')
  *           $ref: '#/definitions/groupTag'
  */
 .get(controller.list);
+
+groupTagRouter.route('/groupTag/:id')
+/**
+ * @swagger
+ * /groupTag/{id}:
+ *  get:
+ *    tags:
+ *      - Group Tags
+ *    description: Gets all groupTags based on query
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        description: id of the groupTag to return
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: A JSON array of groupTags
+ *        schema: 
+ *           $ref: '#/definitions/groupTag'
+ *      '404':
+ *        description: groupTag deleted or does not exist
+ *        schema: 
+ *           $ref: '#/definitions/groupTag'
+ */
+.get(controller.get);
 
 export default groupTagRouter;
