@@ -16,6 +16,16 @@ cp ./.env.example .env
 
 # Set all of the variables in the new .env file
 
+# Migrate the tables into your local database
+export PG_USERNAME=<local_db_username>
+export PG_PASSWORD=<local_db_password>
+export PG_DATABASE=<local_db_database>
+export PG_HOST=<local_db_host>
+cd src/database && ../../node_modules/.bin/sequelize db:migrate
+
+# Seed the local database
+cd src/database && ../../node_modules/.bin/sequelize db:seed:all
+
 npm run dev
 
 # Navigate to localhost:<env.NODE_PORT>/api/v1/api-docs/
