@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import { ImageTagController } from '../controllers';
+import SequelizeController from '../controllers/sequelize.controller';
+import { Model } from 'sequelize';
 
+const imageTag = require('../database/models').imageTag;
 const imageTagRouter = Router();
-const controller = new ImageTagController();
+const controller = new SequelizeController(imageTag as Model);
 
 imageTagRouter.route('/imageTags')
 /**

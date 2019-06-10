@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import { ImageGroupController } from '../controllers';
+import SequelizeController from '../controllers/sequelize.controller';
+import { Model } from 'sequelize';
 
+const imageGroup = require('../database/models').imageGroup;
 const imageGroupRouter = Router();
-const controller = new ImageGroupController();
+const controller = new SequelizeController(imageGroup as Model);
 
 imageGroupRouter.route('/imageGroups')
 /**

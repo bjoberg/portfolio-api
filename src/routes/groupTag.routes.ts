@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import { GroupTagController } from '../controllers';
+import SequelizeController from '../controllers/sequelize.controller';
+import { Model } from 'sequelize';
 
+const groupTag = require('../database/models').groupTag;
 const groupTagRouter = Router();
-const controller = new GroupTagController();
+const controller = new SequelizeController(groupTag as Model);
 
 groupTagRouter.route('/groupTags')
 /**

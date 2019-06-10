@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import { TagController } from '../controllers';
+import SequelizeController from '../controllers/sequelize.controller';
+import { Model } from 'sequelize';
 
+const tag = require('../database/models').tag;
 const tagRouter = Router();
-const controller = new TagController();
+const controller = new SequelizeController(tag as Model);
 
 tagRouter.route('/tags')
 /**

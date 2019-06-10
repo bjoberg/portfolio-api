@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import { GroupController } from '../controllers';
+import SequelizeController from '../controllers/sequelize.controller';
+import { Model } from 'sequelize';
 
+const group = require('../database/models').group;
 const groupRouter = Router();
-const controller = new GroupController();
+const controller = new SequelizeController(group as Model);
 
 groupRouter.route('/groups')
 /**
