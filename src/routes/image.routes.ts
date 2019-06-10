@@ -28,6 +28,6 @@ imageRouter.route('/images')
  *        schema: 
  *           $ref: '#/definitions/image'
  */
-.get(controller.getAll);
+.get(controller.list);
 
 export default imageRouter;

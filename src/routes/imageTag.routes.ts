@@ -25,6 +25,6 @@ imageTagRouter.route('/imageTags')
  *        schema: 
  *           $ref: '#/definitions/imageTag'
  */
-.get(controller.getAll);
+.get(controller.list);
 
 export default imageTagRouter;

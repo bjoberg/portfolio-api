@@ -12,7 +12,7 @@ groupRouter.route('/groups')
  * /groups:
  *  get:
  *    tags:
- *      - groups
+ *      - Groups
  *    description: Gets all groups based on query
  *    parameters:
  *      - $ref: '#/components/parameters/limit'
@@ -27,6 +27,33 @@ groupRouter.route('/groups')
  *        schema: 
  *           $ref: '#/definitions/group'
  */
-.get(controller.getAll);
+.get(controller.list);
+
+groupRouter.route('/group/:id')
+/**
+ * @swagger
+ * /group/{id}:
+ *  get:
+ *    tags:
+ *      - Groups
+ *    description: Find group by id
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        description: id of the group to return
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: Group item as JSON
+ *        schema: 
+ *           $ref: '#/definitions/group'
+ *      '404':
+ *        description: Group deleted or does not exist
+ *        schema: 
+ *           $ref: '#/definitions/group'
+ */
+.get(controller.get);
 
 export default groupRouter;

@@ -24,6 +24,6 @@ tagRouter.route('/tags')
  *        schema: 
  *           $ref: '#/definitions/tag'
  */
-.get(controller.getAll);
+.get(controller.list);
 
 export default tagRouter;

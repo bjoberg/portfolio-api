@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the imageTags containing the specified query items
    * @throws error if query fails
    */
-  imageTag.getAll = ({page, limit, imageId, tagId}) => {
+  imageTag.list = async ({page, limit, imageId, tagId}) => {
     try {
       const options = omitBy({
         imageId, tagId
@@ -71,7 +71,10 @@ module.exports = (sequelize, DataTypes) => {
   
       return imageTag.findAll(getAllOptions); 
     } catch (error) {
-      throw error;
+      throw {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        message: `Error fetching imageTags.`
+      };
     }
   };
 

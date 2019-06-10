@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the images containing the specified query items
    * @throws error if query fails
    */
-  image.getAll = ({page, limit, thumbnailUrl, imageUrl, title, description, location}) => {
+  image.list = async ({page, limit, thumbnailUrl, imageUrl, title, description, location}) => {
     try {
       const options = omitBy({
         thumbnailUrl, imageUrl, title, description, location
@@ -84,7 +84,10 @@ module.exports = (sequelize, DataTypes) => {
   
       return image.findAll(getAllOptions); 
     } catch (error) {
-      throw error;
+      throw {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        message: `Error fetching images.`
+      };
     }
   };
 

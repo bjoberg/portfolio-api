@@ -10,6 +10,7 @@ try {
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import express from 'express';
+import { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import {
   groupRouter,
@@ -23,6 +24,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
 import mapKeys from 'lodash/mapKeys';
 import { sequelize } from './database/models';
+import ApiError from './config/ApiError';
 // @ts-ignore
 import definition from 'sequelize-json-schema';
 
@@ -60,6 +62,16 @@ app.use(baseUrl, tagRouter);
 app.use(baseUrl, groupTagRouter);
 app.use(baseUrl, imageGroupRouter);
 app.use(baseUrl, imageTagRouter);
+
+// Custom error handler
+app.use((err: ApiError, req: Request, res: Response, next: NextFunction) => {
+  res.status(err.status || 500);
+  res.json({
+    code: err.status,
+    message: err.message
+  });
+  res.end();
+});
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);

@@ -1,5 +1,6 @@
 'use strict';
 
+const httpStatus  = require('http-status');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 
@@ -60,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the groups containing the specified query items
    * @throws error if query fails
    */
-  group.getAll = ({page, limit, thumbnailUrl, imageUrl, title, description}) => {
+  group.list = async ({page, limit, thumbnailUrl, imageUrl, title, description}) => {
     try {
       const options = omitBy({
         thumbnailUrl, imageUrl, title, description
@@ -80,7 +81,36 @@ module.exports = (sequelize, DataTypes) => {
   
       return group.findAll(getAllOptions); 
     } catch (error) {
+      throw {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        message: `Error fetching groups.`
+      };
+    }
+  };
+
+  /**
+   * Try and find a group by its id.
+   * @param {string} id of the group being searched for
+   * @returns group item
+   * @throws error if query fails
+   */
+  group.get = async (id) => {
+    try {
+      let item = await group.findOne({
+        where: {
+          id: id
+        }
+      });
+      
+      if (item) return item;
+  
+      let error = new Error('group does not exist.');
       throw error;
+    } catch (error) {
+      throw {
+        status: httpStatus.NOT_FOUND,
+        message: `Group, ${id}, deleted or does not exist.`
+      };
     }
   };
 

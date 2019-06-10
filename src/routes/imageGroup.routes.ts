@@ -25,6 +25,6 @@ imageGroupRouter.route('/imageGroups')
  *        schema: 
  *           $ref: '#/definitions/imageGroup'
  */
-.get(controller.getAll);
+.get(controller.list);
 
 export default imageGroupRouter;

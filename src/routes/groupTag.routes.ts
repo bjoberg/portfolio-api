@@ -25,6 +25,6 @@ groupTagRouter.route('/groupTags')
  *        schema: 
  *           $ref: '#/definitions/groupTag'
  */
-.get(controller.getAll);
+.get(controller.list);
 
 export default groupTagRouter;

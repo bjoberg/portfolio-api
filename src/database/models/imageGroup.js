@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the imageGroups containing the specified query items
    * @throws error if query fails
    */
-  imageGroup.getAll = ({page, limit, imageId, groupId}) => {
+  imageGroup.list = async ({page, limit, imageId, groupId}) => {
     try {
       const options = omitBy({
         imageId, groupId
@@ -71,7 +71,10 @@ module.exports = (sequelize, DataTypes) => {
   
       return imageGroup.findAll(getAllOptions); 
     } catch (error) {
-      throw error;
+      throw {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        message: `Error fetching imageGroups.`
+      };
     }
   };
 

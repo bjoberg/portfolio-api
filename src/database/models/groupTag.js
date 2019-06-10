@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the groupTags containing the specified query items
    * @throws error if query fails
    */
-  groupTag.getAll = ({page, limit, groupId, tagId}) => {
+  groupTag.list = ({page, limit, groupId, tagId}) => {
     try {
       const options = omitBy({
         groupId, tagId
@@ -71,7 +71,10 @@ module.exports = (sequelize, DataTypes) => {
   
       return groupTag.findAll(getAllOptions); 
     } catch (error) {
-      throw error;
+      throw {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        message: `Error fetching groupTags.`
+      };
     }
   };
 
