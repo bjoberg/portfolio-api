@@ -41,12 +41,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
 
-
   groupTag.associate = function(models) {
     // associations can be defined here
   };
 
-    /**
+  /**
    * Get all of the groupTags that match a certain query
    * @param {Object} json object with properties to query with
    * @returns all of the groupTags containing the specified query items
