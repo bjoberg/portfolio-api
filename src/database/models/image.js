@@ -1,5 +1,6 @@
 'use strict';
 
+const httpStatus  = require('http-status');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 
@@ -88,6 +89,31 @@ module.exports = (sequelize, DataTypes) => {
         status: httpStatus.INTERNAL_SERVER_ERROR,
         message: `Error fetching images.`
       };
+    }
+  };
+
+  /**
+   * Try and find an image by its id.
+   * @param {string} id of the image being searched for
+   * @returns image item
+   * @throws error if query fails
+   */
+  image.get = async (id) => {
+    try {
+      let item = await image.findOne({
+        where: {
+          id: id
+        }
+      });
+      
+      if (item) return item;
+  
+      throw {
+        status: httpStatus.NOT_FOUND,
+        message: `Image, ${id}, deleted or does not exist.`
+      };
+    } catch (error) {
+      throw error;
     }
   };
 

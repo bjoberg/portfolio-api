@@ -34,7 +34,7 @@ groupTagRouter.route('/groupTag/:id')
  *  get:
  *    tags:
  *      - Group Tags
- *    description: Gets all groupTags based on query
+ *    description: Find groupTag by id
  *    parameters:
  *      - in: path
  *        name: id
@@ -44,7 +44,7 @@ groupTagRouter.route('/groupTag/:id')
  *          type: string
  *    responses:
  *      '200':
- *        description: A JSON array of groupTags
+ *        description: groupTag item as JSON
  *        schema: 
  *           $ref: '#/definitions/groupTag'
  *      '404':

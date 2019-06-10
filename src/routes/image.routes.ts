@@ -12,7 +12,7 @@ imageRouter.route('/images')
  * /images:
  *  get:
  *    tags:
- *      - images
+ *      - Images
  *    description: Gets all images based on query
  *    parameters:
  *      - $ref: '#/components/parameters/limit'
@@ -29,5 +29,28 @@ imageRouter.route('/images')
  *           $ref: '#/definitions/image'
  */
 .get(controller.list);
+
+imageRouter.route('/image/:id')
+/**
+ * @swagger
+ * /image/{id}:
+ *  get:
+ *    tags:
+ *      - Images
+ *    description: Find image by id
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        description: id of the image to return
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      '200':
+ *        description: Image item as JSON
+ *        schema: 
+ *           $ref: '#/definitions/image'
+ */
+.get(controller.get);
 
 export default imageRouter;

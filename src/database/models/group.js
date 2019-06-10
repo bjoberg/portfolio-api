@@ -107,12 +107,9 @@ module.exports = (sequelize, DataTypes) => {
       throw {
         status: httpStatus.NOT_FOUND,
         message: `Group, ${id}, deleted or does not exist.`
-      }
-    } catch (error) {
-      throw {
-        status: httpStatus.INTERNAL_SERVER_ERROR,
-        message: `Error fetching groups.`
       };
+    } catch (error) {
+      throw error;
     }
   };
 
