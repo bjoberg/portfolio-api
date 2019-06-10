@@ -18,7 +18,7 @@ imageGroupRouter.route('/imageGroups')
  *      - $ref: '#/components/parameters/limit'
  *      - $ref: '#/components/parameters/page'
  *      - $ref: '#/components/parameters/groupId'
-*      - $ref: '#/components/parameters/imageId'
+ *      - $ref: '#/components/parameters/imageId'
  *    responses:
  *      '200':
  *        description: A JSON array of imageGroups
