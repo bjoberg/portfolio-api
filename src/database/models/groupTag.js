@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the groupTags containing the specified query items
    * @throws error if query fails
    */
-  groupTag.list = ({page, limit, groupId, tagId}) => {
+  groupTag.list = async ({page, limit, groupId, tagId}) => {
     try {
       const options = omitBy({
         groupId, tagId
