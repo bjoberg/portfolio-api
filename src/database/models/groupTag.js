@@ -101,8 +101,8 @@ module.exports = (sequelize, DataTypes) => {
       };
     } catch (error) {
       throw {
-        status: httpStatus.NOT_FOUND,
-        message: `groupTag, ${id}, deleted or does not exist.`
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        message: `Error fetching groupTags.`
       };
     }
   };  
