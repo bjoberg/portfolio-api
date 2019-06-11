@@ -56,4 +56,27 @@ groupRouter.route('/group/:id')
  */
 .get(controller.get);
 
+groupRouter.route('/group')
+  /**
+  * @swagger
+  * /group:
+  *  post:
+  *    tags:
+  *      - Groups
+  *    description: Create a new group.
+  *    requestBody:
+  *      description: Group object
+  *      required: true
+  *      content:
+  *        'application/json':
+  *          schema:
+  *            $ref: '#/definitions/group'
+  *    responses:
+  *      '201':
+  *        description: A JSON array of the created group
+  *        content: 
+  *           application/json: {}
+  */
+  .post(controller.create);
+
 export default groupRouter;

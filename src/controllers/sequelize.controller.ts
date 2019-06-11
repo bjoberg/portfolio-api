@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Model } from 'sequelize';
+import HttpStatus from 'http-status';
 import ApiError from '../config/ApiError';
 
 /**
@@ -38,5 +39,16 @@ export default class SequelizeController {
     } catch (error) {
       next(error as ApiError);
     }
-  }  
+  }
+
+  public create = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // @ts-ignore
+      let item = await this.model.create(req.body);
+      res.status(HttpStatus.CREATED);
+      res.json(item);
+    } catch (error) {
+      next(error as ApiError);
+    }
+  }
 }
