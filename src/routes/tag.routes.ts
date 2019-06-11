@@ -53,4 +53,27 @@ tagRouter.route('/tag/:id')
    */
   .get(controller.get);
 
+tagRouter.route('/tag')
+  /**
+   * @swagger
+   * /tag:
+   *  post:
+   *    tags:
+   *      - Tags
+   *    description: Create a new tag.
+   *    requestBody:
+   *      description: Tag object
+   *      required: true
+   *      content:
+   *        'application/json':
+   *          schema:
+   *            $ref: '#/definitions/tag'
+   *    responses:
+   *      '201':
+   *        description: A JSON array of the created tag
+   *        content: 
+   *           application/json: {}
+   */
+  .post(controller.create);
+
 export default tagRouter;
