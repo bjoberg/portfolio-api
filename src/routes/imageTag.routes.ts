@@ -54,4 +54,27 @@ imageTagRouter.route('/imageTag/:id')
    */
   .get(controller.get);
 
+imageTagRouter.route('/imageTag')
+  /**
+   * @swagger
+   * /imageTag:
+   *  post:
+   *    tags:
+   *      - Image Tags
+   *    description: Create a new image tag based on query
+   *    requestBody:
+   *      description: Image tag object
+   *      required: true
+   *      content:
+   *        'application/json':
+   *          schema:
+   *            $ref: '#/definitions/imageTag'
+   *    responses:
+   *      '201':
+   *        description: A JSON array of the created image tag
+   *        content: 
+   *           application/json: {}
+   */
+  .post(controller.create);
+
 export default imageTagRouter;
