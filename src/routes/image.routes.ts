@@ -57,4 +57,27 @@ imageRouter.route('/image/:id')
    */
   .get(controller.get);
 
+imageRouter.route('/image')
+  /**
+   * @swagger
+   * /image:
+   *  post:
+   *    tags:
+   *      - Images
+   *    description: Create a new image
+   *    requestBody:
+   *      description: Image object
+   *      required: true
+   *      content:
+   *        'application/json':
+   *          schema:
+   *            $ref: '#/definitions/image'
+   *    responses:
+   *      '201':
+   *        description: A JSON array of the created image
+   *        content: 
+   *           application/json: {}
+   */
+  .post(controller.create);  
+
 export default imageRouter;
