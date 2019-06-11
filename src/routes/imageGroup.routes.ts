@@ -54,4 +54,27 @@ imageGroupRouter.route('/imageGroup/:id')
    */
   .get(controller.get);
 
+imageGroupRouter.route('/imageGroup')
+  /**
+   * @swagger
+   * /imageGroup:
+   *  post:
+   *    tags:
+   *      - Image Groups
+   *    description: Create a new imageGroup
+   *    requestBody:
+   *      description: Image group object
+   *      required: true
+   *      content:
+   *        'application/json':
+   *          schema:
+   *            $ref: '#/definitions/imageGroup'
+   *    responses:
+   *      '201':
+   *        description: A JSON array of the created image group
+   *        content: 
+   *           application/json: {}
+   */
+  .post(controller.create);
+
 export default imageGroupRouter;
