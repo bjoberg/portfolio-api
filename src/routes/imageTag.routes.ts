@@ -52,7 +52,35 @@ imageTagRouter.route('/imageTag/:id')
    *        schema: 
    *           $ref: '#/definitions/imageTag'
    */
-  .get(controller.get);
+  .get(controller.get)
+  /**
+   * @swagger
+   * /imageTag/{id}:
+   *  put:
+   *    tags:
+   *      - Image Tags
+   *    description: Update an imageTag item by id
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the imageTag to update
+   *        required: true
+   *        schema:
+   *          type: string
+   *    requestBody:
+   *      description: Image tag object
+   *      required: true
+   *      content:
+   *        'application/json':
+   *          schema:
+   *            $ref: '#/definitions/imageTag'
+   *    responses:
+   *      '200':
+   *        description: Updated imageTag item as JSON
+   *        schema: 
+   *           $ref: '#/definitions/imageTag'
+   */
+  .put(controller.update);
 
 imageTagRouter.route('/imageTag')
   /**
