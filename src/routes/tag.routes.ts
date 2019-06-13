@@ -51,7 +51,35 @@ tagRouter.route('/tag/:id')
    *        schema: 
    *           $ref: '#/definitions/tag'
    */
-  .get(controller.get);
+  .get(controller.get)
+  /**
+   * @swagger
+   * /tag/{id}:
+   *  put:
+   *    tags:
+   *      - Tags
+   *    description: Update a tag item by id
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the tag to update
+   *        required: true
+   *        schema:
+   *          type: string
+   *    requestBody:
+   *      description: Tag object
+   *      required: true
+   *      content:
+   *        'application/json':
+   *          schema:
+   *            $ref: '#/definitions/tag'
+   *    responses:
+   *      '200':
+   *        description: Updated tag item as JSON
+   *        schema: 
+   *           $ref: '#/definitions/tag'
+   */
+  .put(controller.update);
 
 tagRouter.route('/tag')
   /**
