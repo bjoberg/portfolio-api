@@ -30,3 +30,10 @@ npm run dev
 
 # Navigate to localhost:<env.NODE_PORT>/api/v1/api-docs/
 ```
+
+## Production Build
+
+```bash
+docker build -t "<tag_name>"
+docker run -p 8080:8080 -d "<tag_name>"
+```
