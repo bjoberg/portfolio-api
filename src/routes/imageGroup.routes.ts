@@ -52,7 +52,35 @@ imageGroupRouter.route('/imageGroup/:id')
    *        schema: 
    *           $ref: '#/definitions/imageGroup'
    */
-  .get(controller.get);
+  .get(controller.get)
+  /**
+   * @swagger
+   * /imageGroup/{id}:
+   *  put:
+   *    tags:
+   *      - Image Groups
+   *    description: Update an imageGroup item by id
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the imageGroup to update
+   *        required: true
+   *        schema:
+   *          type: string
+   *    requestBody:
+   *      description: Image group object
+   *      required: true
+   *      content:
+   *        'application/json':
+   *          schema:
+   *            $ref: '#/definitions/imageGroup'
+   *    responses:
+   *      '200':
+   *        description: Updated imageGroup item as JSON
+   *        schema: 
+   *           $ref: '#/definitions/imageGroup'
+   */
+  .put(controller.update);
 
 imageGroupRouter.route('/imageGroup')
   /**
