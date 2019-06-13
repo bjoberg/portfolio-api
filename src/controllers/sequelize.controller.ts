@@ -41,12 +41,32 @@ export default class SequelizeController {
     }
   }
 
+  /**
+   * Create a single instance of a specific model
+   */
   public create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       // @ts-ignore
       let item = await this.model.create(req.body);
       res.status(HttpStatus.CREATED);
       res.json(item);
+    } catch (error) {
+      next(error as ApiError);
+    }
+  }
+
+  /**
+   * Update a single instance of a specific model
+   */
+  public update = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      let result = await this.model.update(req.body, {
+        where: {id: req.params.id},
+        limit: 1,
+        returning: true
+      });
+      res.status(HttpStatus.OK);
+      res.json(result);
     } catch (error) {
       next(error as ApiError);
     }

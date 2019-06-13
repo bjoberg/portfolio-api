@@ -54,7 +54,35 @@ groupRouter.route('/group/:id')
    *        schema: 
    *           $ref: '#/definitions/group'
    */
-  .get(controller.get);
+  .get(controller.get)
+  /**
+   * @swagger
+   * /group/{id}:
+   *  put:
+   *    tags:
+   *      - Groups
+   *    description: Update a group item.
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the group to update
+   *        required: true
+   *        schema:
+   *          type: string
+   *    requestBody:
+   *      description: Group object
+   *      required: true
+   *      content:
+   *        'application/json':
+   *          schema:
+   *            $ref: '#/definitions/group'
+   *    responses:
+   *      '200':
+   *        description: Updated group item as JSON
+   *        schema: 
+   *           $ref: '#/definitions/group'
+   */
+  .put(controller.update);
 
 groupRouter.route('/group')
   /**
