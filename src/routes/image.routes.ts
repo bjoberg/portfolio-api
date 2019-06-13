@@ -55,7 +55,35 @@ imageRouter.route('/image/:id')
    *        schema: 
    *           $ref: '#/definitions/image'
    */
-  .get(controller.get);
+  .get(controller.get)
+  /**
+   * @swagger
+   * /image/{id}:
+   *  put:
+   *    tags:
+   *      - Images
+   *    description: Update an image item by id
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the image to update
+   *        required: true
+   *        schema:
+   *          type: string
+   *    requestBody:
+   *      description: Image object
+   *      required: true
+   *      content:
+   *        'application/json':
+   *          schema:
+   *            $ref: '#/definitions/image'
+   *    responses:
+   *      '200':
+   *        description: Updated image item as JSON
+   *        schema: 
+   *           $ref: '#/definitions/image'
+   */
+  .put(controller.update);
 
 imageRouter.route('/image')
   /**
