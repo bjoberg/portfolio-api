@@ -52,7 +52,35 @@ groupTagRouter.route('/groupTag/:id')
    *        schema: 
    *           $ref: '#/definitions/groupTag'
    */
-  .get(controller.get);
+  .get(controller.get)
+  /**
+   * @swagger
+   * /groupTag/{id}:
+   *  put:
+   *    tags:
+   *      - Group Tags
+   *    description: Update a groupTag item by id
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the groupTag to update
+   *        required: true
+   *        schema:
+   *          type: string
+   *    requestBody:
+   *      description: Group tag object
+   *      required: true
+   *      content:
+   *        'application/json':
+   *          schema:
+   *            $ref: '#/definitions/groupTag'
+   *    responses:
+   *      '200':
+   *        description: Updated groupTag item as JSON
+   *        schema: 
+   *           $ref: '#/definitions/groupTag'
+   */
+  .put(controller.update)
 
 groupTagRouter.route('/groupTag')
   /**

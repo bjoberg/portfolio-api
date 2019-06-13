@@ -61,7 +61,7 @@ groupRouter.route('/group/:id')
    *  put:
    *    tags:
    *      - Groups
-   *    description: Update a group item.
+   *    description: Update a group item by id
    *    parameters:
    *      - in: path
    *        name: id
