@@ -95,7 +95,26 @@ imageTagRouter.route('/imageTag/:id')
    *        schema: 
    *           $ref: '#/definitions/imageTag'
    */
-  .put(controller.update);
+  .put(controller.update)
+  /**
+   * @swagger
+   * /imageTag/{id}:
+   *  delete:
+   *    tags:
+   *      - Image Tags
+   *    description: Update an imageTag item by id
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the imageTag to delete
+   *        required: true
+   *        schema:
+   *          type: string
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   */
+  .delete(controller.delete);
 
 imageTagRouter.route('/imageTag')
   /**
