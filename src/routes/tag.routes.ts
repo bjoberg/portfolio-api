@@ -24,7 +24,21 @@ tagRouter.route('/tags')
    *        schema: 
    *           $ref: '#/definitions/tag'
    */
-  .get(controller.list);
+  .get(controller.list)
+  /**
+   * @swagger
+   * /tags:
+   *  delete:
+   *    tags:
+   *      - Tags
+   *    description: Delete all tags based on query
+   *    parameters:
+   *      - $ref: '#/components/parameters/title'
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   */  
+  .delete(controller.deleteAll);
 
 tagRouter.route('/tag/:id')
   /**

@@ -96,7 +96,7 @@ groupTagRouter.route('/groupTag/:id')
    *        schema: 
    *           $ref: '#/definitions/groupTag'
    */
-  .put(controller.update)
+  .put(controller.update);
 
 groupTagRouter.route('/groupTag')
   /**
