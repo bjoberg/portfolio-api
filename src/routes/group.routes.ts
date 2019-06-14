@@ -97,7 +97,26 @@ groupRouter.route('/group/:id')
    *        schema: 
    *           $ref: '#/definitions/group'
    */
-  .put(controller.update);
+  .put(controller.update)
+  /**
+   * @swagger
+   * /group/{id}:
+   *  delete:
+   *    tags:
+   *      - Groups
+   *    description: Delete a group item by id
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the group to delete
+   *        required: true
+   *        schema:
+   *          type: string
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   */
+  .delete(controller.delete);
 
 groupRouter.route('/group')
   /**

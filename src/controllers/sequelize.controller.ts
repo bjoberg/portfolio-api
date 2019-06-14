@@ -73,22 +73,22 @@ export default class SequelizeController {
   }
 
   /**
-   * Delete a single instance the model
+   * Delete a single instance of the model
    */
-  // public delete = async (req: Request, res: Response, next: NextFunction) => {
-  //   try {
-  //     let result = await this.model.destroy({
-  //        // @ts-ignore
-  //       where: {
-  //         id: req.params.id
-  //       }
-  //     });
-  //     res.status(HttpStatus.OK);
-  //     res.json(result);
-  //   } catch (error) {
-  //     next(error as ApiError);
-  //   }
-  // }
+  public delete = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      let result = await this.model.destroy({
+         // @ts-ignore
+        where: {
+          id: req.params.id
+        }
+      });
+      res.status(HttpStatus.OK);
+      res.json(result);
+    } catch (error) {
+      next(error as ApiError);
+    }
+  }
 
   /**
    * Delete all instances of the model based on query params
