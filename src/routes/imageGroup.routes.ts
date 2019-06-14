@@ -97,7 +97,26 @@ imageGroupRouter.route('/imageGroup/:id')
    *        schema: 
    *           $ref: '#/definitions/imageGroup'
    */
-  .put(controller.update);
+  .put(controller.update)
+  /**
+   * @swagger
+   * /imageGroup/{id}:
+   *  delete:
+   *    tags:
+   *      - Image Groups
+   *    description: Update an imageGroup item by id
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the imageGroup to delete
+   *        required: true
+   *        schema:
+   *          type: string
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   */
+  .delete(controller.delete);
 
 imageGroupRouter.route('/imageGroup')
   /**
