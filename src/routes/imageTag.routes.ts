@@ -25,7 +25,22 @@ imageTagRouter.route('/imageTags')
    *        schema: 
    *           $ref: '#/definitions/imageTag'
    */
-  .get(controller.list);
+  .get(controller.list)
+  /**
+   * @swagger
+   * /imageTags:
+   *  delete:
+   *    tags:
+   *      - Image Tags
+   *    description: Delete all imageTags based on query
+   *    parameters:
+   *      - $ref: '#/components/parameters/tagId'
+   *      - $ref: '#/components/parameters/imageId'
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   */  
+  .delete(controller.deleteAll);
 
 imageTagRouter.route('/imageTag/:id')
   /**
