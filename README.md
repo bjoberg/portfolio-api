@@ -37,3 +37,11 @@ npm run dev
 docker build -t "<tag_name>"
 docker run -p 8080:8080 -d "<tag_name>"
 ```
+
+## Deploy
+
+```bash
+heroku container:login
+heroku container:push web -a bo-portfolio-api
+heroku container:release web --app bo-portfolio-api
+```
