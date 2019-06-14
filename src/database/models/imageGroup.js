@@ -104,5 +104,28 @@ module.exports = (sequelize, DataTypes) => {
     }
   };  
 
+  /**
+   * Delete all of the imageGroups that match a certain query
+   * @param {Object} json object with properties to query with
+   * @returns number of imageGroup rows affected
+   * @throws error if query fails
+   */
+  imageGroup.deleteAll = async ({imageId, groupId}) => {
+    try {
+      const options = omitBy({
+        imageId, groupId
+      }, isNil);
+
+      return imageGroup.destroy({
+        where: options
+      });
+    } catch (error) {
+      throw {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        message: `Error deleting imageGroup(s).`
+      };
+    }
+  };
+
   return imageGroup;
 };

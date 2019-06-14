@@ -113,5 +113,28 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
 
+  /**
+   * Delete all of the groups that match a certain query
+   * @param {Object} json object with properties to query with
+   * @returns number of group rows affected
+   * @throws error if query fails
+   */
+  group.deleteAll = async ({thumbnailUrl, imageUrl, title, description}) => {
+    try {
+      const options = omitBy({
+        thumbnailUrl, imageUrl, title, description
+      }, isNil);
+
+      return group.destroy({
+        where: options
+      });
+    } catch (error) {
+      throw {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        message: `Error deleting group(s).`
+      };
+    }
+  };
+
   return group;
 };

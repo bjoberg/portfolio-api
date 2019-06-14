@@ -27,7 +27,26 @@ groupRouter.route('/groups')
    *        schema: 
    *           $ref: '#/definitions/group'
    */
-  .get(controller.list);
+  .get(controller.list)
+  /**
+   * @swagger
+   * /groups:
+   *  delete:
+   *    tags:
+   *      - Groups
+   *    description: Delete all groups based on query
+   *    parameters:
+   *      - $ref: '#/components/parameters/thumbnailUrl'
+   *      - $ref: '#/components/parameters/imageUrl'
+   *      - $ref: '#/components/parameters/title'
+   *      - $ref: '#/components/parameters/description'
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   *        schema: 
+   *           $ref: '#/definitions/group'
+   */  
+  .delete(controller.deleteAll);
 
 groupRouter.route('/group/:id')
   /**

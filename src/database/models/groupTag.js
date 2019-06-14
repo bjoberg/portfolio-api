@@ -125,7 +125,7 @@ module.exports = (sequelize, DataTypes) => {
         message: `Error deleting groupTag(s).`
       };
     }
-  }
+  };
 
   return groupTag;
 };

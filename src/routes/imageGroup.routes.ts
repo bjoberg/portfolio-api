@@ -25,7 +25,24 @@ imageGroupRouter.route('/imageGroups')
    *        schema: 
    *           $ref: '#/definitions/imageGroup'
    */
-  .get(controller.list);
+  .get(controller.list)
+  /**
+   * @swagger
+   * /imageGroups:
+   *  delete:
+   *    tags:
+   *      - Image Groups
+   *    description: Delete all imageGroups based on query
+   *    parameters:
+   *      - $ref: '#/components/parameters/groupId'
+   *      - $ref: '#/components/parameters/imageId'
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   *        schema: 
+   *           $ref: '#/definitions/imageGroup'
+   */  
+  .delete(controller.deleteAll);
 
 imageGroupRouter.route('/imageGroup/:id')
   /**
