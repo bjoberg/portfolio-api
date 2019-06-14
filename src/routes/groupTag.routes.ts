@@ -39,8 +39,6 @@ groupTagRouter.route('/groupTags')
    *    responses:
    *      '200':
    *        description: The number of destroyed rows
-   *        schema: 
-   *           $ref: '#/definitions/group'
    */  
   .delete(controller.deleteAll);
 

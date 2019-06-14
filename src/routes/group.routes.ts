@@ -24,8 +24,6 @@ groupRouter.route('/groups')
    *    responses:
    *      '200':
    *        description: A JSON array of groups
-   *        schema: 
-   *           $ref: '#/definitions/group'
    */
   .get(controller.list)
   /**

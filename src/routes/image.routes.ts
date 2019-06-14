@@ -28,7 +28,25 @@ imageRouter.route('/images')
    *        schema: 
    *           $ref: '#/definitions/image'
    */
-  .get(controller.list);
+  .get(controller.list)
+  /**
+   * @swagger
+   * /images:
+   *  delete:
+   *    tags:
+   *      - Images
+   *    description: Delete all images based on query
+   *    parameters:
+   *      - $ref: '#/components/parameters/thumbnailUrl'
+   *      - $ref: '#/components/parameters/imageUrl'
+   *      - $ref: '#/components/parameters/title'
+   *      - $ref: '#/components/parameters/description'
+   *      - $ref: '#/components/parameters/location'
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   */  
+  .delete(controller.deleteAll);
 
 imageRouter.route('/image/:id')
   /**
