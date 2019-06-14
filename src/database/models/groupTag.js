@@ -102,7 +102,30 @@ module.exports = (sequelize, DataTypes) => {
     } catch (error) {
       throw error;
     }
-  };  
+  };
+
+  /**
+   * Delete all of the groupTags that match a certain query
+   * @param {Object} json object with properties to query with
+   * @returns number of groupTag rows affected
+   * @throws error if query fails
+   */
+  groupTag.deleteAll = async ({groupId, tagId}) => {
+    try {
+      const options = omitBy({
+        groupId, tagId
+      }, isNil);
+
+      return groupTag.destroy({
+        where: options
+      });
+    } catch (error) {
+      throw {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        message: `Error deleting groupTag(s).`
+      };
+    }
+  }
 
   return groupTag;
 };

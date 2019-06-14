@@ -25,7 +25,25 @@ groupTagRouter.route('/groupTags')
    *        schema: 
    *           $ref: '#/definitions/groupTag'
    */
-  .get(controller.list);
+  .get(controller.list)
+  /**
+   * @swagger
+   * /groupTags:
+   *  delete:
+   *    tags:
+   *      - Group Tags
+   *    description: Delete all groupTags based on query
+   *    parameters:
+   *      - $ref: '#/components/parameters/groupId'
+   *      - $ref: '#/components/parameters/tagId'
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   *        schema: 
+   *           $ref: '#/definitions/group'
+   */  
+  .delete(controller.deleteAll);
+
 
 groupTagRouter.route('/groupTag/:id')
   /**

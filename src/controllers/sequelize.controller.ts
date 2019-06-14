@@ -30,7 +30,7 @@ export default class SequelizeController {
   }
 
   /**
-   * Get a single instance of a specific model
+   * Get a single instance of the model
    */
   public get = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -42,7 +42,7 @@ export default class SequelizeController {
   }
 
   /**
-   * Create a single instance of a specific model
+   * Create a single instance of the model
    */
   public create = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -56,7 +56,7 @@ export default class SequelizeController {
   }
 
   /**
-   * Update a single instance of a specific model
+   * Update a single instance of the model
    */
   public update = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -65,6 +65,38 @@ export default class SequelizeController {
         limit: 1,
         returning: true
       });
+      res.status(HttpStatus.OK);
+      res.json(result);
+    } catch (error) {
+      next(error as ApiError);
+    }
+  }
+
+  /**
+   * Delete a single instance the model
+   */
+  // public delete = async (req: Request, res: Response, next: NextFunction) => {
+  //   try {
+  //     let result = await this.model.destroy({
+  //        // @ts-ignore
+  //       where: {
+  //         id: req.params.id
+  //       }
+  //     });
+  //     res.status(HttpStatus.OK);
+  //     res.json(result);
+  //   } catch (error) {
+  //     next(error as ApiError);
+  //   }
+  // }
+
+  /**
+   * Delete all instances of the model based on query params
+   */
+  public deleteAll = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+       // @ts-ignore
+      let result = await this.model.deleteAll(req.query);
       res.status(HttpStatus.OK);
       res.json(result);
     } catch (error) {
