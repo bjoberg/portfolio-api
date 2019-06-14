@@ -93,7 +93,26 @@ tagRouter.route('/tag/:id')
    *        schema: 
    *           $ref: '#/definitions/tag'
    */
-  .put(controller.update);
+  .put(controller.update)
+  /**
+   * @swagger
+   * /tag/{id}:
+   *  delete:
+   *    tags:
+   *      - Tags
+   *    description: Delete a tag item by id
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the tag to delete
+   *        required: true
+   *        schema:
+   *          type: string
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   */
+  .delete(controller.delete);
 
 tagRouter.route('/tag')
   /**
