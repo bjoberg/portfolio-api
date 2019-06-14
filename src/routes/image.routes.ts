@@ -101,7 +101,26 @@ imageRouter.route('/image/:id')
    *        schema: 
    *           $ref: '#/definitions/image'
    */
-  .put(controller.update);
+  .put(controller.update)
+  /**
+   * @swagger
+   * /image/{id}:
+   *  delete:
+   *    tags:
+   *      - Images
+   *    description: Delete an image item by id
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the image to delete
+   *        required: true
+   *        schema:
+   *          type: string
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   */
+  .delete(controller.delete);
 
 imageRouter.route('/image')
   /**
