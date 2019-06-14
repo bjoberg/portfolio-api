@@ -96,7 +96,26 @@ groupTagRouter.route('/groupTag/:id')
    *        schema: 
    *           $ref: '#/definitions/groupTag'
    */
-  .put(controller.update);
+  .put(controller.update)
+  /**
+   * @swagger
+   * /groupTag/{id}:
+   *  delete:
+   *    tags:
+   *      - Group Tags
+   *    description: Update a groupTag item by id
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the groupTag to delete
+   *        required: true
+   *        schema:
+   *          type: string
+   *    responses:
+   *      '200':
+   *        description: The number of destroyed rows
+   */
+  .delete(controller.delete);
 
 groupTagRouter.route('/groupTag')
   /**
