@@ -3,6 +3,8 @@
 const httpStatus  = require('http-status');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
+const LIMIT_DEFAULT = require('../../utils/models/defaults').LIMIT_DEFAULT;
+const PAGE_DEFAULT = require('../../utils/models/defaults').PAGE_DEFAULT;
 
 module.exports = (sequelize, DataTypes) => {
   const tag = sequelize.define('tag', {
@@ -53,15 +55,19 @@ module.exports = (sequelize, DataTypes) => {
         where: options
       };
   
-      if (page && limit) {
-        getAllOptions.offset = page * limit;
+      if (limit) {
         getAllOptions.limit = limit;
       } else {
-        getAllOptions.page = 0;
-        getAllOptions.limit = 30;
-      };
+        getAllOptions.limit = LIMIT_DEFAULT;
+      }
+
+      if (page) {
+        getAllOptions.offset = page * limit;
+      } else {
+        getAllOptions.offset = PAGE_DEFAULT;
+      }
   
-      return tag.findAll(getAllOptions); 
+      return tag.findAndCountAll(getAllOptions); 
     } catch (error) {
       throw {
         status: httpStatus.INTERNAL_SERVER_ERROR,

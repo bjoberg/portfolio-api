@@ -1,13 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 import { Model } from 'sequelize';
 import HttpStatus from 'http-status';
-import ApiError from '../config/ApiError';
+
+import SequelizeHelpers from '../utils/helpers/sequelize.helpers';
+import ApiError from '../utils/models/api-error';
+import EntityList from '../utils/models/enity-list';
 
 /**
  * Controller for interacting with Sequelize
  */
 export default class SequelizeController {
   private model: Model;
+  private sequelizeHelpers: SequelizeHelpers;
   
   /**
    * Construct a new sequelize controller
@@ -15,6 +19,7 @@ export default class SequelizeController {
    */
   constructor(model: Model) {
     this.model = model;
+    this.sequelizeHelpers = new SequelizeHelpers();
   }
 
   /**
@@ -22,8 +27,21 @@ export default class SequelizeController {
    */
   public list = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      req = this.sequelizeHelpers.setPage(req);
+      req = this.sequelizeHelpers.setLimit(req);
+
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
       // @ts-ignore
-      res.json(await this.model.list(req.query));
+      const data = await this.model.list(req.query);
+      const entityList: EntityList = {
+        count: data.count,
+        limit,
+        page,
+        rows: data.rows
+      };
+
+      res.json(entityList);
     } catch (error) {
       next(error as ApiError);
     }
