@@ -68,11 +68,13 @@ module.exports = class SeederHelper {
   createImages() {
     return this.queryInterface.bulkInsert('images', [{
       id: uuidv4(),
-      thumbnailUrl: 'https://www.testUrl.com',
-      imageUrl: 'https://www.testUrl.com',
+      thumbnailUrl: 'https://picsum.photos/200/300',
+      imageUrl: 'https://picsum.photos/200/300',
       title: 'Test Image',
       description: 'This is a super awesome image!',
       location: 'Chicago, IL',
+      width: 200,
+      height: 300,
       createdAt: new Date(),
       updatedAt: new Date()
     }], {});
