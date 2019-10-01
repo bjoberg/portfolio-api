@@ -3,20 +3,14 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.addColumn(
-        'images',
-        'width',
-        {
+      queryInterface.addColumn('images','width', {
           type: Sequelize.INTEGER,
-          allowNull: false,
+          defaultValue: 0
         }
       ),
-      queryInterface.addColumn(
-        'images',
-        'height',
-        {
+      queryInterface.addColumn('images', 'height', {
           type: Sequelize.INTEGER,
-          allowNull: false,
+          defaultValue: 0
         }
       ),
     ]);
