@@ -1,12 +1,17 @@
-import { Router } from 'express';
-import SequelizeController from '../controllers/sequelize.controller';
-import { Model } from 'sequelize';
+import { Router } from "express";
+import { Model } from "sequelize";
+import { OAuth2Client } from "google-auth-library";
 
-const imageTag = require('../database/models').imageTag;
+import AuthController from "../controllers/auth.controller";
+import SequelizeController from "../controllers/sequelize.controller";
+
+const imageTag = require("../database/models").imageTag;
 const imageTagRouter = Router();
 const controller = new SequelizeController(imageTag as Model);
+const authController = new AuthController(new OAuth2Client());
 
-imageTagRouter.route('/imageTags')
+imageTagRouter
+  .route("/imageTags")
   /**
    * @swagger
    * /imageTags:
@@ -20,16 +25,16 @@ imageTagRouter.route('/imageTags')
    *      - $ref: '#/components/parameters/tagId'
    *      - $ref: '#/components/parameters/imageId'
    *    responses:
-   *      '200':
-   *        description: A JSON array of imageTags
-   *        schema: 
-   *           $ref: '#/definitions/imageTag'
+   *      200:
+   *        $ref: '#/components/responses/ok'
    */
   .get(controller.list)
   /**
    * @swagger
    * /imageTags:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Image Tags
    *    description: Delete all imageTags based on query
@@ -37,12 +42,18 @@ imageTagRouter.route('/imageTags')
    *      - $ref: '#/components/parameters/tagId'
    *      - $ref: '#/components/parameters/imageId'
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
-   */  
-  .delete(controller.deleteAll);
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
+   */
 
-imageTagRouter.route('/imageTag/:id')
+  .delete(authController.validateRequest, controller.deleteAll);
+
+imageTagRouter
+  .route("/imageTag/:id")
   /**
    * @swagger
    * /imageTag/{id}:
@@ -58,20 +69,18 @@ imageTagRouter.route('/imageTag/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: imageTag item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/imageTag'
-   *      '404':
-   *        description: imageTag deleted or does not exist
-   *        schema: 
-   *           $ref: '#/definitions/imageTag'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      404:
+   *        $ref: '#/components/responses/notFound'
    */
   .get(controller.get)
   /**
    * @swagger
    * /imageTag/{id}:
    *  put:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Image Tags
    *    description: Update an imageTag item by id
@@ -90,16 +99,20 @@ imageTagRouter.route('/imageTag/:id')
    *          schema:
    *            $ref: '#/definitions/imageTag'
    *    responses:
-   *      '200':
-   *        description: Updated imageTag item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/imageTag'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .put(controller.update)
+  .put(authController.validateRequest, controller.update)
   /**
    * @swagger
    * /imageTag/{id}:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Image Tags
    *    description: Update an imageTag item by id
@@ -111,16 +124,23 @@ imageTagRouter.route('/imageTag/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .delete(controller.delete);
+  .delete(authController.validateRequest, controller.delete);
 
-imageTagRouter.route('/imageTag')
+imageTagRouter
+  .route("/imageTag")
   /**
    * @swagger
    * /imageTag:
    *  post:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Image Tags
    *    description: Create a new image tag based on query
@@ -132,11 +152,13 @@ imageTagRouter.route('/imageTag')
    *          schema:
    *            $ref: '#/definitions/imageTag'
    *    responses:
-   *      '201':
-   *        description: A JSON array of the created image tag
-   *        content: 
-   *           application/json: {}
+   *      201:
+   *        $ref: '#/components/responses/created'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .post(controller.create);
+  .post(authController.validateRequest, controller.create);
 
 export default imageTagRouter;
