@@ -18,7 +18,7 @@ export default class AuthorizationError extends Error {
   getError(): ApiError {
     return {
       status: this.status,
-      message: this.message || "User not found"
+      message: this.message || "User does not have access to this resource"
     } as ApiError;
   }
 }

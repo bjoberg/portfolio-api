@@ -1,133 +1,152 @@
-import SwaggerJSDoc from 'swagger-jsdoc';
-import path from 'path';
+import SwaggerJSDoc from "swagger-jsdoc";
+import path from "path";
 
 const swaggerDefinition = {
-  openapi: '3.0.1',
+  openapi: "3.0.1",
   info: {
-    title: 'Brett Oberg Studio API',
-    description: 'API for working with Brett Oberg Studio, LLC portfolio data',
-    version: '1.0.0'
+    title: "Brett Oberg Studio API",
+    description: "API for working with Brett Oberg Studio, LLC portfolio data",
+    version: "1.0.0"
   },
   servers: [
     {
-      url: '/api/v1'
+      url: "/api/v1"
     }
   ],
   components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer"
+      }
+    },
     parameters: {
       limit: {
-        in: 'query',
-        name: 'limit',
-        description: 'Limits the amount of items returned. [Default: limit = 30]',
+        in: "query",
+        name: "limit",
+        description:
+          "Limits the amount of items returned. [Default: limit = 30]",
         schema: {
-          type: 'integer'
+          type: "integer"
         },
         required: false
       },
       page: {
-        in: 'query',
-        name: 'page',
-        description: 'Get items for a defined range, based on the limit. [Default: page = 0]',
+        in: "query",
+        name: "page",
+        description:
+          "Get items for a defined range, based on the limit. [Default: page = 0]",
         schema: {
-          type: 'integer'
+          type: "integer"
         },
         required: false
-      },      
+      },
       thumbnailUrl: {
-        in: 'query',
-        name: 'thumbnailUrl',
+        in: "query",
+        name: "thumbnailUrl",
         schema: {
-          type: 'string'
+          type: "string"
         },
         required: false
       },
       imageUrl: {
-        in: 'query',
-        name: 'imageUrl',
+        in: "query",
+        name: "imageUrl",
         schema: {
-          type: 'string'
+          type: "string"
         },
         required: false
       },
       title: {
-        in: 'query',
-        name: 'title',
+        in: "query",
+        name: "title",
         schema: {
-          type: 'string'
+          type: "string"
         },
         required: false
       },
       description: {
-        in: 'query',
-        name: 'description',
+        in: "query",
+        name: "description",
         schema: {
-          type: 'string'
+          type: "string"
         },
         required: false
       },
       location: {
-        in: 'query',
-        name: 'location',
+        in: "query",
+        name: "location",
         schema: {
-          type: 'string'
+          type: "string"
         },
         required: false
       },
       groupId: {
-        in: 'query',
-        name: 'groupId',
+        in: "query",
+        name: "groupId",
         schema: {
-          type: 'uuid'
+          type: "uuid"
         },
         required: false
       },
       groupTagId: {
-        in: 'query',
-        name: 'groupTagId',
+        in: "query",
+        name: "groupTagId",
         schema: {
-          type: 'uuid'
+          type: "uuid"
         },
         required: false
-      }, 
+      },
       imageId: {
-        in: 'query',
-        name: 'imageId',
+        in: "query",
+        name: "imageId",
         schema: {
-          type: 'uuid'
+          type: "uuid"
         },
         required: false
       },
       imageGroupId: {
-        in: 'query',
-        name: 'imageGroupId',
+        in: "query",
+        name: "imageGroupId",
         schema: {
-          type: 'uuid'
+          type: "uuid"
         },
         required: false
       },
       imageTagId: {
-        in: 'query',
-        name: 'imageTagId',
+        in: "query",
+        name: "imageTagId",
         schema: {
-          type: 'uuid'
+          type: "uuid"
         },
         required: false
       },
       tagId: {
-        in: 'query',
-        name: 'tagId',
+        in: "query",
+        name: "tagId",
         schema: {
-          type: 'uuid'
+          type: "uuid"
         },
         required: false
-      }         
+      }
+    },
+    responses: {
+      ok: { description: "OK" },
+      created: { description: "Resouce has been created" },
+      forbidden: { description: "Invalid token" },
+      unauthorized: {
+        description: "User does not have access to this resource"
+      },
+      notFound: {
+        description: "Entity does not exist"
+      }
     }
   }
 };
 
 const swaggerOptions = {
   swaggerDefinition: swaggerDefinition,
-  apis: [path.resolve(__dirname, '../routes/*.routes.js')]
+  apis: [path.resolve(__dirname, "../routes/*.routes.js")]
 };
 
 const swaggerSpec = SwaggerJSDoc(swaggerOptions);

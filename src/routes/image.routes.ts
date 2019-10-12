@@ -1,12 +1,17 @@
-import { Router } from 'express';
-import SequelizeController from '../controllers/sequelize.controller';
-import { Model } from 'sequelize';
+import { Router } from "express";
+import { Model } from "sequelize";
+import { OAuth2Client } from "google-auth-library";
 
-const image = require('../database/models').image;
+import AuthController from "../controllers/auth.controller";
+import SequelizeController from "../controllers/sequelize.controller";
+
+const image = require("../database/models").image;
 const imageRouter = Router();
 const controller = new SequelizeController(image as Model);
+const authController = new AuthController(new OAuth2Client());
 
-imageRouter.route('/images')
+imageRouter
+  .route("/images")
   /**
    * @swagger
    * /images:
@@ -23,16 +28,16 @@ imageRouter.route('/images')
    *      - $ref: '#/components/parameters/description'
    *      - $ref: '#/components/parameters/location'
    *    responses:
-   *      '200':
-   *        description: A JSON array of images
-   *        schema: 
-   *           $ref: '#/definitions/image'
+   *      200:
+   *        $ref: '#/components/responses/ok'
    */
   .get(controller.list)
   /**
    * @swagger
    * /images:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Images
    *    description: Delete all images based on query
@@ -43,12 +48,18 @@ imageRouter.route('/images')
    *      - $ref: '#/components/parameters/description'
    *      - $ref: '#/components/parameters/location'
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
-   */  
-  .delete(controller.deleteAll);
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
+   */
 
-imageRouter.route('/image/:id')
+  .delete(authController.validateRequest, controller.deleteAll);
+
+imageRouter
+  .route("/image/:id")
   /**
    * @swagger
    * /image/{id}:
@@ -64,20 +75,18 @@ imageRouter.route('/image/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: Image item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/image'
-   *      '404':
-   *        description: Image deleted or does not exist
-   *        schema: 
-   *           $ref: '#/definitions/image'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      404:
+   *        $ref: '#/components/responses/notFound'
    */
   .get(controller.get)
   /**
    * @swagger
    * /image/{id}:
    *  put:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Images
    *    description: Update an image item by id
@@ -96,16 +105,20 @@ imageRouter.route('/image/:id')
    *          schema:
    *            $ref: '#/definitions/image'
    *    responses:
-   *      '200':
-   *        description: Updated image item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/image'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .put(controller.update)
+  .put(authController.validateRequest, controller.update)
   /**
    * @swagger
    * /image/{id}:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Images
    *    description: Delete an image item by id
@@ -117,16 +130,23 @@ imageRouter.route('/image/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .delete(controller.delete);
+  .delete(authController.validateRequest, controller.delete);
 
-imageRouter.route('/image')
+imageRouter
+  .route("/image")
   /**
    * @swagger
    * /image:
    *  post:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Images
    *    description: Create a new image
@@ -138,11 +158,13 @@ imageRouter.route('/image')
    *          schema:
    *            $ref: '#/definitions/image'
    *    responses:
-   *      '201':
-   *        description: A JSON array of the created image
-   *        content: 
-   *           application/json: {}
+   *      201:
+   *        $ref: '#/components/responses/created'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .post(controller.create);  
+  .post(authController.validateRequest, controller.create);
 
 export default imageRouter;
