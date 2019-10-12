@@ -1,12 +1,17 @@
-import { Router } from 'express';
-import SequelizeController from '../controllers/sequelize.controller';
-import { Model } from 'sequelize';
+import { Router } from "express";
+import { Model } from "sequelize";
+import { OAuth2Client } from "google-auth-library";
 
-const groupTag = require('../database/models').groupTag;
+import AuthController from "../controllers/auth.controller";
+import SequelizeController from "../controllers/sequelize.controller";
+
+const groupTag = require("../database/models").groupTag;
 const groupTagRouter = Router();
 const controller = new SequelizeController(groupTag as Model);
+const authController = new AuthController(new OAuth2Client());
 
-groupTagRouter.route('/groupTags')
+groupTagRouter
+  .route("/groupTags")
   /**
    * @swagger
    * /groupTags:
@@ -20,16 +25,16 @@ groupTagRouter.route('/groupTags')
    *      - $ref: '#/components/parameters/groupId'
    *      - $ref: '#/components/parameters/tagId'
    *    responses:
-   *      '200':
-   *        description: A JSON array of groupTags
-   *        schema: 
-   *           $ref: '#/definitions/groupTag'
+   *      200:
+   *        $ref: '#/components/responses/ok'
    */
   .get(controller.list)
   /**
    * @swagger
    * /groupTags:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Group Tags
    *    description: Delete all groupTags based on query
@@ -37,13 +42,18 @@ groupTagRouter.route('/groupTags')
    *      - $ref: '#/components/parameters/groupId'
    *      - $ref: '#/components/parameters/tagId'
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
-   */  
-  .delete(controller.deleteAll);
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
+   */
 
+  .delete(authController.validateRequest, controller.deleteAll);
 
-groupTagRouter.route('/groupTag/:id')
+groupTagRouter
+  .route("/groupTag/:id")
   /**
    * @swagger
    * /groupTag/{id}:
@@ -59,20 +69,18 @@ groupTagRouter.route('/groupTag/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: groupTag item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/groupTag'
-   *      '404':
-   *        description: groupTag deleted or does not exist
-   *        schema: 
-   *           $ref: '#/definitions/groupTag'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      404:
+   *        $ref: '#/components/responses/notFound'
    */
   .get(controller.get)
   /**
    * @swagger
    * /groupTag/{id}:
    *  put:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Group Tags
    *    description: Update a groupTag item by id
@@ -91,16 +99,20 @@ groupTagRouter.route('/groupTag/:id')
    *          schema:
    *            $ref: '#/definitions/groupTag'
    *    responses:
-   *      '200':
-   *        description: Updated groupTag item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/groupTag'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .put(controller.update)
+  .put(authController.validateRequest, controller.update)
   /**
    * @swagger
    * /groupTag/{id}:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Group Tags
    *    description: Update a groupTag item by id
@@ -112,16 +124,23 @@ groupTagRouter.route('/groupTag/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .delete(controller.delete);
+  .delete(authController.validateRequest, controller.delete);
 
-groupTagRouter.route('/groupTag')
+groupTagRouter
+  .route("/groupTag")
   /**
    * @swagger
    * /groupTag:
    *  post:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Group Tags
    *    description: Create a new group tag.
@@ -133,11 +152,13 @@ groupTagRouter.route('/groupTag')
    *          schema:
    *            $ref: '#/definitions/groupTag'
    *    responses:
-   *      '201':
-   *        description: A JSON array of the created group tag
-   *        content: 
-   *           application/json: {}
+   *      201:
+   *        $ref: '#/components/responses/created'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .post(controller.create);
+  .post(authController.validateRequest, controller.create);
 
 export default groupTagRouter;
