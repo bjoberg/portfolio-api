@@ -1,12 +1,17 @@
-import { Router } from 'express';
-import SequelizeController from '../controllers/sequelize.controller';
-import { Model } from 'sequelize';
+import { Router } from "express";
+import { Model } from "sequelize";
+import { OAuth2Client } from "google-auth-library";
 
-const imageGroup = require('../database/models').imageGroup;
+import AuthController from "../controllers/auth.controller";
+import SequelizeController from "../controllers/sequelize.controller";
+
+const imageGroup = require("../database/models").imageGroup;
 const imageGroupRouter = Router();
 const controller = new SequelizeController(imageGroup as Model);
+const authController = new AuthController(new OAuth2Client());
 
-imageGroupRouter.route('/imageGroups')
+imageGroupRouter
+  .route("/imageGroups")
   /**
    * @swagger
    * /imageGroups:
@@ -20,16 +25,16 @@ imageGroupRouter.route('/imageGroups')
    *      - $ref: '#/components/parameters/groupId'
    *      - $ref: '#/components/parameters/imageId'
    *    responses:
-   *      '200':
-   *        description: A JSON array of imageGroups
-   *        schema: 
-   *           $ref: '#/definitions/imageGroup'
+   *      200:
+   *        $ref: '#/components/responses/ok'
    */
   .get(controller.list)
   /**
    * @swagger
    * /imageGroups:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Image Groups
    *    description: Delete all imageGroups based on query
@@ -37,14 +42,18 @@ imageGroupRouter.route('/imageGroups')
    *      - $ref: '#/components/parameters/groupId'
    *      - $ref: '#/components/parameters/imageId'
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
-   *        schema: 
-   *           $ref: '#/definitions/imageGroup'
-   */  
-  .delete(controller.deleteAll);
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
+   */
 
-imageGroupRouter.route('/imageGroup/:id')
+  .delete(authController.validateRequest, controller.deleteAll);
+
+imageGroupRouter
+  .route("/imageGroup/:id")
   /**
    * @swagger
    * /imageGroup/{id}:
@@ -60,20 +69,18 @@ imageGroupRouter.route('/imageGroup/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: imageGroup item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/imageGroup'
-   *      '404':
-   *        description: imageGroup deleted or does not exist
-   *        schema: 
-   *           $ref: '#/definitions/imageGroup'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      404:
+   *        $ref: '#/components/responses/notFound'
    */
   .get(controller.get)
   /**
    * @swagger
    * /imageGroup/{id}:
    *  put:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Image Groups
    *    description: Update an imageGroup item by id
@@ -92,16 +99,20 @@ imageGroupRouter.route('/imageGroup/:id')
    *          schema:
    *            $ref: '#/definitions/imageGroup'
    *    responses:
-   *      '200':
-   *        description: Updated imageGroup item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/imageGroup'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .put(controller.update)
+  .put(authController.validateRequest, controller.update)
   /**
    * @swagger
    * /imageGroup/{id}:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Image Groups
    *    description: Update an imageGroup item by id
@@ -113,16 +124,23 @@ imageGroupRouter.route('/imageGroup/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .delete(controller.delete);
+  .delete(authController.validateRequest, controller.delete);
 
-imageGroupRouter.route('/imageGroup')
+imageGroupRouter
+  .route("/imageGroup")
   /**
    * @swagger
    * /imageGroup:
    *  post:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Image Groups
    *    description: Create a new imageGroup
@@ -134,11 +152,13 @@ imageGroupRouter.route('/imageGroup')
    *          schema:
    *            $ref: '#/definitions/imageGroup'
    *    responses:
-   *      '201':
-   *        description: A JSON array of the created image group
-   *        content: 
-   *           application/json: {}
+   *      201:
+   *        $ref: '#/components/responses/created'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .post(controller.create);
+  .post(authController.validateRequest, controller.create);
 
 export default imageGroupRouter;
