@@ -1,4 +1,7 @@
 "use strict";
+
+const httpStatus = require("http-status");
+
 module.exports = (sequelize, DataTypes) => {
   const user = sequelize.define(
     "user",
@@ -45,6 +48,33 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
+
   user.associate = function(models) {};
+
+  /**
+   * Try and find a user by its google id.
+   * @param {string} googleId of the user being searched for
+   * @returns user item
+   * @throws error if query fails
+   */
+  user.getByGoogleId = async googleId => {
+    try {
+      let item = await user.findOne({
+        where: {
+          googleId: googleId
+        }
+      });
+
+      if (item) return item;
+
+      throw {
+        status: httpStatus.NOT_FOUND,
+        message: `User does not exist`
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return user;
 };

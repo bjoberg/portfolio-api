@@ -1,15 +1,15 @@
 import ApiError from "../utils/models/api-error";
-import HttpStatus from "http-status";
+import httpStatus from "http-status";
 
-export default class ServerError extends Error {
+export default class AuthorizationError extends Error {
   private status: number;
 
   constructor(message?: string) {
     super(message);
-    this.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    this.status = httpStatus.UNAUTHORIZED;
 
     // Set the prototype explicitly.
-    Object.setPrototypeOf(this, ServerError.prototype);
+    Object.setPrototypeOf(this, AuthorizationError.prototype);
   }
 
   /**
@@ -18,7 +18,7 @@ export default class ServerError extends Error {
   getError(): ApiError {
     return {
       status: this.status,
-      message: this.message || "Internal server error"
+      message: this.message || "User not found"
     } as ApiError;
   }
 }

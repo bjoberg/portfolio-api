@@ -1,7 +1,7 @@
 import ApiError from "../utils/models/api-error";
-import HttpStatus from "http-status-codes";
+import HttpStatus from "http-status";
 
-export default class InvalidTokenError extends Error {
+export default class AuthenticationError extends Error {
   private status: number;
 
   constructor(message?: string) {
@@ -9,7 +9,7 @@ export default class InvalidTokenError extends Error {
     this.status = HttpStatus.FORBIDDEN;
 
     // Set the prototype explicitly.
-    Object.setPrototypeOf(this, InvalidTokenError.prototype);
+    Object.setPrototypeOf(this, AuthenticationError.prototype);
   }
 
   /**
