@@ -49,7 +49,6 @@ groupTagRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-
   .delete(authController.validateRequest, controller.deleteAll);
 
 groupTagRouter
