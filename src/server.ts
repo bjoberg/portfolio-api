@@ -18,7 +18,8 @@ import {
   tagRouter,
   imageGroupRouter,
   groupTagRouter,
-  imageTagRouter
+  imageTagRouter,
+  userRouter
 } from './routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
@@ -34,7 +35,7 @@ const app = express();
 
 // Parse body params and attach them to the req.body
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Compress response body for all requests
 app.use(compression());
@@ -50,9 +51,9 @@ mapKeys(sequelize.models, (model, key) => {
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(
-  {...swaggerSpec, definitions: swaggerSpecDefinitions},
+  { ...swaggerSpec, definitions: swaggerSpecDefinitions },
   false,
-  {docExpansion: 'none'}
+  { docExpansion: 'none' }
 ));
 
 // Custom routes
@@ -63,6 +64,7 @@ app.use(baseUrl, tagRouter);
 app.use(baseUrl, groupTagRouter);
 app.use(baseUrl, imageGroupRouter);
 app.use(baseUrl, imageTagRouter);
+app.use(baseUrl, userRouter);
 
 // Custom error handler
 app.use((err: ApiError, req: Request, res: Response, next: NextFunction) => {

@@ -1,12 +1,17 @@
-import { Router } from 'express';
-import SequelizeController from '../controllers/sequelize.controller';
-import { Model } from 'sequelize';
+import { Router } from "express";
+import { Model } from "sequelize";
+import { OAuth2Client } from "google-auth-library";
 
-const group = require('../database/models').group;
+import AuthController from "../controllers/auth.controller";
+import SequelizeController from "../controllers/sequelize.controller";
+
+const group = require("../database/models").group;
 const groupRouter = Router();
 const controller = new SequelizeController(group as Model);
+const authController = new AuthController(new OAuth2Client());
 
-groupRouter.route('/groups')
+groupRouter
+  .route("/groups")
   /**
    * @swagger
    * /groups:
@@ -22,14 +27,16 @@ groupRouter.route('/groups')
    *      - $ref: '#/components/parameters/title'
    *      - $ref: '#/components/parameters/description'
    *    responses:
-   *      '200':
-   *        description: A JSON array of groups
+   *      200:
+   *        $ref: '#/components/responses/ok'
    */
   .get(controller.list)
   /**
    * @swagger
    * /groups:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Groups
    *    description: Delete all groups based on query
@@ -39,12 +46,17 @@ groupRouter.route('/groups')
    *      - $ref: '#/components/parameters/title'
    *      - $ref: '#/components/parameters/description'
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
-   */  
-  .delete(controller.deleteAll);
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
+   */
+  .delete(authController.validateRequest, controller.deleteAll);
 
-groupRouter.route('/group/:id')
+groupRouter
+  .route("/group/:id")
   /**
    * @swagger
    * /group/{id}:
@@ -60,20 +72,18 @@ groupRouter.route('/group/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: Group item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/group'
-   *      '404':
-   *        description: Group deleted or does not exist
-   *        schema: 
-   *           $ref: '#/definitions/group'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      404:
+   *        $ref: '#/components/responses/notFound'
    */
   .get(controller.get)
   /**
    * @swagger
    * /group/{id}:
    *  put:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Groups
    *    description: Update a group item by id
@@ -92,16 +102,20 @@ groupRouter.route('/group/:id')
    *          schema:
    *            $ref: '#/definitions/group'
    *    responses:
-   *      '200':
-   *        description: Updated group item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/group'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .put(controller.update)
+  .put(authController.validateRequest, controller.update)
   /**
    * @swagger
    * /group/{id}:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Groups
    *    description: Delete a group item by id
@@ -113,16 +127,23 @@ groupRouter.route('/group/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .delete(controller.delete);
+  .delete(authController.validateRequest, controller.delete);
 
-groupRouter.route('/group')
+groupRouter
+  .route("/group")
   /**
    * @swagger
    * /group:
    *  post:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Groups
    *    description: Create a new group.
@@ -134,11 +155,13 @@ groupRouter.route('/group')
    *          schema:
    *            $ref: '#/definitions/group'
    *    responses:
-   *      '201':
-   *        description: A JSON array of the created group
-   *        content: 
-   *           application/json: {}
+   *      201:
+   *        $ref: '#/components/responses/created'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .post(controller.create);
+  .post(authController.validateRequest, controller.create);
 
 export default groupRouter;

@@ -1,12 +1,17 @@
-import { Router } from 'express';
-import SequelizeController from '../controllers/sequelize.controller';
-import { Model } from 'sequelize';
+import { Router } from "express";
+import { Model } from "sequelize";
+import { OAuth2Client } from "google-auth-library";
 
-const tag = require('../database/models').tag;
+import AuthController from "../controllers/auth.controller";
+import SequelizeController from "../controllers/sequelize.controller";
+
+const tag = require("../database/models").tag;
 const tagRouter = Router();
 const controller = new SequelizeController(tag as Model);
+const authController = new AuthController(new OAuth2Client());
 
-tagRouter.route('/tags')
+tagRouter
+  .route("/tags")
   /**
    * @swagger
    * /tags:
@@ -19,28 +24,33 @@ tagRouter.route('/tags')
    *      - $ref: '#/components/parameters/page'
    *      - $ref: '#/components/parameters/title'
    *    responses:
-   *      '200':
-   *        description: A JSON array of tags
-   *        schema: 
-   *           $ref: '#/definitions/tag'
+   *      200:
+   *        $ref: '#/components/responses/ok'
    */
   .get(controller.list)
   /**
    * @swagger
    * /tags:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Tags
    *    description: Delete all tags based on query
    *    parameters:
    *      - $ref: '#/components/parameters/title'
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
-   */  
-  .delete(controller.deleteAll);
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
+   */
+  .delete(authController.validateRequest, controller.deleteAll);
 
-tagRouter.route('/tag/:id')
+tagRouter
+  .route("/tag/:id")
   /**
    * @swagger
    * /tag/{id}:
@@ -56,20 +66,18 @@ tagRouter.route('/tag/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: Tag item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/tag'
-   *      '404':
-   *        description: Tag deleted or does not exist
-   *        schema: 
-   *           $ref: '#/definitions/tag'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      404:
+   *        $ref: '#/components/responses/notFound'
    */
   .get(controller.get)
   /**
    * @swagger
    * /tag/{id}:
    *  put:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Tags
    *    description: Update a tag item by id
@@ -88,16 +96,20 @@ tagRouter.route('/tag/:id')
    *          schema:
    *            $ref: '#/definitions/tag'
    *    responses:
-   *      '200':
-   *        description: Updated tag item as JSON
-   *        schema: 
-   *           $ref: '#/definitions/tag'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .put(controller.update)
+  .put(authController.validateRequest, controller.update)
   /**
    * @swagger
    * /tag/{id}:
    *  delete:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Tags
    *    description: Delete a tag item by id
@@ -109,16 +121,23 @@ tagRouter.route('/tag/:id')
    *        schema:
    *          type: string
    *    responses:
-   *      '200':
-   *        description: The number of destroyed rows
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .delete(controller.delete);
+  .delete(authController.validateRequest, controller.delete);
 
-tagRouter.route('/tag')
+tagRouter
+  .route("/tag")
   /**
    * @swagger
    * /tag:
    *  post:
+   *    security:
+   *      - bearerAuth: []
    *    tags:
    *      - Tags
    *    description: Create a new tag.
@@ -130,11 +149,13 @@ tagRouter.route('/tag')
    *          schema:
    *            $ref: '#/definitions/tag'
    *    responses:
-   *      '201':
-   *        description: A JSON array of the created tag
-   *        content: 
-   *           application/json: {}
+   *      201:
+   *        $ref: '#/components/responses/created'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
    */
-  .post(controller.create);
+  .post(authController.validateRequest, controller.create);
 
 export default tagRouter;
