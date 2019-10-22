@@ -7,16 +7,21 @@ const userRouter = Router();
 const controller = new UserController(user);
 
 userRouter
-  .route("/role")
+  .route("/user/:googleId/role")
   /**
    * @swagger
-   * /role:
+   * /user/{googleId}/role:
    *  get:
    *    tags:
    *      - User
    *    description: Get the role for the provided user id
    *    parameters:
-   *      - $ref: '#/components/parameters/googleId'
+   *      - in: path
+   *        name: googleId
+   *        description: google id of the user to get role details
+   *        required: true
+   *        schema:
+   *          type: string
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'

@@ -128,14 +128,6 @@ const swaggerDefinition = {
           type: "uuid"
         },
         required: false
-      },
-      googleId: {
-        in: "query",
-        name: "googleId",
-        schema: {
-          type: "string"
-        },
-        required: false
       }
     },
     responses: {
