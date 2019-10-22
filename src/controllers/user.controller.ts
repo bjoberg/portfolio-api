@@ -21,7 +21,7 @@ export default class UserController {
       role: Role.READONLY
     };
     try {
-      const googleId = req.query.googleId;
+      const googleId = req.params.googleId;
       const user = await this.user.getByGoogleId(googleId);
       if (user) {
         response.role = Role.ADMIN;
