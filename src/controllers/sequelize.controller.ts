@@ -12,7 +12,7 @@ import EntityList from '../utils/models/enity-list';
 export default class SequelizeController {
   private model: Model;
   private sequelizeHelpers: SequelizeHelpers;
-  
+
   /**
    * Construct a new sequelize controller
    * @param model sequelize model defenition
@@ -35,9 +35,10 @@ export default class SequelizeController {
       // @ts-ignore
       const data = await this.model.list(req.query);
       const entityList: EntityList = {
-        count: data.count,
         limit,
         page,
+        totalItems: data.count,
+        pageCount: data.rows.length,
         rows: data.rows
       };
 
@@ -79,7 +80,7 @@ export default class SequelizeController {
   public update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       let result = await this.model.update(req.body, {
-        where: {id: req.params.id},
+        where: { id: req.params.id },
         limit: 1,
         returning: true
       });
@@ -96,7 +97,7 @@ export default class SequelizeController {
   public delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
       let result = await this.model.destroy({
-         // @ts-ignore
+        // @ts-ignore
         where: {
           id: req.params.id
         }
@@ -113,7 +114,7 @@ export default class SequelizeController {
    */
   public deleteAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-       // @ts-ignore
+      // @ts-ignore
       let result = await this.model.deleteAll(req.query);
       res.status(HttpStatus.OK);
       res.json(result);

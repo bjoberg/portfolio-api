@@ -1,5 +1,6 @@
 export default interface EntityList {
-  count: number;
+  totalItems: number;
+  pageCount: number;
   page: number;
   limit: number;
   rows: [];
