@@ -88,6 +88,15 @@ module.exports = class SeederHelper {
           description: "This is a group",
           createdAt: new Date(),
           updatedAt: new Date()
+        },
+        {
+          id: uuidv4(),
+          thumbnailUrl: "https://www.testUrl.com",
+          imageUrl: "https://www.testUrl.com",
+          title: "Urban Landscape",
+          description: "This is a group",
+          createdAt: new Date(),
+          updatedAt: new Date()
         }
       ],
       {}
@@ -109,6 +118,42 @@ module.exports = class SeederHelper {
           height: 300,
           createdAt: new Date(),
           updatedAt: new Date()
+        },
+        {
+          id: uuidv4(),
+          thumbnailUrl: "https://picsum.photos/200/300",
+          imageUrl: "https://picsum.photos/200/300",
+          title: "Test Image 2",
+          description: "This is a super awesome image!",
+          location: "Test, IL",
+          width: 200,
+          height: 300,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: uuidv4(),
+          thumbnailUrl: "https://picsum.photos/200/300",
+          imageUrl: "https://picsum.photos/200/300",
+          title: "Test Image 3",
+          description: "This is a super awesome image!",
+          location: "Test, IL",
+          width: 200,
+          height: 300,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: uuidv4(),
+          thumbnailUrl: "https://picsum.photos/200/300",
+          imageUrl: "https://picsum.photos/200/300",
+          title: "Test Image 4",
+          description: "This is a super awesome image!",
+          location: "Test, IL",
+          width: 200,
+          height: 300,
+          createdAt: new Date(),
+          updatedAt: new Date()
         }
       ],
       {}
@@ -116,16 +161,48 @@ module.exports = class SeederHelper {
   }
 
   async createImageGroups() {
-    let groupId = await this.getIdByTitle("groups", "Natural Landscape");
-    let imageId = await this.getIdByTitle("images", "Test Image");
+    let groupId1 = await this.getIdByTitle("groups", "Natural Landscape");
+    let groupId2 = await this.getIdByTitle("groups", "Urban Landscape");
+    let imageId1 = await this.getIdByTitle("images", "Test Image");
+    let imageId2 = await this.getIdByTitle("images", "Test Image 2");
+    let imageId3 = await this.getIdByTitle("images", "Test Image 3");
+    let imageId4 = await this.getIdByTitle("images", "Test Image 4");
 
     return this.queryInterface.bulkInsert(
       "imageGroups",
       [
         {
           id: uuidv4(),
-          imageId: imageId,
-          groupId: groupId,
+          imageId: imageId1,
+          groupId: groupId1,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: uuidv4(),
+          imageId: imageId2,
+          groupId: groupId1,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: uuidv4(),
+          imageId: imageId3,
+          groupId: groupId2,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: uuidv4(),
+          imageId: imageId4,
+          groupId: groupId1,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: uuidv4(),
+          imageId: imageId4,
+          groupId: groupId2,
           createdAt: new Date(),
           updatedAt: new Date()
         }

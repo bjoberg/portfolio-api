@@ -1,6 +1,6 @@
 'use strict';
 
-const httpStatus  = require('http-status');
+const httpStatus = require('http-status');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 const LIMIT_DEFAULT = require('../../utils/models/defaults').LIMIT_DEFAULT;
@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
 
-  group.associate = function(models) {
+  group.associate = function (models) {
     group.belongsToMany(models.image, {
       through: models.imageGroup,
       foreignKey: 'groupId'
@@ -63,16 +63,16 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the groups containing the specified query items
    * @throws error if query fails
    */
-  group.list = async ({page, limit, thumbnailUrl, imageUrl, title, description}) => {
+  group.list = async ({ page, limit, thumbnailUrl, imageUrl, title, description }) => {
     try {
       const options = omitBy({
         thumbnailUrl, imageUrl, title, description
       }, isNil);
-  
+
       const getAllOptions = {
         where: options
       };
-  
+
       if (limit) {
         getAllOptions.limit = limit;
       } else {
@@ -84,8 +84,8 @@ module.exports = (sequelize, DataTypes) => {
       } else {
         getAllOptions.offset = PAGE_DEFAULT;
       }
-  
-      return group.findAndCountAll(getAllOptions); 
+
+      return group.findAndCountAll(getAllOptions);
     } catch (error) {
       throw {
         status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -107,9 +107,9 @@ module.exports = (sequelize, DataTypes) => {
           id: id
         }
       });
-      
+
       if (item) return item;
-  
+
       throw {
         status: httpStatus.NOT_FOUND,
         message: `Group, ${id}, deleted or does not exist.`
@@ -125,7 +125,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns number of group rows affected
    * @throws error if query fails
    */
-  group.deleteAll = async ({thumbnailUrl, imageUrl, title, description}) => {
+  group.deleteAll = async ({ thumbnailUrl, imageUrl, title, description }) => {
     try {
       const options = omitBy({
         thumbnailUrl, imageUrl, title, description

@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { Model } from "sequelize";
 import { OAuth2Client } from "google-auth-library";
 
@@ -27,7 +27,7 @@ tagRouter
    *      200:
    *        $ref: '#/components/responses/ok'
    */
-  .get(controller.list)
+  .get((req: Request, res: Response, next: NextFunction) => controller.list(req, res, next))
   /**
    * @swagger
    * /tags:
@@ -47,7 +47,10 @@ tagRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .delete(authController.validateRequest, controller.deleteAll);
+  .delete(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.deleteAll(req, res, next)
+  );
 
 tagRouter
   .route("/tag/:id")
@@ -71,7 +74,7 @@ tagRouter
    *      404:
    *        $ref: '#/components/responses/notFound'
    */
-  .get(controller.get)
+  .get((req: Request, res: Response, next: NextFunction) => controller.get(req, res, next))
   /**
    * @swagger
    * /tag/{id}:
@@ -103,7 +106,10 @@ tagRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .put(authController.validateRequest, controller.update)
+  .put(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.update(req, res, next)
+  )
   /**
    * @swagger
    * /tag/{id}:
@@ -128,7 +134,10 @@ tagRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .delete(authController.validateRequest, controller.delete);
+  .delete(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.delete(req, res, next)
+  );
 
 tagRouter
   .route("/tag")
@@ -156,6 +165,9 @@ tagRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .post(authController.validateRequest, controller.create);
+  .post(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.create(req, res, next)
+  );
 
 export default tagRouter;
