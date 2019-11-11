@@ -11,7 +11,7 @@ import EntityList from '../utils/models/enity-list';
  */
 export default class SequelizeController {
   private model: Model;
-  private sequelizeHelpers: SequelizeHelpers;
+  protected sequelizeHelpers: SequelizeHelpers;
 
   /**
    * Construct a new sequelize controller
@@ -25,7 +25,7 @@ export default class SequelizeController {
   /**
    * Get all of the models data
    */
-  public list = async (req: Request, res: Response, next: NextFunction) => {
+  public async list(req: Request, res: Response, next: NextFunction) {
     try {
       req = this.sequelizeHelpers.setPage(req);
       req = this.sequelizeHelpers.setLimit(req);
@@ -51,7 +51,7 @@ export default class SequelizeController {
   /**
    * Get a single instance of the model
    */
-  public get = async (req: Request, res: Response, next: NextFunction) => {
+  public async get(req: Request, res: Response, next: NextFunction) {
     try {
       // @ts-ignore
       res.json(await this.model.get(req.params.id));
@@ -63,7 +63,7 @@ export default class SequelizeController {
   /**
    * Create a single instance of the model
    */
-  public create = async (req: Request, res: Response, next: NextFunction) => {
+  public async create(req: Request, res: Response, next: NextFunction) {
     try {
       // @ts-ignore
       let item = await this.model.create(req.body);
@@ -77,7 +77,7 @@ export default class SequelizeController {
   /**
    * Update a single instance of the model
    */
-  public update = async (req: Request, res: Response, next: NextFunction) => {
+  public async update(req: Request, res: Response, next: NextFunction) {
     try {
       let result = await this.model.update(req.body, {
         where: { id: req.params.id },
@@ -94,7 +94,7 @@ export default class SequelizeController {
   /**
    * Delete a single instance of the model
    */
-  public delete = async (req: Request, res: Response, next: NextFunction) => {
+  public async delete(req: Request, res: Response, next: NextFunction) {
     try {
       let result = await this.model.destroy({
         // @ts-ignore
@@ -112,7 +112,7 @@ export default class SequelizeController {
   /**
    * Delete all instances of the model based on query params
    */
-  public deleteAll = async (req: Request, res: Response, next: NextFunction) => {
+  public async deleteAll(req: Request, res: Response, next: NextFunction) {
     try {
       // @ts-ignore
       let result = await this.model.deleteAll(req.query);

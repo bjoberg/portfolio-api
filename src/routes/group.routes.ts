@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { Model } from "sequelize";
 import { OAuth2Client } from "google-auth-library";
 
@@ -30,7 +30,7 @@ groupRouter
    *      200:
    *        $ref: '#/components/responses/ok'
    */
-  .get(controller.list)
+  .get((req: Request, res: Response, next: NextFunction) => controller.list(req, res, next))
   /**
    * @swagger
    * /groups:
@@ -53,7 +53,10 @@ groupRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .delete(authController.validateRequest, controller.deleteAll);
+  .delete(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.deleteAll(req, res, next)
+  );
 
 groupRouter
   .route("/group/:id")
@@ -77,7 +80,7 @@ groupRouter
    *      404:
    *        $ref: '#/components/responses/notFound'
    */
-  .get(controller.get)
+  .get((req: Request, res: Response, next: NextFunction) => controller.get(req, res, next))
   /**
    * @swagger
    * /group/{id}:
@@ -109,7 +112,10 @@ groupRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .put(authController.validateRequest, controller.update)
+  .put(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.update(req, res, next)
+  )
   /**
    * @swagger
    * /group/{id}:
@@ -134,7 +140,10 @@ groupRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .delete(authController.validateRequest, controller.delete);
+  .delete(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.delete(req, res, next)
+  );
 
 groupRouter
   .route("/group")
@@ -162,6 +171,9 @@ groupRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .post(authController.validateRequest, controller.create);
+  .post(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.create(req, res, next)
+  );
 
 export default groupRouter;

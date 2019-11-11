@@ -1,6 +1,6 @@
 'use strict';
 
-const httpStatus  = require('http-status');
+const httpStatus = require('http-status');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 const LIMIT_DEFAULT = require('../../utils/models/defaults').LIMIT_DEFAULT;
@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
 
-  image.associate = function(models) {
+  image.associate = function (models) {
     image.belongsToMany(models.group, {
       through: models.imageGroup,
       foreignKey: 'imageId'
@@ -72,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
     image.belongsToMany(models.tag, {
       through: models.imageTag,
       foreignKey: 'imageId'
-    });    
+    });
   };
 
   /**
@@ -81,16 +81,16 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the images containing the specified query items
    * @throws error if query fails
    */
-  image.list = async ({page, limit, thumbnailUrl, imageUrl, title, description, location}) => {
+  image.list = async ({ page, limit, thumbnailUrl, imageUrl, title, description, location, groupId }, group = undefined) => {
     try {
+      // General query
       const options = omitBy({
         thumbnailUrl, imageUrl, title, description, location
       }, isNil);
-  
-      const getAllOptions = {
-        where: options
-      };
-  
+
+      const getAllOptions = { where: options };
+
+      // Pagination
       if (limit) {
         getAllOptions.limit = limit;
       } else {
@@ -103,7 +103,16 @@ module.exports = (sequelize, DataTypes) => {
         getAllOptions.offset = PAGE_DEFAULT;
       }
 
-      return image.findAndCountAll(getAllOptions); 
+      // Join statement
+      if (groupId && group) {
+        getAllOptions.include = [{
+          model: group,
+          attributes: ['id', "title"],
+          where: { id: groupId }
+        }]
+      }
+
+      return image.findAndCountAll(getAllOptions);
     } catch (error) {
       throw {
         status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -125,9 +134,9 @@ module.exports = (sequelize, DataTypes) => {
           id: id
         }
       });
-      
+
       if (item) return item;
-  
+
       throw {
         status: httpStatus.NOT_FOUND,
         message: `Image, ${id}, deleted or does not exist.`
@@ -143,7 +152,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns number of image rows affected
    * @throws error if query fails
    */
-  image.deleteAll = async ({thumbnailUrl, imageUrl, title, description, location}) => {
+  image.deleteAll = async ({ thumbnailUrl, imageUrl, title, description, location }) => {
     try {
       const options = omitBy({
         thumbnailUrl, imageUrl, title, description, location
@@ -158,7 +167,7 @@ module.exports = (sequelize, DataTypes) => {
         message: `Error deleting image(s).`
       };
     }
-  };  
+  };
 
   return image;
 };

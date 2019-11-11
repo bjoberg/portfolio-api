@@ -1,13 +1,16 @@
-import { Router } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { Model } from "sequelize";
 import { OAuth2Client } from "google-auth-library";
 
 import AuthController from "../controllers/auth.controller";
-import SequelizeController from "../controllers/sequelize.controller";
+// import SequelizeController from "../controllers/sequelize.controller";
+import ImageController from "../controllers/image.controller";
 
 const image = require("../database/models").image;
+const group = require("../database/models").group;
 const imageRouter = Router();
-const controller = new SequelizeController(image as Model);
+const controller = new ImageController(image as Model, group as Model);
+// const controller = new SequelizeController(image as Model);
 const authController = new AuthController(new OAuth2Client());
 
 imageRouter
@@ -27,11 +30,12 @@ imageRouter
    *      - $ref: '#/components/parameters/title'
    *      - $ref: '#/components/parameters/description'
    *      - $ref: '#/components/parameters/location'
+   *      - $ref: '#/components/parameters/groupId'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
    */
-  .get(controller.list)
+  .get((req: Request, res: Response, next: NextFunction) => controller.list(req, res, next))
   /**
    * @swagger
    * /images:
@@ -55,7 +59,10 @@ imageRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .delete(authController.validateRequest, controller.deleteAll);
+  .delete(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.deleteAll(req, res, next)
+  );
 
 imageRouter
   .route("/image/:id")
@@ -79,7 +86,7 @@ imageRouter
    *      404:
    *        $ref: '#/components/responses/notFound'
    */
-  .get(controller.get)
+  .get((req: Request, res: Response, next: NextFunction) => controller.get(req, res, next))
   /**
    * @swagger
    * /image/{id}:
@@ -111,7 +118,10 @@ imageRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .put(authController.validateRequest, controller.update)
+  .put(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.update(req, res, next)
+  )
   /**
    * @swagger
    * /image/{id}:
@@ -136,7 +146,10 @@ imageRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .delete(authController.validateRequest, controller.delete);
+  .delete(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.delete(req, res, next)
+  );
 
 imageRouter
   .route("/image")
@@ -164,6 +177,9 @@ imageRouter
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .post(authController.validateRequest, controller.create);
+  .post(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => controller.create(req, res, next)
+  );
 
 export default imageRouter;
