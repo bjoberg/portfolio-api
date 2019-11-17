@@ -158,23 +158,40 @@ module.exports = (sequelize, DataTypes) => {
     try {
       const where = { id };
       const options = { where };
-      const item = await group.findOne(options);
-
-      if (item) {
-        return item;
-      } else {
-        throw {
-          status: httpStatus.NOT_FOUND,
-          message: `Image, ${id}, deleted or does not exist.`
-        };
-      }
+      return image.findOne(options);
     } catch (error) {
       throw error;
     }
   };
 
   /**
-   * Remove images from the specified group
+   * Try and find an image in a group
+   * 
+   * @param {string} groupId unique id of group to search for
+   * @param {string} imageId unique id of image to search for
+   * @param {any} groupModel sequelize model to query on
+   * @returns image item
+   * @throws error if query fails
+   */
+  image.getImageInGroup = async (groupId, imageId, groupModel) => {
+    try {
+      const where = { id: imageId };
+      const include = [{
+        model: groupModel,
+        attributes: [],
+        where: {
+          id: groupId
+        }
+      }];
+      const options = { where, include };
+      return image.findOne(options);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
+   * Remove image from the specified group
    * 
    * @param {string} groupId unique group id of group to search for
    * @param {number} imageId unique image id to remove from group
@@ -192,7 +209,29 @@ module.exports = (sequelize, DataTypes) => {
       });
       return response;
     } catch (error) {
-      let message = `Error removing images from ${groupId}.`
+      let message = `Error removing image from ${groupId}.`
+      let status = httpStatus.INTERNAL_SERVER_ERROR;
+      if (error.message) message = error.message;
+      throw { status, message };
+    }
+  };
+
+  /**
+   * Add image to the specified group
+   * 
+   * @param {string} groupId unique group id of group to search for
+   * @param {number} imageId unique image id to remove from group
+   * @param {any} imageGroupModel sequelize model to query on
+   * @returns number of images that were added to the group
+   * @throws error if query fails
+   */
+  image.addImageToGroup = async (groupId = undefined, imageId = undefined, imageGroupModel = undefined) => {
+    try {
+      const imageGroup = { groupId, imageId };
+      const response = await imageGroupModel.create(imageGroup);
+      return response;
+    } catch (error) {
+      let message = `Error adding image to ${groupId}.`
       let status = httpStatus.INTERNAL_SERVER_ERROR;
       if (error.message) message = error.message;
       throw { status, message };

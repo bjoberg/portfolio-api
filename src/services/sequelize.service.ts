@@ -33,10 +33,11 @@ export default class SequelizeService {
       };
       return entityList;
     } catch (error) {
-      const apiError: ApiError = {
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message
-      };
+      let status = HttpStatus.INTERNAL_SERVER_ERROR;
+      let message = `Error retrieving items`;
+      if (error.status) status = error.status;
+      if (error.message) message = error.message;
+      const apiError: ApiError = { status, message };
       throw apiError;
     }
   }
@@ -52,12 +53,19 @@ export default class SequelizeService {
     try {
       // @ts-ignore-next-line
       const response = await this.model.get(id);
+      if (!response) {
+        throw {
+          status: HttpStatus.NOT_FOUND,
+          message: `Image, ${id}, deleted or does not exist.`
+        };
+      }
       return response;
     } catch (error) {
-      const apiError: ApiError = {
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message
-      };
+      let status = HttpStatus.INTERNAL_SERVER_ERROR;
+      let message = `Error retrieving ${id}`;
+      if (error.status) status = error.status;
+      if (error.message) message = error.message;
+      const apiError: ApiError = { status, message };
       throw apiError;
     }
   }
@@ -75,10 +83,11 @@ export default class SequelizeService {
       const response = await this.model.create(model);
       return response;
     } catch (error) {
-      const apiError: ApiError = {
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message
-      };
+      let status = HttpStatus.INTERNAL_SERVER_ERROR;
+      let message = `Error creating item`;
+      if (error.status) status = error.status;
+      if (error.message) message = error.message;
+      const apiError: ApiError = { status, message };
       throw apiError;
     }
   }
@@ -101,10 +110,11 @@ export default class SequelizeService {
       });
       return response;
     } catch (error) {
-      const apiError: ApiError = {
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message
-      };
+      let status = HttpStatus.INTERNAL_SERVER_ERROR;
+      let message = `Error updating item`;
+      if (error.status) status = error.status;
+      if (error.message) message = error.message;
+      const apiError: ApiError = { status, message };
       throw apiError;
     }
   }
@@ -124,10 +134,11 @@ export default class SequelizeService {
       });
       return response;
     } catch (error) {
-      const apiError: ApiError = {
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message
-      };
+      let status = HttpStatus.INTERNAL_SERVER_ERROR;
+      let message = `Error deleting item`;
+      if (error.status) status = error.status;
+      if (error.message) message = error.message;
+      const apiError: ApiError = { status, message };
       throw apiError;
     }
   }

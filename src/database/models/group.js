@@ -103,16 +103,7 @@ module.exports = (sequelize, DataTypes) => {
     try {
       const where = { id };
       const options = { where };
-      const item = await group.findOne(options);
-
-      if (item) {
-        return item;
-      } else {
-        throw {
-          status: httpStatus.NOT_FOUND,
-          message: `Group, ${id}, deleted or does not exist.`
-        };
-      }
+      return group.findOne(options);
     } catch (error) {
       throw error;
     }

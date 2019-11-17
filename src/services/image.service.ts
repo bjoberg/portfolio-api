@@ -22,6 +22,27 @@ export default class ImageService extends SequelizeService {
   }
 
   /**
+   * Get image in a specific group
+   * 
+   * @param groupId unique id of group to search for
+   * @param imageId unique id of image to search for
+   */
+  public async getImageInGroup(groupId: string, imageId: string): Promise<any> {
+    try {
+      // @ts-ignore-next-line
+      const response = await this.model.getImageInGroup(groupId, imageId, this.groupModel);
+      return response;
+    } catch (error) {
+      let status = HttpStatus.INTERNAL_SERVER_ERROR;
+      let message = `Error retrieving images from group (${groupId})`;
+      if (error.status) status = error.status;
+      if (error.message) message = error.message;
+      const apiError: ApiError = { status, message };
+      throw apiError;
+    }
+  }
+
+  /**
    * Get all images in a specific group
    * 
    * @param groupId unique id of group to search for
@@ -42,10 +63,11 @@ export default class ImageService extends SequelizeService {
       };
       return entityList;
     } catch (error) {
-      const apiError: ApiError = {
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message
-      };
+      let status = HttpStatus.INTERNAL_SERVER_ERROR;
+      let message = `Error retrieving images from group (${groupId})`;
+      if (error.status) status = error.status;
+      if (error.message) message = error.message;
+      const apiError: ApiError = { status, message };
       throw apiError;
     }
   }
@@ -74,5 +96,32 @@ export default class ImageService extends SequelizeService {
       success,
       errors
     };
+  }
+
+  /**
+   * Add images from the specified group
+   * 
+   * @param groupId unique id of group to delete images from
+   * @param imageIds array of image ids to remove from group
+   */
+  public async addImagesToGroup(groupId: string, imageIds: string[]): Promise<any> {
+    let success = [];
+    let errors = [];
+    for (let i = 0; i < imageIds.length; i++) {
+      const imageId = imageIds[i];
+      try {
+        const image = await this.getImageInGroup(groupId, imageId);
+        if (!image) {
+          // @ts-ignore-next-line
+          await this.model.addImageToGroup(groupId, imageId, this.imageGroupModel);
+          success.push(imageId);
+        } else {
+          errors.push({ id: imageId, status: `Image already exists in group.` });
+        }
+      } catch (error) {
+        errors.push({ id: imageId, status: error.message });
+      }
+    }
+    return { success, errors };
   }
 }

@@ -172,6 +172,30 @@ groupRouter
   /**
      * @swagger
      * /group/{id}/images:
+     *  post:
+     *    security:
+     *      - bearerAuth: []
+     *    tags:
+     *      - Groups
+     *    description: Add images from a group.
+     *    parameters:
+     *      - $ref: '#/components/parameters/path/groupId'
+     *      - $ref: '#/components/parameters/query/imageId'
+     *    responses:
+     *      200:
+     *        $ref: '#/components/responses/ok'
+     *      401:
+     *        $ref: '#/components/responses/unauthorized'
+     *      403:
+     *        $ref: '#/components/responses/forbidden'
+     */
+  .post(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => imageController.addImagesToGroup(req, res, next)
+  )
+  /**
+     * @swagger
+     * /group/{id}/images:
      *  delete:
      *    security:
      *      - bearerAuth: []

@@ -59,4 +59,24 @@ export default class ImageController extends SequelizeController {
       next(error as ApiError);
     }
   }
+
+  /**
+   * Add images from the specified group
+   * 
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express Next function
+   */
+  public async addImagesToGroup(req: Request, res: Response, next: NextFunction) {
+    try {
+      const groupId = req.params.id;
+      let imageIds = req.query.imageId ? req.query.imageId : [];
+      if (!Array.isArray(imageIds)) imageIds = [imageIds];
+      const response = await this.imageService.addImagesToGroup(groupId, imageIds);
+      res.status(HttpStatus.OK);
+      res.json(response);
+    } catch (error) {
+      next(error as ApiError);
+    }
+  }
 }
