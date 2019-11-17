@@ -28,13 +28,13 @@ imageRouter
    *      - Images
    *    description: Gets all images based on query
    *    parameters:
-   *      - $ref: '#/components/parameters/limit'
-   *      - $ref: '#/components/parameters/page'
-   *      - $ref: '#/components/parameters/thumbnailUrl'
-   *      - $ref: '#/components/parameters/imageUrl'
-   *      - $ref: '#/components/parameters/title'
-   *      - $ref: '#/components/parameters/description'
-   *      - $ref: '#/components/parameters/location'
+   *      - $ref: '#/components/parameters/query/limit'
+   *      - $ref: '#/components/parameters/query/page'
+   *      - $ref: '#/components/parameters/query/thumbnailUrl'
+   *      - $ref: '#/components/parameters/query/imageUrl'
+   *      - $ref: '#/components/parameters/query/title'
+   *      - $ref: '#/components/parameters/query/description'
+   *      - $ref: '#/components/parameters/query/location'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
@@ -51,12 +51,7 @@ imageRouter
    *      - Images
    *    description: Find image by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the image to return
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/imageId'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
@@ -74,12 +69,7 @@ imageRouter
    *      - Images
    *    description: Update an image item by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the image to update
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/imageId'
    *    requestBody:
    *      description: Image object
    *      required: true
@@ -109,12 +99,7 @@ imageRouter
    *      - Images
    *    description: Delete an image item by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the image to delete
-   *        required: true
-   *        schema:
-   *          type: string
+   *     - $ref: '#/components/parameters/path/imageId'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'

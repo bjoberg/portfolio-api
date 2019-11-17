@@ -5,7 +5,7 @@ import EntityList from '../utils/models/enity-list';
 import ApiError from '../utils/models/api-error';
 
 export default class SequelizeService {
-  private model: Model;
+  protected model: Model;
 
   constructor(model: Model) {
     this.model = model;
@@ -22,7 +22,7 @@ export default class SequelizeService {
    */
   public async list(limit: number, page: number, query: any): Promise<EntityList> {
     try {
-      // @ts-ignore
+      // @ts-ignore-next-line
       const response = await this.model.list(limit, page, query);
       const entityList: EntityList = {
         limit,
@@ -50,7 +50,7 @@ export default class SequelizeService {
    */
   public async get(id: string): Promise<any> {
     try {
-      // @ts-ignore
+      // @ts-ignore-next-line
       const response = await this.model.get(id);
       return response;
     } catch (error) {
@@ -71,7 +71,7 @@ export default class SequelizeService {
    */
   public async create(model: any): Promise<any> {
     try {
-      // @ts-ignore
+      // @ts-ignore-next-line
       const response = await this.model.create(model);
       return response;
     } catch (error) {
@@ -93,7 +93,7 @@ export default class SequelizeService {
    */
   public async update(id: string, model: any): Promise<any> {
     try {
-      // @ts-ignore
+      // @ts-ignore-next-line
       const response = await this.model.update(model, {
         where: { id },
         limit: 1,
@@ -119,7 +119,7 @@ export default class SequelizeService {
   public async delete(id: string): Promise<any> {
     try {
       const response = await this.model.destroy({
-        // @ts-ignore
+        // @ts-ignore-next-line
         where: { id }
       });
       return response;

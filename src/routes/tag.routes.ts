@@ -28,9 +28,9 @@ tagRouter
    *      - Tags
    *    description: Gets all tags based on query
    *    parameters:
-   *      - $ref: '#/components/parameters/limit'
-   *      - $ref: '#/components/parameters/page'
-   *      - $ref: '#/components/parameters/title'
+   *      - $ref: '#/components/parameters/query/limit'
+   *      - $ref: '#/components/parameters/query/page'
+   *      - $ref: '#/components/parameters/query/title'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
@@ -47,12 +47,7 @@ tagRouter
    *      - Tags
    *    description: Find tag by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the tag to return
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/tagId'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
@@ -70,12 +65,7 @@ tagRouter
    *      - Tags
    *    description: Update a tag item by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the tag to update
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/tagId'
    *    requestBody:
    *      description: Tag object
    *      required: true
@@ -105,12 +95,7 @@ tagRouter
    *      - Tags
    *    description: Delete a tag item by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the tag to delete
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/tagId'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'

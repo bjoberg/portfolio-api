@@ -6,16 +6,19 @@ import HttpStatus from "http-status";
 
 export default class ImageService extends SequelizeService {
   private groupModel: Model;
+  private imageGroupModel: Model;
 
   /**
    * Construct a new image service
    * 
    * @param imageModel image model definition
    * @param groupModel group model definition
+   * @param imageGroupModel imageGroup model definition
    */
-  constructor(imageModel: Model, groupModel: Model) {
+  constructor(imageModel: Model, groupModel: Model, imageGroupModel: Model) {
     super(imageModel);
     this.groupModel = groupModel;
+    this.imageGroupModel = imageGroupModel;
   }
 
   /**
@@ -26,9 +29,9 @@ export default class ImageService extends SequelizeService {
    * @param page range of items to return
    * @param filter object with properties to query with
    */
-  public async listAllForGroup(groupId: string, limit: number, page: number, filter: any): Promise<EntityList> {
+  public async listImagesForGroup(groupId: string, limit: number, page: number, filter: any): Promise<EntityList> {
     try {
-      // @ts-ignore
+      // @ts-ignore-next-line
       const response = await this.model.listAllForGroup(groupId, this.groupModel, limit, page, filter);
       const entityList: EntityList = {
         limit,
@@ -45,5 +48,31 @@ export default class ImageService extends SequelizeService {
       };
       throw apiError;
     }
+  }
+
+  /**
+   * Remove images from the specified group
+   * 
+   * @param groupId unique id of group to delete images from
+   * @param imageIds array of image ids to remove from group
+   */
+  public async removeImagesFromGroup(groupId: string, imageIds: string[]): Promise<any> {
+    let success = [];
+    let errors = [];
+    for (let i = 0; i < imageIds.length; i++) {
+      const imageId = imageIds[i];
+      try {
+        // @ts-ignore-next-line
+        const response = await this.model.removeImageFromGroup(groupId, imageId, this.imageGroupModel);
+        if (response > 0) success.push(imageId);
+        else errors.push(imageId);
+      } catch (error) {
+        errors.push(imageId);
+      }
+    }
+    return {
+      success,
+      errors
+    };
   }
 }

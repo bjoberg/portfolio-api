@@ -13,13 +13,14 @@ const groupRouter = Router();
 // Initialize models
 const group = require("../database/models").group;
 const image = require("../database/models").image;
+const imageGroup = require("../database/models").imageGroup;
 
 // Initialize controller
 const sequelizeService = new SequelizeService(group);
 const sequelizeController = new SequelizeController(sequelizeService);
 
 // Initialize image controller
-const imageService = new ImageService(image, group);
+const imageService = new ImageService(image, group, imageGroup);
 const imageController = new ImageController(sequelizeService, imageService);
 
 // Initialize auth controller
@@ -35,12 +36,12 @@ groupRouter
    *      - Groups
    *    description: Gets all groups based on query
    *    parameters:
-   *      - $ref: '#/components/parameters/limit'
-   *      - $ref: '#/components/parameters/page'
-   *      - $ref: '#/components/parameters/thumbnailUrl'
-   *      - $ref: '#/components/parameters/imageUrl'
-   *      - $ref: '#/components/parameters/title'
-   *      - $ref: '#/components/parameters/description'
+   *      - $ref: '#/components/parameters/query/limit'
+   *      - $ref: '#/components/parameters/query/page'
+   *      - $ref: '#/components/parameters/query/thumbnailUrl'
+   *      - $ref: '#/components/parameters/query/imageUrl'
+   *      - $ref: '#/components/parameters/query/title'
+   *      - $ref: '#/components/parameters/query/description'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
@@ -88,12 +89,7 @@ groupRouter
    *      - Groups
    *    description: Find group by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the group to return
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/groupId'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
@@ -111,12 +107,7 @@ groupRouter
    *      - Groups
    *    description: Update a group item by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the group to update
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/groupId'
    *    requestBody:
    *      description: Group object
    *      required: true
@@ -146,12 +137,7 @@ groupRouter
    *      - Groups
    *    description: Delete a group item by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the group to delete
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/groupId'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
@@ -175,18 +161,37 @@ groupRouter
    *      - Groups
    *    description: Find all images in a group
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the group to get images for
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/groupId'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
    *      404:
    *        $ref: '#/components/responses/notFound'
    */
-  .get((req: Request, res: Response, next: NextFunction) => imageController.listAllForGroup(req, res, next));
+  .get((req: Request, res: Response, next: NextFunction) => imageController.listImagesForGroup(req, res, next))
+  /**
+     * @swagger
+     * /group/{id}/images:
+     *  delete:
+     *    security:
+     *      - bearerAuth: []
+     *    tags:
+     *      - Groups
+     *    description: Remove images from a group. This endpoint breaks the image and group associations. It does not delete any images from the database.
+     *    parameters:
+     *      - $ref: '#/components/parameters/path/groupId'
+     *      - $ref: '#/components/parameters/query/imageId'
+     *    responses:
+     *      200:
+     *        $ref: '#/components/responses/ok'
+     *      401:
+     *        $ref: '#/components/responses/unauthorized'
+     *      403:
+     *        $ref: '#/components/responses/forbidden'
+     */
+  .delete(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => imageController.removeImagesFromGroup(req, res, next)
+  );
 
 export default groupRouter;

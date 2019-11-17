@@ -173,5 +173,31 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
 
+  /**
+   * Remove images from the specified group
+   * 
+   * @param {string} groupId unique group id of group to search for
+   * @param {number} imageId unique image id to remove from group
+   * @param {any} imageGroupModel sequelize model to query on
+   * @returns number of images that were removed from group
+   * @throws error if query fails
+   */
+  image.removeImageFromGroup = async (groupId = undefined, imageId = undefined, imageGroupModel = undefined) => {
+    try {
+      const response = await imageGroupModel.destroy({
+        where: {
+          imageId,
+          groupId
+        }
+      });
+      return response;
+    } catch (error) {
+      let message = `Error removing images from ${groupId}.`
+      let status = httpStatus.INTERNAL_SERVER_ERROR;
+      if (error.message) message = error.message;
+      throw { status, message };
+    }
+  };
+
   return image;
 };
