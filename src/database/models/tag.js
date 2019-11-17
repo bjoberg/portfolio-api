@@ -40,34 +40,32 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   /**
+   * Get the where clause for tag model
+   * 
+   * @param {any} filter object with properties to query with
+   * @returns object defining where clause for tag model
+   */
+  const getWhere = (filter) => {
+    const { title } = filter;
+    const where = omitBy({ title }, isNil);
+    return where;
+  }
+
+  /**
    * Get all of the tags that match a certain query
-   * @param {Object} json object with properties to query with
+   * 
+   * @param {number} limit number of items to return
+   * @param {number} offset range of items to return
+   * @param {any} filter object with properties to filter with
    * @returns all of the tags containing the specified query items
    * @throws error if query fails
    */
-  tag.list = async ({ page, limit, title }) => {
+  tag.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter = undefined) => {
     try {
-      const options = omitBy({
-        title
-      }, isNil);
+      const where = getWhere(filter);
+      const options = { where, limit, offset };
 
-      const getAllOptions = {
-        where: options
-      };
-
-      if (limit) {
-        getAllOptions.limit = limit;
-      } else {
-        getAllOptions.limit = LIMIT_DEFAULT;
-      }
-
-      if (page) {
-        getAllOptions.offset = page * limit;
-      } else {
-        getAllOptions.offset = PAGE_DEFAULT;
-      }
-
-      return tag.findAndCountAll(getAllOptions);
+      return tag.findAndCountAll(options);
     } catch (error) {
       throw {
         status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -78,24 +76,25 @@ module.exports = (sequelize, DataTypes) => {
 
   /**
    * Try and find a tag by its id.
+   * 
    * @param {string} id of the tag being searched for
    * @returns tag item
    * @throws error if query fails
    */
   tag.get = async (id) => {
     try {
-      let item = await tag.findOne({
-        where: {
-          id: id
-        }
-      });
+      const where = { id };
+      const options = { where };
+      const item = await group.findOne(options);
 
-      if (item) return item;
-
-      throw {
-        status: httpStatus.NOT_FOUND,
-        message: `Tag, ${id}, deleted or does not exist.`
-      };
+      if (item) {
+        return item;
+      } else {
+        throw {
+          status: httpStatus.NOT_FOUND,
+          message: `Tag, ${id}, deleted or does not exist.`
+        };
+      }
     } catch (error) {
       throw error;
     }

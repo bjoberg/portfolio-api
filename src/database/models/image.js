@@ -76,35 +76,32 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   /**
+   * Get the where clause for image model
+   * 
+   * @param {any} filter object with properties to query with
+   * @returns object defining where clause for image model
+   */
+  const getWhere = (filter) => {
+    const { thumbnailUrl, imageUrl, title, description, location } = filter;
+    const where = omitBy({ thumbnailUrl, imageUrl, title, description, location }, isNil);
+    return where;
+  }
+
+  /**
    * Get all of the images that match a certain query
    * 
-   * @param {Object} json object with properties to query with
+   * @param {number} limit number of items to return
+   * @param {number} offset range of items to return
+   * @param {any} filter object with properties to query with
    * @returns all of the images containing the specified query items
    * @throws error if query fails
    */
-  image.list = async ({ page, limit, thumbnailUrl, imageUrl, title, description, location }) => {
+  image.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter = undefined) => {
     try {
-      // General query
-      const options = omitBy({
-        thumbnailUrl, imageUrl, title, description, location
-      }, isNil);
+      const where = getWhere(filter);
+      const options = { where, limit, offset };
 
-      const getAllOptions = { where: options };
-
-      // Pagination
-      if (limit) {
-        getAllOptions.limit = limit;
-      } else {
-        getAllOptions.limit = LIMIT_DEFAULT;
-      }
-
-      if (page) {
-        getAllOptions.offset = page * limit;
-      } else {
-        getAllOptions.offset = PAGE_DEFAULT;
-      }
-
-      return image.findAndCountAll(getAllOptions);
+      return image.findAndCountAll(options);
     } catch (error) {
       throw {
         status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -113,24 +110,33 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
 
-  image.listAllForGroup = async ({ page, limit }, groupId, groupModel) => {
+  /**
+   * Get all of the images in a specific group that match a certain query
+   * 
+   * @param {string} groupId unique id of group to search for
+   * @param {any} groupModel sequelize model to query on
+   * @param {number} limit number of items to return
+   * @param {number} offset range of items to return
+   * @param {Object} filter object with properties to query with
+   * @returns all of the images in a specific group containing the specified query items
+   * @throws error if query fails
+   */
+  image.listAllForGroup = async (
+    groupId = undefined,
+    groupModel = undefined,
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = undefined) => {
     try {
-      // Pagination
-      if (!limit) { limit = LIMIT_DEFAULT; }
-      let offset = PAGE_DEFAULT;
-      if (page) { offset = page * limit; }
-
-      const options = {
-        limit,
-        offset,
-        include: [{
-          model: groupModel,
-          attributes: [],
-          where: {
-            id: groupId
-          }
-        }]
-      };
+      const where = getWhere(filter);
+      const include = [{
+        model: groupModel,
+        attributes: [],
+        where: {
+          id: groupId
+        }
+      }];
+      const options = { limit, offset, include };
 
       return image.findAndCountAll(options);
     } catch (error) {
@@ -150,18 +156,18 @@ module.exports = (sequelize, DataTypes) => {
    */
   image.get = async (id) => {
     try {
-      let item = await image.findOne({
-        where: {
-          id: id
-        }
-      });
+      const where = { id };
+      const options = { where };
+      const item = await group.findOne(options);
 
-      if (item) return item;
-
-      throw {
-        status: httpStatus.NOT_FOUND,
-        message: `Image, ${id}, deleted or does not exist.`
-      };
+      if (item) {
+        return item;
+      } else {
+        throw {
+          status: httpStatus.NOT_FOUND,
+          message: `Image, ${id}, deleted or does not exist.`
+        };
+      }
     } catch (error) {
       throw error;
     }

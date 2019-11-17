@@ -58,18 +58,29 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   /**
+   * Get the where clause for group model
+   * 
+   * @param {any} filter object with properties to query with
+   * @returns object defining where clause for group model
+   */
+  const getWhere = (filter) => {
+    const { thumbnailUrl, imageUrl, title, description } = filter;
+    const where = omitBy({ thumbnailUrl, imageUrl, title, description }, isNil);
+    return where;
+  }
+
+  /**
    * Get all of the groups that match a certain query
    * 
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
-   * @param {Object} groupQuery object with properties to query with
+   * @param {any} filter object with properties to filter with
    * @returns all of the groups containing the specified query items
    * @throws error if query fails
    */
-  group.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, groupQuery = undefined) => {
+  group.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter = undefined) => {
     try {
-      const { thumbnailUrl, imageUrl, title, description } = groupQuery;
-      const where = omitBy({ thumbnailUrl, imageUrl, title, description }, isNil);
+      const where = getWhere(filter);
       const options = { where, limit, offset };
 
       return group.findAndCountAll(options);
@@ -90,18 +101,18 @@ module.exports = (sequelize, DataTypes) => {
    */
   group.get = async (id) => {
     try {
-      let item = await group.findOne({
-        where: {
-          id: id
-        }
-      });
+      const where = { id };
+      const options = { where };
+      const item = await group.findOne(options);
 
-      if (item) return item;
-
-      throw {
-        status: httpStatus.NOT_FOUND,
-        message: `Group, ${id}, deleted or does not exist.`
-      };
+      if (item) {
+        return item;
+      } else {
+        throw {
+          status: httpStatus.NOT_FOUND,
+          message: `Group, ${id}, deleted or does not exist.`
+        };
+      }
     } catch (error) {
       throw error;
     }
