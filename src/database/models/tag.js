@@ -1,6 +1,6 @@
 'use strict';
 
-const httpStatus  = require('http-status');
+const httpStatus = require('http-status');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 const LIMIT_DEFAULT = require('../../utils/models/defaults').LIMIT_DEFAULT;
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
 
-  tag.associate = function(models) {
+  tag.associate = function (models) {
     tag.belongsToMany(models.group, {
       through: models.groupTag,
       foreignKey: 'tagId'
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     tag.belongsToMany(models.image, {
       through: models.imageTag,
       foreignKey: 'tagId'
-    });    
+    });
   };
 
   /**
@@ -45,16 +45,16 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the tags containing the specified query items
    * @throws error if query fails
    */
-  tag.list = async ({page, limit, title}) => {
+  tag.list = async ({ page, limit, title }) => {
     try {
       const options = omitBy({
         title
       }, isNil);
-  
+
       const getAllOptions = {
         where: options
       };
-  
+
       if (limit) {
         getAllOptions.limit = limit;
       } else {
@@ -66,8 +66,8 @@ module.exports = (sequelize, DataTypes) => {
       } else {
         getAllOptions.offset = PAGE_DEFAULT;
       }
-  
-      return tag.findAndCountAll(getAllOptions); 
+
+      return tag.findAndCountAll(getAllOptions);
     } catch (error) {
       throw {
         status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -89,9 +89,9 @@ module.exports = (sequelize, DataTypes) => {
           id: id
         }
       });
-      
+
       if (item) return item;
-  
+
       throw {
         status: httpStatus.NOT_FOUND,
         message: `Tag, ${id}, deleted or does not exist.`
@@ -100,29 +100,6 @@ module.exports = (sequelize, DataTypes) => {
       throw error;
     }
   };
-
-  /**
-   * Delete all of the tags that match a certain query
-   * @param {Object} json object with properties to query with
-   * @returns number of tag rows affected
-   * @throws error if query fails
-   */
-  tag.deleteAll = async ({title}) => {
-    try {
-      const options = omitBy({
-        title
-      }, isNil);
-
-      return tag.destroy({
-        where: options
-      });
-    } catch (error) {
-      throw {
-        status: httpStatus.INTERNAL_SERVER_ERROR,
-        message: `Error deleting tag(s).`
-      };
-    }
-  };  
 
   return tag;
 };

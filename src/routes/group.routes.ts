@@ -5,12 +5,22 @@ import { OAuth2Client } from "google-auth-library";
 import AuthController from "../controllers/auth.controller";
 import SequelizeController from "../controllers/sequelize.controller";
 import ImageController from "../controllers/image.controller";
+import SequelizeService from "../services/sequelize.service";
 
+// Initialize router
+const groupRouter = Router();
+
+// Initialize models
 const group = require("../database/models").group;
 const image = require("../database/models").image;
-const groupRouter = Router();
-const sequelizeController = new SequelizeController(group as Model);
-const imageController = new ImageController(image as Model, group as Model);
+
+// Initialize controller
+const sequelizeController = new SequelizeController(new SequelizeService(group));
+
+// Initialize image controller
+const imageController = new ImageController(new SequelizeService(image), group as Model);
+
+// Initialize auth controller
 const authController = new AuthController(new OAuth2Client());
 
 groupRouter
@@ -34,32 +44,6 @@ groupRouter
    *        $ref: '#/components/responses/ok'
    */
   .get((req: Request, res: Response, next: NextFunction) => sequelizeController.list(req, res, next));
-// /**
-//  * @swagger
-//  * /groups:
-//  *  delete:
-//  *    security:
-//  *      - bearerAuth: []
-//  *    tags:
-//  *      - Groups
-//  *    description: Delete all groups based on query
-//  *    parameters:
-//  *      - $ref: '#/components/parameters/thumbnailUrl'
-//  *      - $ref: '#/components/parameters/imageUrl'
-//  *      - $ref: '#/components/parameters/title'
-//  *      - $ref: '#/components/parameters/description'
-//  *    responses:
-//  *      200:
-//  *        $ref: '#/components/responses/ok'
-//  *      401:
-//  *        $ref: '#/components/responses/unauthorized'
-//  *      403:
-//  *        $ref: '#/components/responses/forbidden'
-//  */
-// .delete(
-//   authController.validateRequest,
-//   (req: Request, res: Response, next: NextFunction) => controller.deleteAll(req, res, next)
-// );
 
 groupRouter
   .route("/group")

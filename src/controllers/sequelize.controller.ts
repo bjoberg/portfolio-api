@@ -1,47 +1,39 @@
 import { Request, Response, NextFunction } from 'express';
-import { Model } from 'sequelize';
 import HttpStatus from 'http-status';
 
-import SequelizeHelpers from '../utils/helpers/sequelize.helpers';
 import ApiError from '../utils/models/api-error';
-import EntityList from '../utils/models/enity-list';
+import { LIMIT_DEFAULT, PAGE_DEFAULT } from '../utils/models/defaults';
+import SequelizeService from '../services/sequelize.service';
 
-/**
- * Controller for interacting with Sequelize
- */
 export default class SequelizeController {
-  private model: Model;
-  protected sequelizeHelpers: SequelizeHelpers;
+  protected limitDefault: number;
+  protected pageDefault: number;
+  protected service: SequelizeService;
 
   /**
    * Construct a new sequelize controller
-   * @param model sequelize model defenition
+   * 
+   * @param model sequelize model definition
    */
-  constructor(model: Model) {
-    this.model = model;
-    this.sequelizeHelpers = new SequelizeHelpers();
+  constructor(service: SequelizeService) {
+    this.limitDefault = LIMIT_DEFAULT;
+    this.pageDefault = PAGE_DEFAULT;
+    this.service = service;
   }
 
   /**
-   * Get all of the models data
+   * List all of the models data
+   * 
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express Next function
    */
   public async list(req: Request, res: Response, next: NextFunction) {
     try {
-      req = this.sequelizeHelpers.setPage(req);
-      req = this.sequelizeHelpers.setLimit(req);
-
-      const page = parseInt(req.query.page);
-      const limit = parseInt(req.query.limit);
-      // @ts-ignore
-      const data = await this.model.list(req.query);
-      const entityList: EntityList = {
-        limit,
-        page,
-        totalItems: data.count,
-        pageCount: data.rows.length,
-        rows: data.rows
-      };
-
+      const page = this.getPage(req.query.page);
+      const limit = this.getLimit(req.query.limit);
+      const entityList = await this.service.list(limit, page, req.query);
+      res.status(HttpStatus.OK);
       res.json(entityList);
     } catch (error) {
       next(error as ApiError);
@@ -50,11 +42,17 @@ export default class SequelizeController {
 
   /**
    * Get a single instance of the model
+   * 
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express Next function
    */
   public async get(req: Request, res: Response, next: NextFunction) {
     try {
-      // @ts-ignore
-      res.json(await this.model.get(req.params.id));
+      const id = req.params.id;
+      const response = await this.service.get(id);
+      res.status(HttpStatus.OK);
+      res.json(response);
     } catch (error) {
       next(error as ApiError);
     }
@@ -62,13 +60,17 @@ export default class SequelizeController {
 
   /**
    * Create a single instance of the model
+   * 
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express Next function
    */
   public async create(req: Request, res: Response, next: NextFunction) {
     try {
-      // @ts-ignore
-      let item = await this.model.create(req.body);
+      const body = req.body;
+      const response = await this.service.create(body);
       res.status(HttpStatus.CREATED);
-      res.json(item);
+      res.json(response);
     } catch (error) {
       next(error as ApiError);
     }
@@ -76,16 +78,18 @@ export default class SequelizeController {
 
   /**
    * Update a single instance of the model
+   * 
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express Next function
    */
   public async update(req: Request, res: Response, next: NextFunction) {
     try {
-      let result = await this.model.update(req.body, {
-        where: { id: req.params.id },
-        limit: 1,
-        returning: true
-      });
+      const id = req.params.id;
+      const body = req.body;
+      const response = await this.service.update(id, body);
       res.status(HttpStatus.OK);
-      res.json(result);
+      res.json(response);
     } catch (error) {
       next(error as ApiError);
     }
@@ -93,33 +97,41 @@ export default class SequelizeController {
 
   /**
    * Delete a single instance of the model
+   * 
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express Next function
    */
   public async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      let result = await this.model.destroy({
-        // @ts-ignore
-        where: {
-          id: req.params.id
-        }
-      });
-      res.status(HttpStatus.OK);
-      res.json(result);
+      const id = req.params.id;
+      const response = await this.service.delete(id);
+      res.status(HttpStatus.NO_CONTENT);
+      res.json(response);
     } catch (error) {
       next(error as ApiError);
     }
   }
 
   /**
-   * Delete all instances of the model based on query params
+   * Get the range of items to return for a single query
+   * 
+   * @param page range of items to return
    */
-  public async deleteAll(req: Request, res: Response, next: NextFunction) {
-    try {
-      // @ts-ignore
-      let result = await this.model.deleteAll(req.query);
-      res.status(HttpStatus.OK);
-      res.json(result);
-    } catch (error) {
-      next(error as ApiError);
-    }
+  protected getPage(page: string): number {
+    const pageAsInt = parseInt(page);
+    if (!page || Number.isNaN(pageAsInt)) return this.pageDefault;
+    return pageAsInt;
+  }
+
+  /**
+   * Get the number of items to return for a single query
+   * 
+   * @param limit number of items to return
+   */
+  protected getLimit(limit: string): number {
+    const limitAsInt = parseInt(limit);
+    if (!limit || Number.isNaN(limitAsInt)) return this.limitDefault;
+    return limitAsInt;
   }
 }

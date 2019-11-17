@@ -4,6 +4,7 @@ import { Model } from 'sequelize';
 import SequelizeController from "./sequelize.controller";
 import ApiError from '../utils/models/api-error';
 import EntityList from '../utils/models/enity-list';
+import SequelizeService from '../services/sequelize.service';
 
 export default class ImageController extends SequelizeController {
   private groupModel: Model;
@@ -14,8 +15,8 @@ export default class ImageController extends SequelizeController {
    * @param model image model definition
    * @param groupModel group model definition
    */
-  constructor(model: Model, groupModel: Model) {
-    super(model);
+  constructor(sequelizeService: SequelizeService, groupModel: Model) {
+    super(sequelizeService);
     this.groupModel = groupModel;
   }
 
@@ -28,11 +29,8 @@ export default class ImageController extends SequelizeController {
    */
   public async listAllForGroup(req: Request, res: Response, next: NextFunction) {
     try {
-      req = this.sequelizeHelpers.setPage(req);
-      req = this.sequelizeHelpers.setLimit(req);
-
-      const page = parseInt(req.query.page);
-      const limit = parseInt(req.query.limit);
+      const page = this.getPage(req.query.page);
+      const limit = this.getLimit(req.query.limit);
       const groupId = req.params.id;
 
       // @ts-ignore

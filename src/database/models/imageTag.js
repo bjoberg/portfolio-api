@@ -1,6 +1,6 @@
 'use strict';
 
-const httpStatus  = require('http-status');
+const httpStatus = require('http-status');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 const LIMIT_DEFAULT = require('../../utils/models/defaults').LIMIT_DEFAULT;
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'images',
         key: 'id'
-      },      
+      },
       validate: {
         isUUID: 4,
         notEmpty: true
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'tags',
         key: 'id'
-      },      
+      },
       validate: {
         isUUID: 4,
         notEmpty: true
@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
 
-  imageTag.associate = function(models) {
+  imageTag.associate = function (models) {
     // associations can be defined here
   };
 
@@ -54,16 +54,16 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the imageTags containing the specified query items
    * @throws error if query fails
    */
-  imageTag.list = async ({page, limit, imageId, tagId}) => {
+  imageTag.list = async ({ page, limit, imageId, tagId }) => {
     try {
       const options = omitBy({
         imageId, tagId
       }, isNil);
-  
+
       const getAllOptions = {
         where: options
       };
-  
+
       if (limit) {
         getAllOptions.limit = limit;
       } else {
@@ -75,8 +75,8 @@ module.exports = (sequelize, DataTypes) => {
       } else {
         getAllOptions.offset = PAGE_DEFAULT;
       }
-  
-      return imageTag.findAndCountAll(getAllOptions); 
+
+      return imageTag.findAndCountAll(getAllOptions);
     } catch (error) {
       throw {
         status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -98,9 +98,9 @@ module.exports = (sequelize, DataTypes) => {
           id: id
         }
       });
-      
+
       if (item) return item;
-  
+
       throw {
         status: httpStatus.NOT_FOUND,
         message: `imageTag, ${id}, deleted or does not exist.`
@@ -109,29 +109,6 @@ module.exports = (sequelize, DataTypes) => {
       throw error;
     }
   };
-
-  /**
-   * Delete all of the imageTags that match a certain query
-   * @param {Object} json object with properties to query with
-   * @returns number of imageTag rows affected
-   * @throws error if query fails
-   */
-  imageTag.deleteAll = async ({imageId, tagId}) => {
-    try {
-      const options = omitBy({
-        imageId, tagId
-      }, isNil);
-
-      return imageTag.destroy({
-        where: options
-      });
-    } catch (error) {
-      throw {
-        status: httpStatus.INTERNAL_SERVER_ERROR,
-        message: `Error deleting imageTag(s).`
-      };
-    }
-  };  
 
   return imageTag;
 };

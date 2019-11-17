@@ -16,9 +16,6 @@ import {
   groupRouter,
   imageRouter,
   tagRouter,
-  imageGroupRouter,
-  groupTagRouter,
-  imageTagRouter,
   userRouter
 } from './routes';
 import swaggerUi from 'swagger-ui-express';
@@ -61,9 +58,6 @@ const baseUrl = '/api/v1';
 app.use(baseUrl, imageRouter);
 app.use(baseUrl, groupRouter);
 app.use(baseUrl, tagRouter);
-app.use(baseUrl, groupTagRouter);
-app.use(baseUrl, imageGroupRouter);
-app.use(baseUrl, imageTagRouter);
 app.use(baseUrl, userRouter);
 
 // Custom error handler

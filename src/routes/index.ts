@@ -1,17 +1,11 @@
 import groupRouter from './group.routes';
-import groupTagRouter from './groupTag.routes';
 import imageRouter from './image.routes';
-import imageGroupRouter from './imageGroup.routes';
 import tagRouter from './tag.routes';
-import imageTagRouter from './imageTag.routes';
 import userRouter from './user.routes';
 
 export {
   groupRouter,
-  groupTagRouter,
   imageRouter,
-  imageGroupRouter,
   tagRouter,
-  imageTagRouter,
   userRouter
 };

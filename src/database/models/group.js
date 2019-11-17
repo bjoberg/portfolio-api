@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
 
-  group.associate = function (models) {
+  group.associate = (models) => {
     group.belongsToMany(models.image, {
       through: models.imageGroup,
       foreignKey: 'groupId'
@@ -60,33 +60,19 @@ module.exports = (sequelize, DataTypes) => {
   /**
    * Get all of the groups that match a certain query
    * 
-   * @param {Object} json object with properties to query with
+   * @param {number} limit number of items to return
+   * @param {number} offset range of items to return
+   * @param {Object} groupQuery object with properties to query with
    * @returns all of the groups containing the specified query items
    * @throws error if query fails
    */
-  group.list = async ({ page, limit, thumbnailUrl, imageUrl, title, description }) => {
+  group.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, groupQuery = undefined) => {
     try {
-      const options = omitBy({
-        thumbnailUrl, imageUrl, title, description
-      }, isNil);
+      const { thumbnailUrl, imageUrl, title, description } = groupQuery;
+      const where = omitBy({ thumbnailUrl, imageUrl, title, description }, isNil);
+      const options = { where, limit, offset };
 
-      const getAllOptions = {
-        where: options
-      };
-
-      if (limit) {
-        getAllOptions.limit = limit;
-      } else {
-        getAllOptions.limit = LIMIT_DEFAULT;
-      }
-
-      if (page) {
-        getAllOptions.offset = page * limit;
-      } else {
-        getAllOptions.offset = PAGE_DEFAULT;
-      }
-
-      return group.findAndCountAll(getAllOptions);
+      return group.findAndCountAll(options);
     } catch (error) {
       throw {
         status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -118,30 +104,6 @@ module.exports = (sequelize, DataTypes) => {
       };
     } catch (error) {
       throw error;
-    }
-  };
-
-  /**
-   * Delete all of the groups that match a certain query
-   * 
-   * @param {Object} json object with properties to query with
-   * @returns number of group rows affected
-   * @throws error if query fails
-   */
-  group.deleteAll = async ({ thumbnailUrl, imageUrl, title, description }) => {
-    try {
-      const options = omitBy({
-        thumbnailUrl, imageUrl, title, description
-      }, isNil);
-
-      return group.destroy({
-        where: options
-      });
-    } catch (error) {
-      throw {
-        status: httpStatus.INTERNAL_SERVER_ERROR,
-        message: `Error deleting group(s).`
-      };
     }
   };
 
