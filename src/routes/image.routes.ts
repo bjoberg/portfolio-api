@@ -3,14 +3,13 @@ import { Model } from "sequelize";
 import { OAuth2Client } from "google-auth-library";
 
 import AuthController from "../controllers/auth.controller";
-// import SequelizeController from "../controllers/sequelize.controller";
-import ImageController from "../controllers/image.controller";
+import SequelizeController from "../controllers/sequelize.controller";
+// import ImageController from "../controllers/image.controller";
 
 const image = require("../database/models").image;
-const group = require("../database/models").group;
 const imageRouter = Router();
-const controller = new ImageController(image as Model, group as Model);
-// const controller = new SequelizeController(image as Model);
+// const controller = new ImageController(image as Model, group as Model);
+const controller = new SequelizeController(image as Model);
 const authController = new AuthController(new OAuth2Client());
 
 imageRouter
@@ -30,7 +29,6 @@ imageRouter
    *      - $ref: '#/components/parameters/title'
    *      - $ref: '#/components/parameters/description'
    *      - $ref: '#/components/parameters/location'
-   *      - $ref: '#/components/parameters/groupId'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'

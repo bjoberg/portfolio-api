@@ -5,28 +5,22 @@ import SequelizeController from "./sequelize.controller";
 import ApiError from '../utils/models/api-error';
 import EntityList from '../utils/models/enity-list';
 
-export default class ImageController extends SequelizeController {
-  private groupModel: Model;
+export default class GroupController extends SequelizeController {
+  private imageModel: Model;
 
   /**
-   * Construct a new image controller
-   * 
-   * @param model image model definition
-   * @param groupModel group model definition
+   * Construct a new group controller
+   * @param model sequelize model defenition
    */
-  constructor(model: Model, groupModel: Model) {
+  constructor(model: Model, imageModel: Model) {
     super(model);
-    this.groupModel = groupModel;
+    this.imageModel = imageModel;
   }
 
   /**
-   * Get all images in a specific group
-   * 
-   * @param req Express Request object
-   * @param res Express Response object
-   * @param next Express Next function
+   * Get all of the groups images
    */
-  public async listAllForGroup(req: Request, res: Response, next: NextFunction) {
+  public async listAllImages(req: Request, res: Response, next: NextFunction) {
     try {
       req = this.sequelizeHelpers.setPage(req);
       req = this.sequelizeHelpers.setLimit(req);
@@ -34,10 +28,8 @@ export default class ImageController extends SequelizeController {
       const page = parseInt(req.query.page);
       const limit = parseInt(req.query.limit);
       const groupId = req.params.id;
-
       // @ts-ignore
-      const data = await this.model.listAllForGroup(req.query, groupId, this.groupModel);
-
+      const data = await this.model.listAllImages(req.query, groupId, this.imageModel);
       const entityList: EntityList = {
         limit,
         page,
@@ -51,5 +43,4 @@ export default class ImageController extends SequelizeController {
       next(error as ApiError);
     }
   }
-
 }

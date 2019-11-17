@@ -77,11 +77,12 @@ module.exports = (sequelize, DataTypes) => {
 
   /**
    * Get all of the images that match a certain query
+   * 
    * @param {Object} json object with properties to query with
    * @returns all of the images containing the specified query items
    * @throws error if query fails
    */
-  image.list = async ({ page, limit, thumbnailUrl, imageUrl, title, description, location, groupId }, group = undefined) => {
+  image.list = async ({ page, limit, thumbnailUrl, imageUrl, title, description, location }) => {
     try {
       // General query
       const options = omitBy({
@@ -103,15 +104,6 @@ module.exports = (sequelize, DataTypes) => {
         getAllOptions.offset = PAGE_DEFAULT;
       }
 
-      // Join statement
-      if (groupId && group) {
-        getAllOptions.include = [{
-          model: group,
-          attributes: ['id', "title"],
-          where: { id: groupId }
-        }]
-      }
-
       return image.findAndCountAll(getAllOptions);
     } catch (error) {
       throw {
@@ -121,8 +113,37 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
 
+  image.listAllForGroup = async ({ page, limit }, groupId, groupModel) => {
+    try {
+      // Pagination
+      if (!limit) { limit = LIMIT_DEFAULT; }
+      let offset = PAGE_DEFAULT;
+      if (page) { offset = page * limit; }
+
+      const options = {
+        limit,
+        offset,
+        include: [{
+          model: groupModel,
+          attributes: [],
+          where: {
+            id: groupId
+          }
+        }]
+      };
+
+      return image.findAndCountAll(options);
+    } catch (error) {
+      throw {
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        message: `Error fetching images in ${groupId}.`
+      };
+    }
+  };
+
   /**
    * Try and find an image by its id.
+   * 
    * @param {string} id of the image being searched for
    * @returns image item
    * @throws error if query fails
@@ -148,6 +169,7 @@ module.exports = (sequelize, DataTypes) => {
 
   /**
    * Delete all of the images that match a certain query
+   * 
    * @param {Object} json object with properties to query with
    * @returns number of image rows affected
    * @throws error if query fails

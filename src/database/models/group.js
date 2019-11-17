@@ -59,6 +59,7 @@ module.exports = (sequelize, DataTypes) => {
 
   /**
    * Get all of the groups that match a certain query
+   * 
    * @param {Object} json object with properties to query with
    * @returns all of the groups containing the specified query items
    * @throws error if query fails
@@ -96,6 +97,7 @@ module.exports = (sequelize, DataTypes) => {
 
   /**
    * Try and find a group by its id.
+   * 
    * @param {string} id of the group being searched for
    * @returns group item
    * @throws error if query fails
@@ -121,6 +123,7 @@ module.exports = (sequelize, DataTypes) => {
 
   /**
    * Delete all of the groups that match a certain query
+   * 
    * @param {Object} json object with properties to query with
    * @returns number of group rows affected
    * @throws error if query fails

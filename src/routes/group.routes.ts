@@ -4,10 +4,13 @@ import { OAuth2Client } from "google-auth-library";
 
 import AuthController from "../controllers/auth.controller";
 import SequelizeController from "../controllers/sequelize.controller";
+import ImageController from "../controllers/image.controller";
 
 const group = require("../database/models").group;
+const image = require("../database/models").image;
 const groupRouter = Router();
-const controller = new SequelizeController(group as Model);
+const sequelizeController = new SequelizeController(group as Model);
+const imageController = new ImageController(image as Model, group as Model);
 const authController = new AuthController(new OAuth2Client());
 
 groupRouter
@@ -30,32 +33,63 @@ groupRouter
    *      200:
    *        $ref: '#/components/responses/ok'
    */
-  .get((req: Request, res: Response, next: NextFunction) => controller.list(req, res, next))
+  .get((req: Request, res: Response, next: NextFunction) => sequelizeController.list(req, res, next));
+// /**
+//  * @swagger
+//  * /groups:
+//  *  delete:
+//  *    security:
+//  *      - bearerAuth: []
+//  *    tags:
+//  *      - Groups
+//  *    description: Delete all groups based on query
+//  *    parameters:
+//  *      - $ref: '#/components/parameters/thumbnailUrl'
+//  *      - $ref: '#/components/parameters/imageUrl'
+//  *      - $ref: '#/components/parameters/title'
+//  *      - $ref: '#/components/parameters/description'
+//  *    responses:
+//  *      200:
+//  *        $ref: '#/components/responses/ok'
+//  *      401:
+//  *        $ref: '#/components/responses/unauthorized'
+//  *      403:
+//  *        $ref: '#/components/responses/forbidden'
+//  */
+// .delete(
+//   authController.validateRequest,
+//   (req: Request, res: Response, next: NextFunction) => controller.deleteAll(req, res, next)
+// );
+
+groupRouter
+  .route("/group")
   /**
    * @swagger
-   * /groups:
-   *  delete:
+   * /group:
+   *  post:
    *    security:
    *      - bearerAuth: []
    *    tags:
    *      - Groups
-   *    description: Delete all groups based on query
-   *    parameters:
-   *      - $ref: '#/components/parameters/thumbnailUrl'
-   *      - $ref: '#/components/parameters/imageUrl'
-   *      - $ref: '#/components/parameters/title'
-   *      - $ref: '#/components/parameters/description'
+   *    description: Create a new group.
+   *    requestBody:
+   *      description: Group object
+   *      required: true
+   *      content:
+   *        'application/json':
+   *          schema:
+   *            $ref: '#/definitions/group'
    *    responses:
-   *      200:
-   *        $ref: '#/components/responses/ok'
+   *      201:
+   *        $ref: '#/components/responses/created'
    *      401:
    *        $ref: '#/components/responses/unauthorized'
    *      403:
    *        $ref: '#/components/responses/forbidden'
    */
-  .delete(
+  .post(
     authController.validateRequest,
-    (req: Request, res: Response, next: NextFunction) => controller.deleteAll(req, res, next)
+    (req: Request, res: Response, next: NextFunction) => sequelizeController.create(req, res, next)
   );
 
 groupRouter
@@ -80,7 +114,7 @@ groupRouter
    *      404:
    *        $ref: '#/components/responses/notFound'
    */
-  .get((req: Request, res: Response, next: NextFunction) => controller.get(req, res, next))
+  .get((req: Request, res: Response, next: NextFunction) => sequelizeController.get(req, res, next))
   /**
    * @swagger
    * /group/{id}:
@@ -114,7 +148,7 @@ groupRouter
    */
   .put(
     authController.validateRequest,
-    (req: Request, res: Response, next: NextFunction) => controller.update(req, res, next)
+    (req: Request, res: Response, next: NextFunction) => sequelizeController.update(req, res, next)
   )
   /**
    * @swagger
@@ -142,38 +176,31 @@ groupRouter
    */
   .delete(
     authController.validateRequest,
-    (req: Request, res: Response, next: NextFunction) => controller.delete(req, res, next)
+    (req: Request, res: Response, next: NextFunction) => sequelizeController.delete(req, res, next)
   );
 
 groupRouter
-  .route("/group")
+  .route("/group/:id/images")
   /**
    * @swagger
-   * /group:
-   *  post:
-   *    security:
-   *      - bearerAuth: []
+   * /group/{id}/images:
+   *  get:
    *    tags:
    *      - Groups
-   *    description: Create a new group.
-   *    requestBody:
-   *      description: Group object
-   *      required: true
-   *      content:
-   *        'application/json':
-   *          schema:
-   *            $ref: '#/definitions/group'
+   *    description: Find all images in a group
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        description: id of the group to get images for
+   *        required: true
+   *        schema:
+   *          type: string
    *    responses:
-   *      201:
-   *        $ref: '#/components/responses/created'
-   *      401:
-   *        $ref: '#/components/responses/unauthorized'
-   *      403:
-   *        $ref: '#/components/responses/forbidden'
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      404:
+   *        $ref: '#/components/responses/notFound'
    */
-  .post(
-    authController.validateRequest,
-    (req: Request, res: Response, next: NextFunction) => controller.create(req, res, next)
-  );
+  .get((req: Request, res: Response, next: NextFunction) => imageController.listAllForGroup(req, res, next));
 
 export default groupRouter;
