@@ -136,7 +136,7 @@ module.exports = (sequelize, DataTypes) => {
           id: groupId
         }
       }];
-      const options = { limit, offset, include };
+      const options = { limit, offset, where, include };
 
       return image.findAndCountAll(options);
     } catch (error) {

@@ -184,7 +184,7 @@ groupRouter
      *      - bearerAuth: []
      *    tags:
      *      - Groups
-     *    description: Add images from a group.
+     *    description: Add images to a group.
      *    parameters:
      *      - $ref: '#/components/parameters/path/groupId'
      *      - $ref: '#/components/parameters/query/imageId'
@@ -208,7 +208,7 @@ groupRouter
      *      - bearerAuth: []
      *    tags:
      *      - Groups
-     *    description: Remove images from a group. This endpoint breaks the image and group associations. It does not delete any images from the database.
+     *    description: Remove images from a group. This endpoint breaks the image and group association. It does not delete any image or group from the database.
      *    parameters:
      *      - $ref: '#/components/parameters/path/groupId'
      *      - $ref: '#/components/parameters/query/imageId'
