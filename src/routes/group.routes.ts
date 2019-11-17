@@ -1,11 +1,11 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { Model } from "sequelize";
 import { OAuth2Client } from "google-auth-library";
 
 import AuthController from "../controllers/auth.controller";
 import SequelizeController from "../controllers/sequelize.controller";
 import ImageController from "../controllers/image.controller";
 import SequelizeService from "../services/sequelize.service";
+import ImageService from "../services/image.service";
 
 // Initialize router
 const groupRouter = Router();
@@ -15,10 +15,12 @@ const group = require("../database/models").group;
 const image = require("../database/models").image;
 
 // Initialize controller
-const sequelizeController = new SequelizeController(new SequelizeService(group));
+const sequelizeService = new SequelizeService(group);
+const sequelizeController = new SequelizeController(sequelizeService);
 
 // Initialize image controller
-const imageController = new ImageController(new SequelizeService(image), group as Model);
+const imageService = new ImageService(image, group);
+const imageController = new ImageController(sequelizeService, imageService);
 
 // Initialize auth controller
 const authController = new AuthController(new OAuth2Client());
