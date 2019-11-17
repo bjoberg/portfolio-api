@@ -24,7 +24,8 @@ const imageService = new ImageService(image, group, imageGroup);
 const imageController = new ImageController(sequelizeService, imageService);
 
 // Initialize auth controller
-const authController = new AuthController(new OAuth2Client());
+const authClient = new OAuth2Client();
+const authController = new AuthController(authClient);
 
 groupRouter
   .route("/groups")
@@ -162,6 +163,12 @@ groupRouter
    *    description: Find all images in a group
    *    parameters:
    *      - $ref: '#/components/parameters/path/groupId'
+   *      - $ref: '#/components/parameters/query/limit'
+   *      - $ref: '#/components/parameters/query/page'
+   *      - $ref: '#/components/parameters/query/thumbnailUrl'
+   *      - $ref: '#/components/parameters/query/imageUrl'
+   *      - $ref: '#/components/parameters/query/title'
+   *      - $ref: '#/components/parameters/query/description'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'

@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import HttpStatus from 'http-status';
 
 import SequelizeController from "./sequelize.controller";
-import ApiError from '../utils/models/api-error';
 import SequelizeService from '../services/sequelize.service';
 import ImageService from '../services/image.service';
 
@@ -32,11 +31,11 @@ export default class ImageController extends SequelizeController {
       const page = this.getPage(req.query.page);
       const limit = this.getLimit(req.query.limit);
       const groupId = req.params.id;
-      const entityList = await this.imageService.listImagesForGroup(groupId, limit, page, req.query);
+      const response = await this.imageService.listImagesForGroup(groupId, limit, page, req.query);
       res.status(HttpStatus.OK);
-      res.json(entityList);
+      res.json(response);
     } catch (error) {
-      next(error as ApiError);
+      next(error);
     }
   }
 
@@ -56,7 +55,7 @@ export default class ImageController extends SequelizeController {
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {
-      next(error as ApiError);
+      next(error);
     }
   }
 
@@ -76,7 +75,7 @@ export default class ImageController extends SequelizeController {
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {
-      next(error as ApiError);
+      next(error);
     }
   }
 }

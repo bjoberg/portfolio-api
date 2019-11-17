@@ -1,8 +1,8 @@
 import { Model } from 'sequelize';
 import HttpStatus from 'http-status';
 
-import EntityList from '../utils/models/enity-list';
-import ApiError from '../utils/models/api-error';
+import ApiError from '../utils/models/api-error.interface';
+import PaginationResponse from '../utils/models/pagination-response.interface';
 
 export default class SequelizeService {
   protected model: Model;
@@ -20,25 +20,20 @@ export default class SequelizeService {
    * @returns list of all the model's data
    * @throws ApiError if query fails
    */
-  public async list(limit: number, page: number, query: any): Promise<EntityList> {
+  public async list(limit: number, page: number, query: any): Promise<PaginationResponse> {
     try {
       // @ts-ignore-next-line
-      const response = await this.model.list(limit, page, query);
-      const entityList: EntityList = {
+      const result = await this.model.list(limit, page, query);
+      const response: PaginationResponse = {
         limit,
         page,
-        totalItems: response.count,
-        pageCount: response.rows.length,
-        rows: response.rows
+        totalItems: result.count,
+        pageCount: result.rows.length,
+        rows: result.rows
       };
-      return entityList;
+      return response;
     } catch (error) {
-      let status = HttpStatus.INTERNAL_SERVER_ERROR;
-      let message = `Error retrieving items`;
-      if (error.status) status = error.status;
-      if (error.message) message = error.message;
-      const apiError: ApiError = { status, message };
-      throw apiError;
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving items', error);
     }
   }
 
@@ -53,20 +48,9 @@ export default class SequelizeService {
     try {
       // @ts-ignore-next-line
       const response = await this.model.get(id);
-      if (!response) {
-        throw {
-          status: HttpStatus.NOT_FOUND,
-          message: `Image, ${id}, deleted or does not exist.`
-        };
-      }
       return response;
     } catch (error) {
-      let status = HttpStatus.INTERNAL_SERVER_ERROR;
-      let message = `Error retrieving ${id}`;
-      if (error.status) status = error.status;
-      if (error.message) message = error.message;
-      const apiError: ApiError = { status, message };
-      throw apiError;
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving ${id}`, error);
     }
   }
 
@@ -83,12 +67,7 @@ export default class SequelizeService {
       const response = await this.model.create(model);
       return response;
     } catch (error) {
-      let status = HttpStatus.INTERNAL_SERVER_ERROR;
-      let message = `Error creating item`;
-      if (error.status) status = error.status;
-      if (error.message) message = error.message;
-      const apiError: ApiError = { status, message };
-      throw apiError;
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Error creating item', error);
     }
   }
 
@@ -110,12 +89,7 @@ export default class SequelizeService {
       });
       return response;
     } catch (error) {
-      let status = HttpStatus.INTERNAL_SERVER_ERROR;
-      let message = `Error updating item`;
-      if (error.status) status = error.status;
-      if (error.message) message = error.message;
-      const apiError: ApiError = { status, message };
-      throw apiError;
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Error updating item', error);
     }
   }
 
@@ -134,12 +108,21 @@ export default class SequelizeService {
       });
       return response;
     } catch (error) {
-      let status = HttpStatus.INTERNAL_SERVER_ERROR;
-      let message = `Error deleting item`;
-      if (error.status) status = error.status;
-      if (error.message) message = error.message;
-      const apiError: ApiError = { status, message };
-      throw apiError;
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Error deleting item', error);
     }
+  }
+
+  /**
+   * Get new ApiError based on input
+   * 
+   * @param status http status of the error
+   * @param defaultMessage default message if error object does not contain message
+   * @param error error object
+   * @returns ApiError
+   */
+  protected getApiError(status: number, defaultMessage: string, error?: Error): ApiError {
+    let message = defaultMessage;
+    if (error && error.message) message = error.message;
+    return { status, message } as ApiError;
   }
 }

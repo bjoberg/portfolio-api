@@ -1,8 +1,9 @@
 import SequelizeService from "./sequelize.service";
 import { Model } from "sequelize/types";
-import EntityList from "../utils/models/enity-list";
-import ApiError from "../utils/models/api-error";
 import HttpStatus from "http-status";
+
+import BulkResponse from "../utils/models/bulk-response.model";
+import PaginationResponse from "../utils/models/pagination-response.interface";
 
 export default class ImageService extends SequelizeService {
   private groupModel: Model;
@@ -33,12 +34,7 @@ export default class ImageService extends SequelizeService {
       const response = await this.model.getImageInGroup(groupId, imageId, this.groupModel);
       return response;
     } catch (error) {
-      let status = HttpStatus.INTERNAL_SERVER_ERROR;
-      let message = `Error retrieving images from group (${groupId})`;
-      if (error.status) status = error.status;
-      if (error.message) message = error.message;
-      const apiError: ApiError = { status, message };
-      throw apiError;
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving images from group (${groupId})`, error);
     }
   }
 
@@ -50,25 +46,20 @@ export default class ImageService extends SequelizeService {
    * @param page range of items to return
    * @param filter object with properties to query with
    */
-  public async listImagesForGroup(groupId: string, limit: number, page: number, filter: any): Promise<EntityList> {
+  public async listImagesForGroup(groupId: string, limit: number, page: number, filter: any): Promise<PaginationResponse> {
     try {
       // @ts-ignore-next-line
-      const response = await this.model.listAllForGroup(groupId, this.groupModel, limit, page, filter);
-      const entityList: EntityList = {
+      const result = await this.model.listAllForGroup(groupId, this.groupModel, limit, page, filter);
+      const response: PaginationResponse = {
         limit,
         page,
-        totalItems: response.count,
-        pageCount: response.rows.length,
-        rows: response.rows
+        totalItems: result.count,
+        pageCount: result.rows.length,
+        rows: result.rows
       };
-      return entityList;
+      return response;
     } catch (error) {
-      let status = HttpStatus.INTERNAL_SERVER_ERROR;
-      let message = `Error retrieving images from group (${groupId})`;
-      if (error.status) status = error.status;
-      if (error.message) message = error.message;
-      const apiError: ApiError = { status, message };
-      throw apiError;
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving images from group (${groupId})`, error);
     }
   }
 
@@ -78,24 +69,20 @@ export default class ImageService extends SequelizeService {
    * @param groupId unique id of group to delete images from
    * @param imageIds array of image ids to remove from group
    */
-  public async removeImagesFromGroup(groupId: string, imageIds: string[]): Promise<any> {
-    let success = [];
-    let errors = [];
+  public async removeImagesFromGroup(groupId: string, imageIds: string[]): Promise<BulkResponse> {
+    const bulkResponse = new BulkResponse();
     for (let i = 0; i < imageIds.length; i++) {
       const imageId = imageIds[i];
       try {
         // @ts-ignore-next-line
         const response = await this.model.removeImageFromGroup(groupId, imageId, this.imageGroupModel);
-        if (response > 0) success.push(imageId);
-        else errors.push(imageId);
+        if (response > 0) bulkResponse.addSuccess(imageId);
+        else bulkResponse.addError(imageId, 'Image did not exist in group');
       } catch (error) {
-        errors.push(imageId);
+        bulkResponse.addError(imageId, error.message);
       }
     }
-    return {
-      success,
-      errors
-    };
+    return bulkResponse;
   }
 
   /**
@@ -104,9 +91,8 @@ export default class ImageService extends SequelizeService {
    * @param groupId unique id of group to delete images from
    * @param imageIds array of image ids to remove from group
    */
-  public async addImagesToGroup(groupId: string, imageIds: string[]): Promise<any> {
-    let success = [];
-    let errors = [];
+  public async addImagesToGroup(groupId: string, imageIds: string[]): Promise<BulkResponse> {
+    const bulkResponse = new BulkResponse();
     for (let i = 0; i < imageIds.length; i++) {
       const imageId = imageIds[i];
       try {
@@ -114,14 +100,12 @@ export default class ImageService extends SequelizeService {
         if (!image) {
           // @ts-ignore-next-line
           await this.model.addImageToGroup(groupId, imageId, this.imageGroupModel);
-          success.push(imageId);
+          bulkResponse.addSuccess(imageId);
         } else {
-          errors.push({ id: imageId, status: `Image already exists in group.` });
+          bulkResponse.addError(imageId, 'Image already exists in group');
         }
-      } catch (error) {
-        errors.push({ id: imageId, status: error.message });
-      }
+      } catch (error) { bulkResponse.addError(imageId, error.message); }
     }
-    return { success, errors };
+    return bulkResponse;
   }
 }

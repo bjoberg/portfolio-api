@@ -21,7 +21,7 @@ import {
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
 import mapKeys from 'lodash/mapKeys';
-import ApiError from './utils/models/api-error';
+import ApiError from './utils/models/api-error.interface';
 // @ts-ignore
 import { sequelize } from './database/models';
 // @ts-ignore
