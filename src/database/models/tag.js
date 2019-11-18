@@ -75,6 +75,40 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   /**
+   * Get all of the tags in a specific group that match a certain query
+   * 
+   * @param {string} groupId unique id of group to search for
+   * @param {any} groupModel sequelize model to query on
+   * @param {number} limit number of items to return
+   * @param {number} offset range of items to return
+   * @param {Object} filter object with properties to query with
+   * @returns all of the tags in a specific group containing the specified query items
+   * @throws error if query fails
+   */
+  tag.listTagsForGroup = async (
+    groupId = undefined,
+    groupModel = undefined,
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = undefined) => {
+    try {
+      const where = getWhere(filter);
+      const include = [{
+        model: groupModel,
+        attributes: [],
+        where: {
+          id: groupId
+        }
+      }];
+      const options = { limit, offset, where, include };
+
+      return tag.findAndCountAll(options);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
    * Try and find a tag by its id.
    * 
    * @param {string} id of the tag being searched for

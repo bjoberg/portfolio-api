@@ -121,7 +121,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the images in a specific group containing the specified query items
    * @throws error if query fails
    */
-  image.listAllForGroup = async (
+  image.listImagesForGroup = async (
     groupId = undefined,
     groupModel = undefined,
     limit = LIMIT_DEFAULT,

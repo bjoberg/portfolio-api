@@ -6,6 +6,8 @@ import SequelizeController from "../controllers/sequelize.controller";
 import ImageController from "../controllers/image.controller";
 import SequelizeService from "../services/sequelize.service";
 import ImageService from "../services/image.service";
+import TagService from "../services/tag.service";
+import TagController from "../controllers/tag.controller";
 
 // Initialize router
 const groupRouter = Router();
@@ -13,15 +15,20 @@ const groupRouter = Router();
 // Initialize models
 const group = require("../database/models").group;
 const image = require("../database/models").image;
+const tag = require("../database/models").tag;
 const imageGroup = require("../database/models").imageGroup;
 
-// Initialize controller
+// Initialize sequelize controller
 const sequelizeService = new SequelizeService(group);
 const sequelizeController = new SequelizeController(sequelizeService);
 
 // Initialize image controller
 const imageService = new ImageService(image, group, imageGroup);
 const imageController = new ImageController(sequelizeService, imageService);
+
+// Initialize tag controller
+const tagService = new TagService(tag, group);
+const tagController = new TagController(sequelizeService, tagService);
 
 // Initialize auth controller
 const authClient = new OAuth2Client();
@@ -224,5 +231,27 @@ groupRouter
     authController.validateRequest,
     (req: Request, res: Response, next: NextFunction) => imageController.removeImagesFromGroup(req, res, next)
   );
+
+groupRouter
+  .route("/group/:id/tags")
+  /**
+   * @swagger
+   * /group/{id}/tags:
+   *  get:
+   *    tags:
+   *      - Groups
+   *    description: Get all tags for a group
+   *    parameters:
+   *      - $ref: '#/components/parameters/path/groupId'
+   *      - $ref: '#/components/parameters/query/limit'
+   *      - $ref: '#/components/parameters/query/page'
+   *      - $ref: '#/components/parameters/query/title'
+   *    responses:
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      404:
+   *        $ref: '#/components/responses/notFound'
+   */
+  .get((req: Request, res: Response, next: NextFunction) => tagController.listTagsForGroup(req, res, next));
 
 export default groupRouter;
