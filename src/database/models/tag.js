@@ -67,10 +67,7 @@ module.exports = (sequelize, DataTypes) => {
 
       return tag.findAndCountAll(options);
     } catch (error) {
-      throw {
-        status: httpStatus.INTERNAL_SERVER_ERROR,
-        message: `Error fetching tags.`
-      };
+      throw error;
     }
   };
 

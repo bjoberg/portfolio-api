@@ -103,10 +103,7 @@ module.exports = (sequelize, DataTypes) => {
 
       return image.findAndCountAll(options);
     } catch (error) {
-      throw {
-        status: httpStatus.INTERNAL_SERVER_ERROR,
-        message: `Error fetching images.`
-      };
+      throw error;
     }
   };
 
@@ -140,10 +137,7 @@ module.exports = (sequelize, DataTypes) => {
 
       return image.findAndCountAll(options);
     } catch (error) {
-      throw {
-        status: httpStatus.INTERNAL_SERVER_ERROR,
-        message: `Error fetching images in ${groupId}.`
-      };
+      throw error;
     }
   };
 
@@ -209,10 +203,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       return response;
     } catch (error) {
-      let message = `Error removing image from ${groupId}.`
-      let status = httpStatus.INTERNAL_SERVER_ERROR;
-      if (error.message) message = error.message;
-      throw { status, message };
+      throw error;
     }
   };
 
@@ -231,10 +222,7 @@ module.exports = (sequelize, DataTypes) => {
       const response = await imageGroupModel.create(imageGroup);
       return response;
     } catch (error) {
-      let message = `Error adding image to ${groupId}.`
-      let status = httpStatus.INTERNAL_SERVER_ERROR;
-      if (error.message) message = error.message;
-      throw { status, message };
+      throw error;
     }
   };
 

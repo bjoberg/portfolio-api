@@ -85,10 +85,7 @@ module.exports = (sequelize, DataTypes) => {
 
       return group.findAndCountAll(options);
     } catch (error) {
-      throw {
-        status: httpStatus.INTERNAL_SERVER_ERROR,
-        message: `Error fetching groups.`
-      };
+      throw error;
     }
   };
 
