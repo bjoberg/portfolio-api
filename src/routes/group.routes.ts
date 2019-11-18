@@ -2,12 +2,13 @@ import { Router, Request, Response, NextFunction } from "express";
 import { OAuth2Client } from "google-auth-library";
 
 import AuthController from "../controllers/auth.controller";
-import SequelizeController from "../controllers/sequelize.controller";
 import ImageController from "../controllers/image.controller";
+import TagController from "../controllers/tag.controller";
+import GroupController from "../controllers/group.controller";
 import SequelizeService from "../services/sequelize.service";
+import GroupService from "../services/group.service";
 import ImageService from "../services/image.service";
 import TagService from "../services/tag.service";
-import TagController from "../controllers/tag.controller";
 
 // Initialize router
 const groupRouter = Router();
@@ -19,9 +20,12 @@ const tag = require("../database/models").tag;
 const imageGroup = require("../database/models").imageGroup;
 const groupTag = require("../database/models").groupTag;
 
-// Initialize sequelize controller
+// Initialize sequelize service
 const sequelizeService = new SequelizeService(group);
-const sequelizeController = new SequelizeController(sequelizeService);
+
+// Initialize group controller
+const groupService = new GroupService(group, image, imageGroup);
+const groupController = new GroupController(sequelizeService, groupService);
 
 // Initialize image controller
 const imageService = new ImageService(image, group, imageGroup);
@@ -55,7 +59,7 @@ groupRouter
    *      200:
    *        $ref: '#/components/responses/ok'
    */
-  .get((req: Request, res: Response, next: NextFunction) => sequelizeController.list(req, res, next));
+  .get((req: Request, res: Response, next: NextFunction) => groupController.list(req, res, next));
 
 groupRouter
   .route("/group")
@@ -85,7 +89,7 @@ groupRouter
    */
   .post(
     authController.validateRequest,
-    (req: Request, res: Response, next: NextFunction) => sequelizeController.create(req, res, next)
+    (req: Request, res: Response, next: NextFunction) => groupController.create(req, res, next)
   );
 
 groupRouter
@@ -105,7 +109,7 @@ groupRouter
    *      404:
    *        $ref: '#/components/responses/notFound'
    */
-  .get((req: Request, res: Response, next: NextFunction) => sequelizeController.get(req, res, next))
+  .get((req: Request, res: Response, next: NextFunction) => groupController.get(req, res, next))
   /**
    * @swagger
    * /group/{id}:
@@ -134,7 +138,7 @@ groupRouter
    */
   .put(
     authController.validateRequest,
-    (req: Request, res: Response, next: NextFunction) => sequelizeController.update(req, res, next)
+    (req: Request, res: Response, next: NextFunction) => groupController.update(req, res, next)
   )
   /**
    * @swagger
@@ -157,7 +161,7 @@ groupRouter
    */
   .delete(
     authController.validateRequest,
-    (req: Request, res: Response, next: NextFunction) => sequelizeController.delete(req, res, next)
+    (req: Request, res: Response, next: NextFunction) => groupController.delete(req, res, next)
   );
 
 groupRouter

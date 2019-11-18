@@ -90,6 +90,35 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   /**
+   * Get all of the groups associated with a specific image that match a certain query
+   * 
+   * @param {string} imageId unique id of image to search for
+   * @param {any} imageModel sequelize model to query on
+   * @param {number} limit number of items to return
+   * @param {number} offset range of items to return
+   * @param {Object} filter object with properties to query with
+   * @returns all of the groups associated with a specific image containing the specified query items
+   * @throws error if query fails
+   */
+  group.listGroupsForImage = async (imageId, imageModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+    try {
+      const where = getWhere(filter);
+      const include = [{
+        model: imageModel,
+        attributes: [],
+        where: {
+          id: imageId
+        }
+      }];
+      const options = { limit, offset, where, include };
+
+      return group.findAndCountAll(options);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
    * Try and find a group by its id.
    * 
    * @param {string} id of the group being searched for

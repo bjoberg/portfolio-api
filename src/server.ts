@@ -53,7 +53,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(
   { docExpansion: 'none' }
 ));
 
-// Custom routes
+// Initialize endpoints
 const baseUrl = '/api/v1';
 app.use(baseUrl, imageRouter);
 app.use(baseUrl, groupRouter);
