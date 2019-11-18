@@ -17,6 +17,7 @@ const group = require("../database/models").group;
 const image = require("../database/models").image;
 const tag = require("../database/models").tag;
 const imageGroup = require("../database/models").imageGroup;
+const groupTag = require("../database/models").groupTag;
 
 // Initialize sequelize controller
 const sequelizeService = new SequelizeService(group);
@@ -27,7 +28,7 @@ const imageService = new ImageService(image, group, imageGroup);
 const imageController = new ImageController(sequelizeService, imageService);
 
 // Initialize tag controller
-const tagService = new TagService(tag, group);
+const tagService = new TagService(tag, group, groupTag);
 const tagController = new TagController(sequelizeService, tagService);
 
 // Initialize auth controller
@@ -252,6 +253,30 @@ groupRouter
    *      404:
    *        $ref: '#/components/responses/notFound'
    */
-  .get((req: Request, res: Response, next: NextFunction) => tagController.listTagsForGroup(req, res, next));
+  .get((req: Request, res: Response, next: NextFunction) => tagController.listTagsForGroup(req, res, next))
+  /**
+   * @swagger
+   * /group/{id}/tags:
+   *  delete:
+   *    security:
+   *      - bearerAuth: []
+   *    tags:
+   *      - Groups
+   *    description: Remove tags from a group. This endpoint breaks the tag and group association. It does not delete any tag or group from the database.
+   *    parameters:
+   *      - $ref: '#/components/parameters/path/groupId'
+   *      - $ref: '#/components/parameters/query/tagId'
+   *    responses:
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
+   */
+  .delete(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => tagController.removeTagsFromGroup(req, res, next)
+  );
 
 export default groupRouter;

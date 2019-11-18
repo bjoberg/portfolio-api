@@ -96,7 +96,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the images containing the specified query items
    * @throws error if query fails
    */
-  image.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter = undefined) => {
+  image.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
     try {
       const where = getWhere(filter);
       const options = { where, limit, offset };
@@ -118,12 +118,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the images in a specific group containing the specified query items
    * @throws error if query fails
    */
-  image.listImagesForGroup = async (
-    groupId = undefined,
-    groupModel = undefined,
-    limit = LIMIT_DEFAULT,
-    offset = PAGE_DEFAULT,
-    filter = undefined) => {
+  image.listImagesForGroup = async (groupId, groupModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
     try {
       const where = getWhere(filter);
       const include = [{
@@ -193,7 +188,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns number of images that were removed from group
    * @throws error if query fails
    */
-  image.removeImageFromGroup = async (groupId = undefined, imageId = undefined, imageGroupModel = undefined) => {
+  image.removeImageFromGroup = async (groupId, imageId, imageGroupModel) => {
     try {
       const response = await imageGroupModel.destroy({
         where: {
@@ -216,7 +211,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns number of images that were added to the group
    * @throws error if query fails
    */
-  image.addImageToGroup = async (groupId = undefined, imageId = undefined, imageGroupModel = undefined) => {
+  image.addImageToGroup = async (groupId, imageId, imageGroupModel) => {
     try {
       const imageGroup = { groupId, imageId };
       const response = await imageGroupModel.create(imageGroup);

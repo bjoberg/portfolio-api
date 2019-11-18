@@ -77,7 +77,7 @@ export default class ImageService extends SequelizeService {
         // @ts-ignore-next-line
         const response = await this.model.removeImageFromGroup(groupId, imageId, this.imageGroupModel);
         if (response > 0) bulkResponse.addSuccess(imageId);
-        else bulkResponse.addError(imageId, 'Image did not exist in group');
+        else bulkResponse.addError(imageId, 'Image does not exist in group');
       } catch (error) {
         bulkResponse.addError(imageId, error.message);
       }

@@ -38,4 +38,24 @@ export default class TagController extends SequelizeController {
       next(error);
     }
   }
+
+  /**
+   * Remove tags from the specified group
+   * 
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express Next function
+   */
+  public async removeTagsFromGroup(req: Request, res: Response, next: NextFunction) {
+    try {
+      const groupId = req.params.id;
+      let tagIds = req.query.tagId ? req.query.tagId : [];
+      if (!Array.isArray(tagIds)) tagIds = [tagIds];
+      const response = await this.tagService.removeTagsFromGroup(groupId, tagIds);
+      res.status(HttpStatus.OK);
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

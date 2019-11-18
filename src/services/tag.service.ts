@@ -3,19 +3,23 @@ import { Model } from "sequelize/types";
 import HttpStatus from "http-status";
 
 import PaginationResponse from "../utils/models/pagination-response.interface";
+import BulkResponse from "../utils/models/bulk-response.model";
 
 export default class TagService extends SequelizeService {
   private groupModel: Model;
+  private groupTagModel: Model;
 
   /**
    * Construct a new tag service
    * 
    * @param tagModel tag model definition
    * @param groupModel group model definition
+   * @param groupTagModel groupTag model definition 
    */
-  constructor(tagModel: Model, groupModel: Model) {
+  constructor(tagModel: Model, groupModel: Model, groupTagModel: Model) {
     super(tagModel);
     this.groupModel = groupModel;
+    this.groupTagModel = groupTagModel;
   }
 
   /**
@@ -41,5 +45,27 @@ export default class TagService extends SequelizeService {
     } catch (error) {
       throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving tags for group (${groupId})`, error);
     }
+  }
+
+  /**
+   * Remove tags from the specified group
+   * 
+   * @param groupId unique id of group to delete tags from
+   * @param tagIds array of tag ids to remove from group
+   */
+  public async removeTagsFromGroup(groupId: string, tagIds: string[]): Promise<BulkResponse> {
+    const bulkResponse = new BulkResponse();
+    for (let i = 0; i < tagIds.length; i++) {
+      const tagId = tagIds[i];
+      try {
+        // @ts-ignore-next-line
+        const response = await this.model.removeTagFromGroup(groupId, tagId, this.groupTagModel);
+        if (response > 0) bulkResponse.addSuccess(tagId);
+        else bulkResponse.addError(tagId, 'Tag does not exist in group');
+      } catch (error) {
+        bulkResponse.addError(tagId, error.message);
+      }
+    }
+    return bulkResponse;
   }
 }

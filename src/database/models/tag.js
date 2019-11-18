@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the tags containing the specified query items
    * @throws error if query fails
    */
-  tag.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter = undefined) => {
+  tag.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
     try {
       const where = getWhere(filter);
       const options = { where, limit, offset };
@@ -82,12 +82,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns all of the tags in a specific group containing the specified query items
    * @throws error if query fails
    */
-  tag.listTagsForGroup = async (
-    groupId = undefined,
-    groupModel = undefined,
-    limit = LIMIT_DEFAULT,
-    offset = PAGE_DEFAULT,
-    filter = undefined) => {
+  tag.listTagsForGroup = async (groupId, groupModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
     try {
       const where = getWhere(filter);
       const include = [{
@@ -117,6 +112,29 @@ module.exports = (sequelize, DataTypes) => {
       const where = { id };
       const options = { where };
       return group.findOne(options);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
+   * Remove tag from the specified group
+   * 
+   * @param {string} groupId unique group id of group to search for
+   * @param {number} tagId unique tag id to remove from group
+   * @param {any} groupTagModel sequelize model to query on
+   * @returns number of tags that were removed from group
+   * @throws error if query fails
+   */
+  tag.removeTagFromGroup = async (groupId, tagId, groupTagModel) => {
+    try {
+      const response = await groupTagModel.destroy({
+        where: {
+          tagId,
+          groupId
+        }
+      });
+      return response;
     } catch (error) {
       throw error;
     }
