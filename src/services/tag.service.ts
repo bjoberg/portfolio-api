@@ -23,6 +23,22 @@ export default class TagService extends SequelizeService {
   }
 
   /**
+   * Get tag in a specific group
+   * 
+   * @param groupId unique id of group to search for
+   * @param tagId unique id of tag to search for
+   */
+  public async getTagInGroup(groupId: string, tagId: string): Promise<any> {
+    try {
+      // @ts-ignore-next-line
+      const response = await this.model.getTagInGroup(groupId, tagId, this.groupModel);
+      return response;
+    } catch (error) {
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving tags from group (${groupId})`, error);
+    }
+  }
+
+  /**
    * Get all tags in a specific group
    * 
    * @param groupId unique id of group to search for
@@ -65,6 +81,30 @@ export default class TagService extends SequelizeService {
       } catch (error) {
         bulkResponse.addError(tagId, error.message);
       }
+    }
+    return bulkResponse;
+  }
+
+  /**
+   * Add tags to the specified group
+   * 
+   * @param groupId unique id of group to delete tags from
+   * @param tagIds array of tag ids to remove from group
+   */
+  public async addTagsToGroup(groupId: string, tagIds: string[]): Promise<BulkResponse> {
+    const bulkResponse = new BulkResponse();
+    for (let i = 0; i < tagIds.length; i++) {
+      const tagId = tagIds[i];
+      try {
+        const tag = await this.getTagInGroup(groupId, tagId);
+        if (!tag) {
+          // @ts-ignore-next-line
+          await this.model.addTagToGroup(groupId, tagId, this.groupTagModel);
+          bulkResponse.addSuccess(tagId);
+        } else {
+          bulkResponse.addError(tagId, 'Tag already exists in group');
+        }
+      } catch (error) { bulkResponse.addError(tagId, error.message); }
     }
     return bulkResponse;
   }

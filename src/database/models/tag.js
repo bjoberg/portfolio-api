@@ -118,6 +118,32 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   /**
+   * Try and find an tag in a group
+   * 
+   * @param {string} groupId unique id of group to search for
+   * @param {string} tagId unique id of tag to search for
+   * @param {any} groupModel sequelize model to query on
+   * @returns tag item
+   * @throws error if query fails
+   */
+  tag.getTagInGroup = async (groupId, tagId, groupModel) => {
+    try {
+      const where = { id: tagId };
+      const include = [{
+        model: groupModel,
+        attributes: [],
+        where: {
+          id: groupId
+        }
+      }];
+      const options = { where, include };
+      return tag.findOne(options);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
    * Remove tag from the specified group
    * 
    * @param {string} groupId unique group id of group to search for
@@ -134,6 +160,25 @@ module.exports = (sequelize, DataTypes) => {
           groupId
         }
       });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
+   * Add tag to the specified group
+   * 
+   * @param {string} groupId unique group id of group to search for
+   * @param {number} tag unique tag id to remove from group
+   * @param {any} groupTagModel sequelize model to query on
+   * @returns number of tags that were added to the group
+   * @throws error if query fails
+   */
+  tag.addTagToGroup = async (groupId, tagId, groupTagModel) => {
+    try {
+      const groupTag = { groupId, tagId };
+      const response = await groupTagModel.create(groupTag);
       return response;
     } catch (error) {
       throw error;

@@ -257,6 +257,30 @@ groupRouter
   /**
    * @swagger
    * /group/{id}/tags:
+   *  post:
+   *    security:
+   *      - bearerAuth: []
+   *    tags:
+   *      - Groups
+   *    description: Add tags to a group.
+   *    parameters:
+   *      - $ref: '#/components/parameters/path/groupId'
+   *      - $ref: '#/components/parameters/query/tagId'
+   *    responses:
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
+   */
+  .post(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => tagController.addTagsToGroup(req, res, next)
+  )
+  /**
+   * @swagger
+   * /group/{id}/tags:
    *  delete:
    *    security:
    *      - bearerAuth: []

@@ -86,7 +86,7 @@ export default class ImageService extends SequelizeService {
   }
 
   /**
-   * Add images from the specified group
+   * Add images to the specified group
    * 
    * @param groupId unique id of group to delete images from
    * @param imageIds array of image ids to remove from group
