@@ -214,6 +214,30 @@ imageRouter
   .post(
     authController.validateRequest,
     (req: Request, res: Response, next: NextFunction) => groupController.addGroupsToImage(req, res, next)
+  )
+  /**
+   * @swagger
+   * /image/{id}/groups:
+   *  delete:
+   *    security:
+   *      - bearerAuth: []
+   *    tags:
+   *      - Images
+   *    description: Remove group associations from an image. This endpoint breaks the image and group association. It does not delete any image or group from the database.
+   *    parameters:
+   *      - $ref: '#/components/parameters/path/imageId'
+   *      - $ref: '#/components/parameters/query/groupId'
+   *    responses:
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
+   */
+  .delete(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => groupController.removeGroupsFromImage(req, res, next)
   );
 
 export default imageRouter;

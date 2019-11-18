@@ -162,6 +162,29 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   /**
+   * Remove group association from image
+   * 
+   * @param {string} imageId unique id of image to search for
+   * @param {number} groupId unique id of group to associate with image
+   * @param {any} imageGroupModel sequelize model to query on
+   * @returns number of groups that were removed from image
+   * @throws error if query fails
+   */
+  group.removeGroupsFromImage = async (imageId, groupId, imageGroupModel) => {
+    try {
+      const response = await imageGroupModel.destroy({
+        where: {
+          imageId,
+          groupId
+        }
+      });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
    * Add group assocation to specified image
    * 
    * @param {string} imageId unique image id of to search for

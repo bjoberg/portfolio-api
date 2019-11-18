@@ -64,6 +64,28 @@ export default class GroupService extends SequelizeService {
   }
 
   /**
+   * Remove images from the specified group
+   * 
+   * @param imageId unique id of image to delete group association
+   * @param groupIds array of group ids to remove from image
+   */
+  public async removeGroupsFromImage(imageId: string, groupIds: string[]): Promise<BulkResponse> {
+    const bulkResponse = new BulkResponse();
+    for (let i = 0; i < groupIds.length; i++) {
+      const groupId = groupIds[i];
+      try {
+        // @ts-ignore-next-line
+        const response = await this.model.removeGroupsFromImage(imageId, groupId, this.imageGroupModel);
+        if (response > 0) bulkResponse.addSuccess(groupId);
+        else bulkResponse.addError(groupId, 'Group is not associated with image');
+      } catch (error) {
+        bulkResponse.addError(groupId, error.message);
+      }
+    }
+    return bulkResponse;
+  }
+
+  /**
    * Add images to the specified group
    * 
    * @param imageId unique id of image to add groups to
