@@ -135,5 +135,50 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
 
+  /**
+   * Try and find an image in a group
+   * 
+   * @param {string} imageId unique id of image to search for
+   * @param {string} groupId unique id of group to search for
+   * @param {any} groupModel sequelize model to query on
+   * @returns group item
+   * @throws error if query fails
+   */
+  group.getGroupImage = async (imageId, groupId, groupModel) => {
+    try {
+      const where = { id: groupId };
+      const include = [{
+        model: groupModel,
+        attributes: [],
+        where: {
+          id: imageId
+        }
+      }];
+      const options = { where, include };
+      return group.findOne(options);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
+   * Add group assocation to specified image
+   * 
+   * @param {string} imageId unique image id of to search for
+   * @param {number} groupId unique group id to create association with
+   * @param {any} imageGroupModel sequelize model to query on
+   * @returns number of groups that are now associated with image
+   * @throws error if query fails
+   */
+  group.addGroupImage = async (imageId, groupId, imageGroupModel) => {
+    try {
+      const imageGroup = { groupId, imageId };
+      const response = await imageGroupModel.create(imageGroup);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return group;
 };

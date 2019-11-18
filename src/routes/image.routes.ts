@@ -190,6 +190,30 @@ imageRouter
    *      404:
    *        $ref: '#/components/responses/notFound'
    */
-  .get((req: Request, res: Response, next: NextFunction) => groupController.listGroupsForImage(req, res, next));
+  .get((req: Request, res: Response, next: NextFunction) => groupController.listGroupsForImage(req, res, next))
+  /**
+   * @swagger
+   * /image/{id}/groups:
+   *  post:
+   *    security:
+   *      - bearerAuth: []
+   *    tags:
+   *      - Images
+   *    description: Associate groups to an image
+   *    parameters:
+   *      - $ref: '#/components/parameters/path/imageId'
+   *      - $ref: '#/components/parameters/query/groupId'
+   *    responses:
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
+   */
+  .post(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => groupController.addGroupsToImage(req, res, next)
+  );
 
 export default imageRouter;

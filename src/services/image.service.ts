@@ -88,8 +88,8 @@ export default class ImageService extends SequelizeService {
   /**
    * Add images to the specified group
    * 
-   * @param groupId unique id of group to delete images from
-   * @param imageIds array of image ids to remove from group
+   * @param groupId unique id of group to add images to
+   * @param imageIds array of image ids to add to group
    */
   public async addImagesToGroup(groupId: string, imageIds: string[]): Promise<BulkResponse> {
     const bulkResponse = new BulkResponse();

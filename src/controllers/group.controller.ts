@@ -38,4 +38,24 @@ export default class GroupController extends SequelizeController {
       next(error);
     }
   }
+
+  /**
+   * Associate groups to the specified image
+   * 
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express Next function
+   */
+  public async addGroupsToImage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const imageId = req.params.id;
+      let groupIds = req.query.groupId ? req.query.groupId : [];
+      if (!Array.isArray(groupIds)) groupIds = [groupIds];
+      const response = await this.groupService.addGroupsToImage(imageId, groupIds);
+      res.status(HttpStatus.OK);
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

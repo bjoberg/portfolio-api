@@ -3,11 +3,11 @@ import { Model } from "sequelize/types";
 import HttpStatus from "http-status";
 
 import PaginationResponse from "../utils/models/pagination-response.interface";
-// import BulkResponse from "../utils/models/bulk-response.model";
+import BulkResponse from "../utils/models/bulk-response.model";
 
 export default class GroupService extends SequelizeService {
   private imageModel: Model;
-  // private imageGroupModel: Model;
+  private imageGroupModel: Model;
 
   /**
    * Construct a new tag service
@@ -19,7 +19,7 @@ export default class GroupService extends SequelizeService {
   constructor(groupModel: Model, imageModel: Model, imageGroupModel: Model) {
     super(groupModel);
     this.imageModel = imageModel;
-    // this.imageGroupModel = imageGroupModel;
+    this.imageGroupModel = imageGroupModel;
   }
 
   /**
@@ -28,10 +28,10 @@ export default class GroupService extends SequelizeService {
    * @param imageId unique id of image to search for
    * @param groupId unique id of group to search for
    */
-  public async getImageGroups(imageId: string, groupId: string): Promise<any> {
+  public async getGroupImage(imageId: string, groupId: string): Promise<any> {
     try {
       // @ts-ignore-next-line
-      const response = await this.model.getImageGroups(imageId, groupId, this.imageModel);
+      const response = await this.model.getGroupImage(imageId, groupId, this.imageModel);
       return response;
     } catch (error) {
       throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving groups for image (${imageId})`, error);
@@ -61,6 +61,30 @@ export default class GroupService extends SequelizeService {
     } catch (error) {
       throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving group associated with image (${imageId})`, error);
     }
+  }
+
+  /**
+   * Add images to the specified group
+   * 
+   * @param imageId unique id of image to add groups to
+   * @param groupIds array of group ids to add to image
+   */
+  public async addGroupsToImage(imageId: string, groupIds: string[]): Promise<BulkResponse> {
+    const bulkResponse = new BulkResponse();
+    for (let i = 0; i < groupIds.length; i++) {
+      const groupId = groupIds[i];
+      try {
+        const group = await this.getGroupImage(imageId, groupId);
+        if (!group) {
+          // @ts-ignore-next-line
+          await this.model.addGroupImage(imageId, groupId, this.imageGroupModel);
+          bulkResponse.addSuccess(groupId);
+        } else {
+          bulkResponse.addError(groupId, 'Group is already associated with image');
+        }
+      } catch (error) { bulkResponse.addError(groupId, error.message); }
+    }
+    return bulkResponse;
   }
 
 }
