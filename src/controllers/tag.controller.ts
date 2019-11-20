@@ -80,7 +80,7 @@ export default class TagController extends SequelizeController {
   }
 
   /**
-   * Add tags from the specified group
+   * Associate tags to a specific group
    * 
    * @param req Express Request object
    * @param res Express Response object
@@ -92,6 +92,26 @@ export default class TagController extends SequelizeController {
       let tagIds = req.query.tagId ? req.query.tagId : [];
       if (!Array.isArray(tagIds)) tagIds = [tagIds];
       const response = await this.tagService.addTagsToGroup(groupId, tagIds);
+      res.status(HttpStatus.OK);
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Associate tags to a specific image
+   * 
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express Next function
+   */
+  public async addTagsToImage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const imageId = req.params.id;
+      let tagIds = req.query.tagId ? req.query.tagId : [];
+      if (!Array.isArray(tagIds)) tagIds = [tagIds];
+      const response = await this.tagService.addTagsToImage(imageId, tagIds);
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {

@@ -173,6 +173,32 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   /**
+   * Try and find a tag associated with a specific image
+   * 
+   * @param {string} imageId unique id of image to search for
+   * @param {string} tagId unique id of tag to search for
+   * @param {any} imageModel sequelize model to query on
+   * @returns tag item
+   * @throws error if query fails
+   */
+  tag.getTagInImage = async (imageId, tagId, imageModel) => {
+    try {
+      const where = { id: tagId };
+      const include = [{
+        model: imageModel,
+        attributes: [],
+        where: {
+          id: imageId
+        }
+      }];
+      const options = { where, include };
+      return tag.findOne(options);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
    * Remove tag from the specified group
    * 
    * @param {string} groupId unique group id of group to search for
@@ -208,6 +234,25 @@ module.exports = (sequelize, DataTypes) => {
     try {
       const groupTag = { groupId, tagId };
       const response = await groupTagModel.create(groupTag);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
+   * Associate tag to a specific imag
+   * 
+   * @param {string} imageId unique id of image to search for
+   * @param {number} tagId unique tag id to remove from image
+   * @param {any} imageTagModel sequelize model to query on
+   * @returns number of tags that were added to the image
+   * @throws error if query fails
+   */
+  tag.addTagToImage = async (imageId, tagId, imageTagModel) => {
+    try {
+      const imageTag = { imageId, tagId };
+      const response = await imageTagModel.create(imageTag);
       return response;
     } catch (error) {
       throw error;

@@ -19,6 +19,7 @@ const image = require("../database/models").image;
 const tag = require("../database/models").tag;
 const imageGroup = require("../database/models").imageGroup;
 const groupTag = require("../database/models").groupTag;
+const imageTag = require("../database/models").imageTag;
 
 // Initialize sequelize service
 const sequelizeService = new SequelizeService(image);
@@ -32,7 +33,7 @@ const imageService = new ImageService(image, group, imageGroup);
 const imageController = new ImageController(sequelizeService, imageService);
 
 // Initialize tag controller
-const tagService = new TagService(tag, group, image, groupTag);
+const tagService = new TagService(tag, group, image, groupTag, imageTag);
 const tagController = new TagController(sequelizeService, tagService);
 
 // Initialize auth controller
@@ -260,31 +261,31 @@ imageRouter
    *      404:
    *        $ref: '#/components/responses/notFound'
    */
-  .get((req: Request, res: Response, next: NextFunction) => tagController.listTagsForImage(req, res, next));
-// /**
-//  * @swagger
-//  * /image/{id}/groups:
-//  *  post:
-//  *    security:
-//  *      - bearerAuth: []
-//  *    tags:
-//  *      - Images
-//  *    description: Associate groups to an image
-//  *    parameters:
-//  *      - $ref: '#/components/parameters/path/imageId'
-//  *      - $ref: '#/components/parameters/query/groupId'
-//  *    responses:
-//  *      200:
-//  *        $ref: '#/components/responses/ok'
-//  *      401:
-//  *        $ref: '#/components/responses/unauthorized'
-//  *      403:
-//  *        $ref: '#/components/responses/forbidden'
-//  */
-// .post(
-//   authController.validateRequest,
-//   (req: Request, res: Response, next: NextFunction) => groupController.addGroupsToImage(req, res, next)
-// )
+  .get((req: Request, res: Response, next: NextFunction) => tagController.listTagsForImage(req, res, next))
+  /**
+   * @swagger
+   * /image/{id}/tags:
+   *  post:
+   *    security:
+   *      - bearerAuth: []
+   *    tags:
+   *      - Images
+   *    description: Associate groups to an image
+   *    parameters:
+   *      - $ref: '#/components/parameters/path/imageId'
+   *      - $ref: '#/components/parameters/query/tagId'
+   *    responses:
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      401:
+   *        $ref: '#/components/responses/unauthorized'
+   *      403:
+   *        $ref: '#/components/responses/forbidden'
+   */
+  .post(
+    authController.validateRequest,
+    (req: Request, res: Response, next: NextFunction) => tagController.addTagsToImage(req, res, next)
+  );
 // /**
 //  * @swagger
 //  * /image/{id}/groups:

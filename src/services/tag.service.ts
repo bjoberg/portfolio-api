@@ -9,23 +9,28 @@ export default class TagService extends SequelizeService {
   private groupModel: Model;
   private imageModel: Model;
   private groupTagModel: Model;
+  private imageTagModel: Model;
 
   /**
    * Construct a new tag service
    * 
    * @param tagModel tag model definition
    * @param groupModel group model definition
-   * @param groupTagModel groupTag model definition 
+   * @param imageModel image model definition
+   * @param groupTagModel groupTag model definition
+   * @param imageTagModel imageTag model definition
    */
   constructor(
     tagModel: Model,
     groupModel: Model,
     imageModel: Model,
-    groupTagModel: Model) {
+    groupTagModel: Model,
+    imageTagModel: Model) {
     super(tagModel);
     this.groupModel = groupModel;
     this.imageModel = imageModel;
     this.groupTagModel = groupTagModel;
+    this.imageTagModel = imageTagModel;
   }
 
   /**
@@ -41,6 +46,22 @@ export default class TagService extends SequelizeService {
       return response;
     } catch (error) {
       throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving tags from group (${groupId})`, error);
+    }
+  }
+
+  /**
+   * Get tag associated with a specific image
+   * 
+   * @param imageID unique id of image to search for
+   * @param tagId unique id of tag to search for
+   */
+  public async getTagInImage(imageId: string, tagId: string): Promise<any> {
+    try {
+      // @ts-ignore-next-line
+      const response = await this.model.getTagInImage(imageId, tagId, this.imageModel);
+      return response;
+    } catch (error) {
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving tags associated with image (${imageId})`, error);
     }
   }
 
@@ -119,8 +140,8 @@ export default class TagService extends SequelizeService {
   /**
    * Add tags to the specified group
    * 
-   * @param groupId unique id of group to delete tags from
-   * @param tagIds array of tag ids to remove from group
+   * @param groupId unique id of group to associate tags to
+   * @param tagIds array of tag ids to associate with group
    */
   public async addTagsToGroup(groupId: string, tagIds: string[]): Promise<BulkResponse> {
     const bulkResponse = new BulkResponse();
@@ -134,6 +155,30 @@ export default class TagService extends SequelizeService {
           bulkResponse.addSuccess(tagId);
         } else {
           bulkResponse.addError(tagId, 'Tag already exists in group');
+        }
+      } catch (error) { bulkResponse.addError(tagId, error.message); }
+    }
+    return bulkResponse;
+  }
+
+  /**
+   * Associate tags to a specific image
+   * 
+   * @param imageId unique id of image to associate tags to
+   * @param tagIds array of tag ids to associate with image
+   */
+  public async addTagsToImage(imageId: string, tagIds: string[]): Promise<BulkResponse> {
+    const bulkResponse = new BulkResponse();
+    for (let i = 0; i < tagIds.length; i++) {
+      const tagId = tagIds[i];
+      try {
+        const tag = await this.getTagInImage(imageId, tagId);
+        if (!tag) {
+          // @ts-ignore-next-line
+          await this.model.addTagToImage(imageId, tagId, this.imageTagModel);
+          bulkResponse.addSuccess(tagId);
+        } else {
+          bulkResponse.addError(tagId, 'Tag already associated with image');
         }
       } catch (error) { bulkResponse.addError(tagId, error.message); }
     }
