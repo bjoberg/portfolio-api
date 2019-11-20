@@ -138,6 +138,28 @@ export default class TagService extends SequelizeService {
   }
 
   /**
+   * Remove tags from the specified image
+   * 
+   * @param imageId unique id of image to delete tags from
+   * @param tagIds array of tag ids to remove from image
+   */
+  public async removeTagsFromImage(imageId: string, tagIds: string[]): Promise<BulkResponse> {
+    const bulkResponse = new BulkResponse();
+    for (let i = 0; i < tagIds.length; i++) {
+      const tagId = tagIds[i];
+      try {
+        // @ts-ignore-next-line
+        const response = await this.model.removeTagFromImage(imageId, tagId, this.imageTagModel);
+        if (response > 0) bulkResponse.addSuccess(tagId);
+        else bulkResponse.addError(tagId, 'Tag is not associated to image');
+      } catch (error) {
+        bulkResponse.addError(tagId, error.message);
+      }
+    }
+    return bulkResponse;
+  }
+
+  /**
    * Add tags to the specified group
    * 
    * @param groupId unique id of group to associate tags to

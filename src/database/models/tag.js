@@ -222,6 +222,29 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   /**
+   * Remove tag from the specified image
+   * 
+   * @param {string} imageId unique id of image to search for
+   * @param {number} tagId unique tag id to remove from image
+   * @param {any} imageTagModel sequelize model to query on
+   * @returns number of tags that were removed from image
+   * @throws error if query fails
+   */
+  tag.removeTagFromImage = async (imageId, tagId, imageTagModel) => {
+    try {
+      const response = await imageTagModel.destroy({
+        where: {
+          tagId,
+          imageId
+        }
+      });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
    * Add tag to the specified group
    * 
    * @param {string} groupId unique group id of group to search for
