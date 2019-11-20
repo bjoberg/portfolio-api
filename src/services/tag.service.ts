@@ -7,6 +7,7 @@ import BulkResponse from "../utils/models/bulk-response.model";
 
 export default class TagService extends SequelizeService {
   private groupModel: Model;
+  private imageModel: Model;
   private groupTagModel: Model;
 
   /**
@@ -16,9 +17,14 @@ export default class TagService extends SequelizeService {
    * @param groupModel group model definition
    * @param groupTagModel groupTag model definition 
    */
-  constructor(tagModel: Model, groupModel: Model, groupTagModel: Model) {
+  constructor(
+    tagModel: Model,
+    groupModel: Model,
+    imageModel: Model,
+    groupTagModel: Model) {
     super(tagModel);
     this.groupModel = groupModel;
+    this.imageModel = imageModel;
     this.groupTagModel = groupTagModel;
   }
 
@@ -60,6 +66,31 @@ export default class TagService extends SequelizeService {
       return response;
     } catch (error) {
       throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving tags for group (${groupId})`, error);
+    }
+  }
+
+  /**
+   * Get all tags in a specific image
+   * 
+   * @param imageId unique id of image to search for
+   * @param limit number of items to return
+   * @param page range of items to return
+   * @param filter object with properties to query with
+   */
+  public async listTagsForImage(imageId: string, limit: number, page: number, filter: any): Promise<PaginationResponse> {
+    try {
+      // @ts-ignore-next-line
+      const result = await this.model.listTagsForImage(imageId, this.imageModel, limit, page, filter);
+      const response: PaginationResponse = {
+        limit,
+        page,
+        totalItems: result.count,
+        pageCount: result.rows.length,
+        rows: result.rows
+      };
+      return response;
+    } catch (error) {
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving tags for image (${imageId})`, error);
     }
   }
 

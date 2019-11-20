@@ -40,6 +40,26 @@ export default class TagController extends SequelizeController {
   }
 
   /**
+   * Get all tags for a specific image
+   * 
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express Next function
+   */
+  public async listTagsForImage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const page = this.getPage(req.query.page);
+      const limit = this.getLimit(req.query.limit);
+      const imageId = req.params.id;
+      const response = await this.tagService.listTagsForImage(imageId, limit, page, req.query);
+      res.status(HttpStatus.OK);
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Remove tags from the specified group
    * 
    * @param req Express Request object

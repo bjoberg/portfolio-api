@@ -32,7 +32,7 @@ const imageService = new ImageService(image, group, imageGroup);
 const imageController = new ImageController(sequelizeService, imageService);
 
 // Initialize tag controller
-const tagService = new TagService(tag, group, groupTag);
+const tagService = new TagService(tag, group, image, groupTag);
 const tagController = new TagController(sequelizeService, tagService);
 
 // Initialize auth controller

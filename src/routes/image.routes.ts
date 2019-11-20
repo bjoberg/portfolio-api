@@ -3,12 +3,12 @@ import { OAuth2Client } from "google-auth-library";
 
 import AuthController from "../controllers/auth.controller";
 import ImageController from "../controllers/image.controller";
-// import TagController from "../controllers/tag.controller";
+import TagController from "../controllers/tag.controller";
 import GroupController from "../controllers/group.controller";
 import SequelizeService from "../services/sequelize.service";
 import GroupService from "../services/group.service";
 import ImageService from "../services/image.service";
-// import TagService from "../services/tag.service";
+import TagService from "../services/tag.service";
 
 // Initialize router
 const imageRouter = Router();
@@ -16,9 +16,9 @@ const imageRouter = Router();
 // Initialize models
 const group = require("../database/models").group;
 const image = require("../database/models").image;
-// const tag = require("../database/models").tag;
+const tag = require("../database/models").tag;
 const imageGroup = require("../database/models").imageGroup;
-// const groupTag = require("../database/models").groupTag;
+const groupTag = require("../database/models").groupTag;
 
 // Initialize sequelize service
 const sequelizeService = new SequelizeService(image);
@@ -32,8 +32,8 @@ const imageService = new ImageService(image, group, imageGroup);
 const imageController = new ImageController(sequelizeService, imageService);
 
 // Initialize tag controller
-// const tagService = new TagService(tag, group, groupTag);
-// const tagController = new TagController(sequelizeService, tagService);
+const tagService = new TagService(tag, group, image, groupTag);
+const tagController = new TagController(sequelizeService, tagService);
 
 // Initialize auth controller
 const authClient = new OAuth2Client();
@@ -239,5 +239,75 @@ imageRouter
     authController.validateRequest,
     (req: Request, res: Response, next: NextFunction) => groupController.removeGroupsFromImage(req, res, next)
   );
+
+imageRouter
+  .route("/image/:id/tags")
+  /**
+   * @swagger
+   * /image/{id}/tags:
+   *  get:
+   *    tags:
+   *      - Images
+   *    description: Find all tags associated with an image
+   *    parameters:
+   *      - $ref: '#/components/parameters/path/imageId'
+   *      - $ref: '#/components/parameters/query/limit'
+   *      - $ref: '#/components/parameters/query/page'
+   *      - $ref: '#/components/parameters/query/title'
+   *    responses:
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      404:
+   *        $ref: '#/components/responses/notFound'
+   */
+  .get((req: Request, res: Response, next: NextFunction) => tagController.listTagsForImage(req, res, next));
+// /**
+//  * @swagger
+//  * /image/{id}/groups:
+//  *  post:
+//  *    security:
+//  *      - bearerAuth: []
+//  *    tags:
+//  *      - Images
+//  *    description: Associate groups to an image
+//  *    parameters:
+//  *      - $ref: '#/components/parameters/path/imageId'
+//  *      - $ref: '#/components/parameters/query/groupId'
+//  *    responses:
+//  *      200:
+//  *        $ref: '#/components/responses/ok'
+//  *      401:
+//  *        $ref: '#/components/responses/unauthorized'
+//  *      403:
+//  *        $ref: '#/components/responses/forbidden'
+//  */
+// .post(
+//   authController.validateRequest,
+//   (req: Request, res: Response, next: NextFunction) => groupController.addGroupsToImage(req, res, next)
+// )
+// /**
+//  * @swagger
+//  * /image/{id}/groups:
+//  *  delete:
+//  *    security:
+//  *      - bearerAuth: []
+//  *    tags:
+//  *      - Images
+//  *    description: Remove group associations from an image. This endpoint breaks the image and group association. It does not delete any image or group from the database.
+//  *    parameters:
+//  *      - $ref: '#/components/parameters/path/imageId'
+//  *      - $ref: '#/components/parameters/query/groupId'
+//  *    responses:
+//  *      200:
+//  *        $ref: '#/components/responses/ok'
+//  *      401:
+//  *        $ref: '#/components/responses/unauthorized'
+//  *      403:
+//  *        $ref: '#/components/responses/forbidden'
+//  */
+// .delete(
+//   authController.validateRequest,
+//   (req: Request, res: Response, next: NextFunction) => groupController.removeGroupsFromImage(req, res, next)
+// );
 
 export default imageRouter;
