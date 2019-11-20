@@ -10,7 +10,7 @@ export default class GroupService extends SequelizeService {
   private imageGroupModel: Model;
 
   /**
-   * Construct a new tag service
+   * Construct a new group service
    * 
    * @param groupModel group model definition
    * @param imageModel image model definition
@@ -23,23 +23,22 @@ export default class GroupService extends SequelizeService {
   }
 
   /**
-   * Get groups for a specific image
+   * Get group associated with image
    * 
    * @param imageId unique id of image to search for
    * @param groupId unique id of group to search for
    */
   public async getGroupImage(imageId: string, groupId: string): Promise<any> {
     try {
-      // @ts-ignore-next-line
-      const response = await this.model.getGroupImage(imageId, groupId, this.imageModel);
-      return response;
+      // @ts-ignore
+      return await this.model.getGroupImage(imageId, groupId, this.imageModel);
     } catch (error) {
-      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving groups for image (${imageId})`, error);
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Image group association does not exist`, error);
     }
   }
 
   /**
-   * Get all groups associated with an image
+   * Get all groups associated with a specific image
    * 
    * @param imageId unique id of image to search for
    * @param limit number of items to return
@@ -48,7 +47,7 @@ export default class GroupService extends SequelizeService {
    */
   public async listGroupsForImage(imageId: string, limit: number, page: number, filter: any): Promise<PaginationResponse> {
     try {
-      // @ts-ignore-next-line
+      // @ts-ignore
       const result = await this.model.listGroupsForImage(imageId, this.imageModel, limit, page, filter);
       const response: PaginationResponse = {
         limit,
@@ -59,22 +58,22 @@ export default class GroupService extends SequelizeService {
       };
       return response;
     } catch (error) {
-      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving group associated with image (${imageId})`, error);
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving groups associated with image`, error);
     }
   }
 
   /**
-   * Remove images from the specified group
+   * Disassociate groups from the specified image
    * 
-   * @param imageId unique id of image to delete group association
-   * @param groupIds array of group ids to remove from image
+   * @param imageId unique id of image to disassociate from groups
+   * @param groupIds array of group ids to disassociate from image
    */
   public async removeGroupsFromImage(imageId: string, groupIds: string[]): Promise<BulkResponse> {
     const bulkResponse = new BulkResponse();
     for (let i = 0; i < groupIds.length; i++) {
       const groupId = groupIds[i];
       try {
-        // @ts-ignore-next-line
+        // @ts-ignore
         const response = await this.model.removeGroupsFromImage(imageId, groupId, this.imageGroupModel);
         if (response > 0) bulkResponse.addSuccess(groupId);
         else bulkResponse.addError(groupId, 'Group is not associated with image');
@@ -86,10 +85,10 @@ export default class GroupService extends SequelizeService {
   }
 
   /**
-   * Add images to the specified group
+   * Associate groups to the specified image
    * 
-   * @param imageId unique id of image to add groups to
-   * @param groupIds array of group ids to add to image
+   * @param imageId unique id of image to associate to groups
+   * @param groupIds array of group ids to associate to image
    */
   public async addGroupsToImage(imageId: string, groupIds: string[]): Promise<BulkResponse> {
     const bulkResponse = new BulkResponse();
@@ -104,9 +103,10 @@ export default class GroupService extends SequelizeService {
         } else {
           bulkResponse.addError(groupId, 'Group is already associated with image');
         }
-      } catch (error) { bulkResponse.addError(groupId, error.message); }
+      } catch (error) {
+        bulkResponse.addError(groupId, error.message);
+      }
     }
     return bulkResponse;
   }
-
 }

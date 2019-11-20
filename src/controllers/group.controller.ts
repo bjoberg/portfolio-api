@@ -9,10 +9,10 @@ export default class GroupController extends SequelizeController {
   private groupService: GroupService;
 
   /**
-   * Construct a new image controller
+   * Construct a new group controller
    * 
-   * @param model image model definition
-   * @param groupModel group model definition
+   * @param sequelizeService service for interacting with generic sequelize functions
+   * @param groupService service for interacting with the group model
    */
   constructor(sequelizeService: SequelizeService, groupService: GroupService) {
     super(sequelizeService);
@@ -20,7 +20,7 @@ export default class GroupController extends SequelizeController {
   }
 
   /**
-   * Get all images in a specific group
+   * Get all groups associated with a specific image
    * 
    * @param req Express Request object
    * @param res Express Response object
@@ -30,8 +30,8 @@ export default class GroupController extends SequelizeController {
     try {
       const page = this.getPage(req.query.page);
       const limit = this.getLimit(req.query.limit);
-      const groupId = req.params.id;
-      const response = await this.groupService.listGroupsForImage(groupId, limit, page, req.query);
+      const imageId = req.params.id;
+      const response = await this.groupService.listGroupsForImage(imageId, limit, page, req.query);
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {
@@ -40,7 +40,7 @@ export default class GroupController extends SequelizeController {
   }
 
   /**
-   * Remove groups from the specified image
+   * Disassociate groups from the specified image
    * 
    * @param req Express Request object
    * @param res Express Response object
@@ -49,8 +49,7 @@ export default class GroupController extends SequelizeController {
   public async removeGroupsFromImage(req: Request, res: Response, next: NextFunction) {
     try {
       const imageId = req.params.id;
-      let groupIds = req.query.groupId ? req.query.groupId : [];
-      if (!Array.isArray(groupIds)) groupIds = [groupIds];
+      const groupIds = this.getRequestParamsArray(req.query.groupId);
       const response = await this.groupService.removeGroupsFromImage(imageId, groupIds);
       res.status(HttpStatus.OK);
       res.json(response);
@@ -69,13 +68,26 @@ export default class GroupController extends SequelizeController {
   public async addGroupsToImage(req: Request, res: Response, next: NextFunction) {
     try {
       const imageId = req.params.id;
-      let groupIds = req.query.groupId ? req.query.groupId : [];
-      if (!Array.isArray(groupIds)) groupIds = [groupIds];
+      const groupIds = this.getRequestParamsArray(req.query.groupId);
       const response = await this.groupService.addGroupsToImage(imageId, groupIds);
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {
       next(error);
     }
+  }
+
+  /**
+   * Convert parameter values to array
+   * 
+   * @param params string or list of parameter values
+   */
+  private getRequestParamsArray(params: string | string[]): string[] {
+    let values: string[] = [];
+    if (params) {
+      if (!Array.isArray(params)) values = [params];
+      else values = params;
+    }
+    return values;
   }
 }

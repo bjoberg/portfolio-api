@@ -173,7 +173,7 @@ groupRouter
    *  get:
    *    tags:
    *      - Groups
-   *    description: Find all images in a group
+   *    description: Find all images associated with specified group
    *    parameters:
    *      - $ref: '#/components/parameters/path/groupId'
    *      - $ref: '#/components/parameters/query/limit'
@@ -197,7 +197,7 @@ groupRouter
      *      - bearerAuth: []
      *    tags:
      *      - Groups
-     *    description: Add images to a group.
+     *    description: Associate images to group
      *    parameters:
      *      - $ref: '#/components/parameters/path/groupId'
      *      - $ref: '#/components/parameters/query/imageId'
@@ -221,7 +221,7 @@ groupRouter
      *      - bearerAuth: []
      *    tags:
      *      - Groups
-     *    description: Remove images from a group. This endpoint breaks the image and group association. It does not delete any image or group from the database.
+     *    description: Disassociate images from specified group. This endpoint breaks the image and group association. It does not delete any image or group from the database.
      *    parameters:
      *      - $ref: '#/components/parameters/path/groupId'
      *      - $ref: '#/components/parameters/query/imageId'
@@ -246,7 +246,7 @@ groupRouter
    *  get:
    *    tags:
    *      - Groups
-   *    description: Get all tags for a group
+   *    description: Find all tags associated with specified group
    *    parameters:
    *      - $ref: '#/components/parameters/path/groupId'
    *      - $ref: '#/components/parameters/query/limit'
@@ -267,7 +267,7 @@ groupRouter
    *      - bearerAuth: []
    *    tags:
    *      - Groups
-   *    description: Add tags to a group.
+   *    description: Associate tags to group
    *    parameters:
    *      - $ref: '#/components/parameters/path/groupId'
    *      - $ref: '#/components/parameters/query/tagId'
@@ -291,7 +291,7 @@ groupRouter
    *      - bearerAuth: []
    *    tags:
    *      - Groups
-   *    description: Remove tags from a group. This endpoint breaks the tag and group association. It does not delete any tag or group from the database.
+   *    description: Disassociate tags from a group. This endpoint breaks the tag and group association. It does not delete any tag or group from the database.
    *    parameters:
    *      - $ref: '#/components/parameters/path/groupId'
    *      - $ref: '#/components/parameters/query/tagId'

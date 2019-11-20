@@ -75,14 +75,13 @@ module.exports = (sequelize, DataTypes) => {
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
    * @param {any} filter object with properties to filter with
-   * @returns all of the groups containing the specified query items
+   * @returns list of groups
    * @throws error if query fails
    */
-  group.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter = undefined) => {
+  group.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
     try {
       const where = getWhere(filter);
       const options = { where, limit, offset };
-
       return group.findAndCountAll(options);
     } catch (error) {
       throw error;
@@ -97,7 +96,7 @@ module.exports = (sequelize, DataTypes) => {
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
    * @param {Object} filter object with properties to query with
-   * @returns all of the groups associated with a specific image containing the specified query items
+   * @returns list of groups
    * @throws error if query fails
    */
   group.listGroupsForImage = async (imageId, imageModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
@@ -111,7 +110,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       }];
       const options = { limit, offset, where, include };
-
       return group.findAndCountAll(options);
     } catch (error) {
       throw error;
