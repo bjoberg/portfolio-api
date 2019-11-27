@@ -1,4 +1,4 @@
-export default interface EntityList {
+export default interface PaginationResponse {
   totalItems: number;
   pageCount: number;
   page: number;

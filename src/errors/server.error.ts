@@ -1,4 +1,4 @@
-import ApiError from "../utils/models/api-error";
+import ApiError from "../utils/models/api-error.interface";
 import HttpStatus from "http-status";
 
 export default class ServerError extends Error {

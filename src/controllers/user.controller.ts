@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import HttpStatus from 'http-status';
 
-import Role from '../utils/models/roles';
+import { ROLES } from '../utils/models/defaults';
 
 export default class UserController {
   /**
@@ -18,13 +18,13 @@ export default class UserController {
   public getRole = async (req: Request, res: Response) => {
     let response = {
       status: HttpStatus.OK,
-      role: Role.READONLY
+      role: ROLES.READONLY
     };
     try {
       const googleId = req.params.googleId;
       const user = await this.user.getByGoogleId(googleId);
       if (user) {
-        response.role = Role.ADMIN;
+        response.role = ROLES.ADMIN;
         res.status(response.status).json(response);
       };
     } catch (error) {

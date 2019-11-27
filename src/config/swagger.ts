@@ -21,113 +21,135 @@ const swaggerDefinition = {
       }
     },
     parameters: {
-      limit: {
-        in: "query",
-        name: "limit",
-        description:
-          "Limits the amount of items returned. [Default: limit = 30]",
-        schema: {
-          type: "integer"
+      query: {
+        imageId: {
+          in: "query",
+          name: "imageId",
+          description: "id of an image object",
+          schema: {
+            type: "array",
+            items: {
+              type: "uuid"
+            },
+            minItems: 0
+          },
+          required: false
         },
-        required: false
+        groupId: {
+          in: "query",
+          name: "groupId",
+          description: "id of a group object",
+          schema: {
+            type: "array",
+            items: {
+              type: "uuid"
+            },
+            minItems: 0
+          },
+          required: false
+        },
+        tagId: {
+          in: "query",
+          name: "tagId",
+          description: "id of a tag object",
+          schema: {
+            type: "array",
+            items: {
+              type: "uuid"
+            },
+            minItems: 0
+          },
+          required: false
+        },
+        limit: {
+          in: "query",
+          name: "limit",
+          description:
+            "Limits the amount of items returned. [Default: limit = 30]",
+          schema: {
+            type: "integer"
+          },
+          required: false
+        },
+        page: {
+          in: "query",
+          name: "page",
+          description:
+            "Get items for a defined range, based on the limit. [Default: page = 0]",
+          schema: {
+            type: "integer"
+          },
+          required: false
+        },
+        thumbnailUrl: {
+          in: "query",
+          name: "thumbnailUrl",
+          schema: {
+            type: "string"
+          },
+          required: false
+        },
+        imageUrl: {
+          in: "query",
+          name: "imageUrl",
+          schema: {
+            type: "string"
+          },
+          required: false
+        },
+        title: {
+          in: "query",
+          name: "title",
+          schema: {
+            type: "string"
+          },
+          required: false
+        },
+        description: {
+          in: "query",
+          name: "description",
+          schema: {
+            type: "string"
+          },
+          required: false
+        },
+        location: {
+          in: "query",
+          name: "location",
+          schema: {
+            type: "string"
+          },
+          required: false
+        }
       },
-      page: {
-        in: "query",
-        name: "page",
-        description:
-          "Get items for a defined range, based on the limit. [Default: page = 0]",
-        schema: {
-          type: "integer"
+      path: {
+        imageId: {
+          in: "path",
+          name: "id",
+          description: 'id of the image',
+          required: true,
+          schema: {
+            type: 'string'
+          }
         },
-        required: false
-      },
-      thumbnailUrl: {
-        in: "query",
-        name: "thumbnailUrl",
-        schema: {
-          type: "string"
+        groupId: {
+          in: "path",
+          name: "id",
+          description: 'id of the group',
+          required: true,
+          schema: {
+            type: 'string'
+          }
         },
-        required: false
-      },
-      imageUrl: {
-        in: "query",
-        name: "imageUrl",
-        schema: {
-          type: "string"
-        },
-        required: false
-      },
-      title: {
-        in: "query",
-        name: "title",
-        schema: {
-          type: "string"
-        },
-        required: false
-      },
-      description: {
-        in: "query",
-        name: "description",
-        schema: {
-          type: "string"
-        },
-        required: false
-      },
-      location: {
-        in: "query",
-        name: "location",
-        schema: {
-          type: "string"
-        },
-        required: false
-      },
-      groupId: {
-        in: "query",
-        name: "groupId",
-        schema: {
-          type: "uuid"
-        },
-        required: false
-      },
-      groupTagId: {
-        in: "query",
-        name: "groupTagId",
-        schema: {
-          type: "uuid"
-        },
-        required: false
-      },
-      imageId: {
-        in: "query",
-        name: "imageId",
-        schema: {
-          type: "uuid"
-        },
-        required: false
-      },
-      imageGroupId: {
-        in: "query",
-        name: "imageGroupId",
-        schema: {
-          type: "uuid"
-        },
-        required: false
-      },
-      imageTagId: {
-        in: "query",
-        name: "imageTagId",
-        schema: {
-          type: "uuid"
-        },
-        required: false
-      },
-      tagId: {
-        in: "query",
-        name: "tagId",
-        schema: {
-          type: "uuid"
-        },
-        required: false
+        tagId: {
+          in: "path",
+          name: "id",
+          description: 'id of the tag',
+          required: true,
+          schema: {
+            type: 'string'
+          }
+        }
       }
     },
     responses: {

@@ -3,35 +3,35 @@ import HttpStatus from 'http-status';
 
 import SequelizeController from "./sequelize.controller";
 import SequelizeService from '../services/sequelize.service';
-import ImageService from '../services/image.service';
+import GroupService from '../services/group.service';
 
-export default class ImageController extends SequelizeController {
-  private imageService: ImageService;
+export default class GroupController extends SequelizeController {
+  private groupService: GroupService;
 
   /**
-   * Construct a new image controller
+   * Construct a new group controller
    * 
    * @param sequelizeService service for interacting with generic sequelize functions
-   * @param imageService service for interacting with the image model
+   * @param groupService service for interacting with the group model
    */
-  constructor(sequelizeService: SequelizeService, imageService: ImageService) {
+  constructor(sequelizeService: SequelizeService, groupService: GroupService) {
     super(sequelizeService);
-    this.imageService = imageService;
+    this.groupService = groupService;
   }
 
   /**
-   * Get all images associated with a specific group
+   * Get all groups associated with a specific image
    * 
    * @param req Express Request object
    * @param res Express Response object
    * @param next Express Next function
    */
-  public async listImagesForGroup(req: Request, res: Response, next: NextFunction) {
+  public async listGroupsForImage(req: Request, res: Response, next: NextFunction) {
     try {
       const page = this.getPage(req.query.page);
       const limit = this.getLimit(req.query.limit);
-      const groupId = req.params.id;
-      const response = await this.imageService.listImagesForGroup(groupId, limit, page, req.query);
+      const imageId = req.params.id;
+      const response = await this.groupService.listGroupsForImage(imageId, limit, page, req.query);
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {
@@ -40,17 +40,17 @@ export default class ImageController extends SequelizeController {
   }
 
   /**
-   * Disassociate images from the specified group
+   * Disassociate groups from the specified image
    * 
    * @param req Express Request object
    * @param res Express Response object
    * @param next Express Next function
    */
-  public async removeImagesFromGroup(req: Request, res: Response, next: NextFunction) {
+  public async removeGroupsFromImage(req: Request, res: Response, next: NextFunction) {
     try {
-      const groupId = req.params.id;
-      const imageIds = this.getRequestParamsArray(req.query.imageId);
-      const response = await this.imageService.removeImagesFromGroup(groupId, imageIds);
+      const imageId = req.params.id;
+      const groupIds = this.getRequestParamsArray(req.query.groupId);
+      const response = await this.groupService.removeGroupsFromImage(imageId, groupIds);
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {
@@ -59,17 +59,17 @@ export default class ImageController extends SequelizeController {
   }
 
   /**
-   * Associate images to the specified group
+   * Associate groups to the specified image
    * 
    * @param req Express Request object
    * @param res Express Response object
    * @param next Express Next function
    */
-  public async addImagesToGroup(req: Request, res: Response, next: NextFunction) {
+  public async addGroupsToImage(req: Request, res: Response, next: NextFunction) {
     try {
-      const groupId = req.params.id;
-      let imageIds = this.getRequestParamsArray(req.query.imageId);
-      const response = await this.imageService.addImagesToGroup(groupId, imageIds);
+      const imageId = req.params.id;
+      const groupIds = this.getRequestParamsArray(req.query.groupId);
+      const response = await this.groupService.addGroupsToImage(imageId, groupIds);
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {

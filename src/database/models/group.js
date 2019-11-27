@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
 
-  group.associate = function (models) {
+  group.associate = (models) => {
     group.belongsToMany(models.image, {
       through: models.imageGroup,
       foreignKey: 'groupId'
@@ -58,87 +58,104 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   /**
-   * Get all of the groups that match a certain query
-   * @param {Object} json object with properties to query with
-   * @returns all of the groups containing the specified query items
-   * @throws error if query fails
+   * Get the where clause for group model
+   * 
+   * @param {any} filter object with properties to query with
+   * @returns object defining where clause for group model
    */
-  group.list = async ({ page, limit, thumbnailUrl, imageUrl, title, description }) => {
-    try {
-      const options = omitBy({
-        thumbnailUrl, imageUrl, title, description
-      }, isNil);
-
-      const getAllOptions = {
-        where: options
-      };
-
-      if (limit) {
-        getAllOptions.limit = limit;
-      } else {
-        getAllOptions.limit = LIMIT_DEFAULT;
-      }
-
-      if (page) {
-        getAllOptions.offset = page * limit;
-      } else {
-        getAllOptions.offset = PAGE_DEFAULT;
-      }
-
-      return group.findAndCountAll(getAllOptions);
-    } catch (error) {
-      throw {
-        status: httpStatus.INTERNAL_SERVER_ERROR,
-        message: `Error fetching groups.`
-      };
-    }
-  };
+  const getWhere = (filter) => {
+    const { thumbnailUrl, imageUrl, title, description } = filter;
+    const where = omitBy({ thumbnailUrl, imageUrl, title, description }, isNil);
+    return where;
+  }
 
   /**
-   * Try and find a group by its id.
-   * @param {string} id of the group being searched for
-   * @returns group item
+   * Get all of the groups that match a certain query
+   * 
+   * @param {number} limit number of items to return
+   * @param {number} offset range of items to return
+   * @param {any} filter object with properties to filter with
+   * @returns list of groups
    * @throws error if query fails
    */
-  group.get = async (id) => {
+  group.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
     try {
-      let item = await group.findOne({
-        where: {
-          id: id
-        }
-      });
-
-      if (item) return item;
-
-      throw {
-        status: httpStatus.NOT_FOUND,
-        message: `Group, ${id}, deleted or does not exist.`
-      };
+      const where = getWhere(filter);
+      const options = { where, limit, offset };
+      return group.findAndCountAll(options);
     } catch (error) {
       throw error;
     }
   };
 
   /**
-   * Delete all of the groups that match a certain query
-   * @param {Object} json object with properties to query with
-   * @returns number of group rows affected
+   * Get all of the groups associated with a specific image that match a certain query
+   * 
+   * @param {string} imageId unique id of image to search for
+   * @param {any} imageModel sequelize model to query on
+   * @param {number} limit number of items to return
+   * @param {number} offset range of items to return
+   * @param {Object} filter object with properties to query with
+   * @returns list of groups
    * @throws error if query fails
    */
-  group.deleteAll = async ({ thumbnailUrl, imageUrl, title, description }) => {
+  group.listGroupsForImage = async (imageId, imageModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
     try {
-      const options = omitBy({
-        thumbnailUrl, imageUrl, title, description
-      }, isNil);
-
-      return group.destroy({
-        where: options
-      });
+      const where = getWhere(filter);
+      const include = [{
+        model: imageModel,
+        attributes: [],
+        where: {
+          id: imageId
+        }
+      }];
+      const options = { limit, offset, where, include };
+      return group.findAndCountAll(options);
     } catch (error) {
-      throw {
-        status: httpStatus.INTERNAL_SERVER_ERROR,
-        message: `Error deleting group(s).`
-      };
+      throw error;
+    }
+  };
+
+  /**
+   * Try and find a group by its id.
+   * 
+   * @param {string} id of the group being searched for
+   * @returns group item
+   * @throws error if query fails
+   */
+  group.get = async (id) => {
+    try {
+      const where = { id };
+      const options = { where };
+      return group.findOne(options);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  /**
+   * Try and find an image in a group
+   * 
+   * @param {string} imageId unique id of image to search for
+   * @param {string} groupId unique id of group to search for
+   * @param {any} groupModel sequelize model to query on
+   * @returns group item
+   * @throws error if query fails
+   */
+  group.getGroupImage = async (imageId, groupId, groupModel) => {
+    try {
+      const where = { id: groupId };
+      const include = [{
+        model: groupModel,
+        attributes: [],
+        where: {
+          id: imageId
+        }
+      }];
+      const options = { where, include };
+      return group.findOne(options);
+    } catch (error) {
+      throw error;
     }
   };
 

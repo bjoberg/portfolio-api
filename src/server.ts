@@ -16,15 +16,12 @@ import {
   groupRouter,
   imageRouter,
   tagRouter,
-  imageGroupRouter,
-  groupTagRouter,
-  imageTagRouter,
   userRouter
 } from './routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
 import mapKeys from 'lodash/mapKeys';
-import ApiError from './utils/models/api-error';
+import ApiError from './utils/models/api-error.interface';
 // @ts-ignore
 import { sequelize } from './database/models';
 // @ts-ignore
@@ -56,14 +53,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(
   { docExpansion: 'none' }
 ));
 
-// Custom routes
+// Initialize endpoints
 const baseUrl = '/api/v1';
 app.use(baseUrl, imageRouter);
 app.use(baseUrl, groupRouter);
 app.use(baseUrl, tagRouter);
-app.use(baseUrl, groupTagRouter);
-app.use(baseUrl, imageGroupRouter);
-app.use(baseUrl, imageTagRouter);
 app.use(baseUrl, userRouter);
 
 // Custom error handler

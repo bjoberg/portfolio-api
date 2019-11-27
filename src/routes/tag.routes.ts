@@ -1,13 +1,21 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { Model } from "sequelize";
 import { OAuth2Client } from "google-auth-library";
 
 import AuthController from "../controllers/auth.controller";
 import SequelizeController from "../controllers/sequelize.controller";
+import SequelizeService from "../services/sequelize.service";
 
-const tag = require("../database/models").tag;
+// Initialize router
 const tagRouter = Router();
-const controller = new SequelizeController(tag as Model);
+
+// Initialize models
+const tag = require("../database/models").tag;
+
+// Initialize sequelize controller
+const sequelizeService = new SequelizeService(tag);
+const controller = new SequelizeController(sequelizeService);
+
+// Initialize auth controller
 const authController = new AuthController(new OAuth2Client());
 
 tagRouter
@@ -20,37 +28,14 @@ tagRouter
    *      - Tags
    *    description: Gets all tags based on query
    *    parameters:
-   *      - $ref: '#/components/parameters/limit'
-   *      - $ref: '#/components/parameters/page'
-   *      - $ref: '#/components/parameters/title'
+   *      - $ref: '#/components/parameters/query/limit'
+   *      - $ref: '#/components/parameters/query/page'
+   *      - $ref: '#/components/parameters/query/title'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
    */
-  .get((req: Request, res: Response, next: NextFunction) => controller.list(req, res, next))
-  /**
-   * @swagger
-   * /tags:
-   *  delete:
-   *    security:
-   *      - bearerAuth: []
-   *    tags:
-   *      - Tags
-   *    description: Delete all tags based on query
-   *    parameters:
-   *      - $ref: '#/components/parameters/title'
-   *    responses:
-   *      200:
-   *        $ref: '#/components/responses/ok'
-   *      401:
-   *        $ref: '#/components/responses/unauthorized'
-   *      403:
-   *        $ref: '#/components/responses/forbidden'
-   */
-  .delete(
-    authController.validateRequest,
-    (req: Request, res: Response, next: NextFunction) => controller.deleteAll(req, res, next)
-  );
+  .get((req: Request, res: Response, next: NextFunction) => controller.list(req, res, next));
 
 tagRouter
   .route("/tag/:id")
@@ -62,12 +47,7 @@ tagRouter
    *      - Tags
    *    description: Find tag by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the tag to return
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/tagId'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
@@ -85,12 +65,7 @@ tagRouter
    *      - Tags
    *    description: Update a tag item by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the tag to update
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/tagId'
    *    requestBody:
    *      description: Tag object
    *      required: true
@@ -120,12 +95,7 @@ tagRouter
    *      - Tags
    *    description: Delete a tag item by id
    *    parameters:
-   *      - in: path
-   *        name: id
-   *        description: id of the tag to delete
-   *        required: true
-   *        schema:
-   *          type: string
+   *      - $ref: '#/components/parameters/path/tagId'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
