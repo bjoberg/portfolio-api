@@ -11,8 +11,8 @@ export default class TagController extends SequelizeController {
   /**
    * Construct a new tag controller
    * 
-   * @param model tag model definition
-   * @param groupModel group model definition
+   * @param sequelizeService service for interacting with generic sequelize functions
+   * @param tagService service for interacting with the tag model
    */
   constructor(sequelizeService: SequelizeService, tagService: TagService) {
     super(sequelizeService);
@@ -20,7 +20,7 @@ export default class TagController extends SequelizeController {
   }
 
   /**
-   * Get all tags for a specific group
+   * Get all tags associated with a specific group
    * 
    * @param req Express Request object
    * @param res Express Response object
@@ -40,7 +40,7 @@ export default class TagController extends SequelizeController {
   }
 
   /**
-   * Get all tags for a specific image
+   * Get all tags associated with a specific image
    * 
    * @param req Express Request object
    * @param res Express Response object
@@ -60,7 +60,7 @@ export default class TagController extends SequelizeController {
   }
 
   /**
-   * Remove tags from the specified group
+   * Disassociate tags from the specified group
    * 
    * @param req Express Request object
    * @param res Express Response object
@@ -69,8 +69,7 @@ export default class TagController extends SequelizeController {
   public async removeTagsFromGroup(req: Request, res: Response, next: NextFunction) {
     try {
       const groupId = req.params.id;
-      let tagIds = req.query.tagId ? req.query.tagId : [];
-      if (!Array.isArray(tagIds)) tagIds = [tagIds];
+      const tagIds = this.getRequestParamsArray(req.query.tagId);
       const response = await this.tagService.removeTagsFromGroup(groupId, tagIds);
       res.status(HttpStatus.OK);
       res.json(response);
@@ -80,7 +79,7 @@ export default class TagController extends SequelizeController {
   }
 
   /**
-   * Remove tags from the specified image
+   * Disassociate tags from the specified image
    * 
    * @param req Express Request object
    * @param res Express Response object
@@ -89,8 +88,7 @@ export default class TagController extends SequelizeController {
   public async removeTagsFromImage(req: Request, res: Response, next: NextFunction) {
     try {
       const imageId = req.params.id;
-      let tagIds = req.query.tagId ? req.query.tagId : [];
-      if (!Array.isArray(tagIds)) tagIds = [tagIds];
+      const tagIds = this.getRequestParamsArray(req.query.tagId);
       const response = await this.tagService.removeTagsFromImage(imageId, tagIds);
       res.status(HttpStatus.OK);
       res.json(response);
@@ -100,7 +98,7 @@ export default class TagController extends SequelizeController {
   }
 
   /**
-   * Associate tags to a specific group
+   * Associate tags to the specific group
    * 
    * @param req Express Request object
    * @param res Express Response object
@@ -109,8 +107,7 @@ export default class TagController extends SequelizeController {
   public async addTagsToGroup(req: Request, res: Response, next: NextFunction) {
     try {
       const groupId = req.params.id;
-      let tagIds = req.query.tagId ? req.query.tagId : [];
-      if (!Array.isArray(tagIds)) tagIds = [tagIds];
+      const tagIds = this.getRequestParamsArray(req.query.tagId);
       const response = await this.tagService.addTagsToGroup(groupId, tagIds);
       res.status(HttpStatus.OK);
       res.json(response);
@@ -129,13 +126,26 @@ export default class TagController extends SequelizeController {
   public async addTagsToImage(req: Request, res: Response, next: NextFunction) {
     try {
       const imageId = req.params.id;
-      let tagIds = req.query.tagId ? req.query.tagId : [];
-      if (!Array.isArray(tagIds)) tagIds = [tagIds];
+      const tagIds = this.getRequestParamsArray(req.query.tagId);
       const response = await this.tagService.addTagsToImage(imageId, tagIds);
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {
       next(error);
     }
+  }
+
+  /**
+   * Convert parameter values to array
+   * 
+   * @param params string or list of parameter values
+   */
+  private getRequestParamsArray(params: string | string[]): string[] {
+    let values: string[] = [];
+    if (params) {
+      if (!Array.isArray(params)) values = [params];
+      else values = params;
+    }
+    return values;
   }
 }

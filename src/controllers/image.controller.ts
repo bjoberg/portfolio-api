@@ -49,7 +49,7 @@ export default class ImageController extends SequelizeController {
   public async removeImagesFromGroup(req: Request, res: Response, next: NextFunction) {
     try {
       const groupId = req.params.id;
-      let imageIds = this.getRequestParamsArray(req.query.imageId);
+      const imageIds = this.getRequestParamsArray(req.query.imageId);
       const response = await this.imageService.removeImagesFromGroup(groupId, imageIds);
       res.status(HttpStatus.OK);
       res.json(response);

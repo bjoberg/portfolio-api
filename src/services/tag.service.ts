@@ -2,8 +2,8 @@ import SequelizeService from "./sequelize.service";
 import { Model } from "sequelize/types";
 import HttpStatus from "http-status";
 
-import PaginationResponse from "../utils/models/pagination-response.interface";
 import BulkResponse from "../utils/models/bulk-response.model";
+import PaginationResponse from "../utils/models/pagination-response.interface";
 
 export default class TagService extends SequelizeService {
   private groupModel: Model;
@@ -34,7 +34,7 @@ export default class TagService extends SequelizeService {
   }
 
   /**
-   * Get tag in a specific group
+   * Get tag associated with group
    * 
    * @param groupId unique id of group to search for
    * @param tagId unique id of tag to search for
@@ -45,14 +45,14 @@ export default class TagService extends SequelizeService {
       const response = await this.model.getTagInGroup(groupId, tagId, this.groupModel);
       return response;
     } catch (error) {
-      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving tags from group (${groupId})`, error);
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving tag from group (${groupId})`, error);
     }
   }
 
   /**
-   * Get tag associated with a specific image
+   * Get tag associated with image
    * 
-   * @param imageID unique id of image to search for
+   * @param imageId unique id of image to search for
    * @param tagId unique id of tag to search for
    */
   public async getTagInImage(imageId: string, tagId: string): Promise<any> {
@@ -61,12 +61,12 @@ export default class TagService extends SequelizeService {
       const response = await this.model.getTagInImage(imageId, tagId, this.imageModel);
       return response;
     } catch (error) {
-      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving tags associated with image (${imageId})`, error);
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving tag associated with image (${imageId})`, error);
     }
   }
 
   /**
-   * Get all tags in a specific group
+   * Get all tags associated with a specific group
    * 
    * @param groupId unique id of group to search for
    * @param limit number of items to return
@@ -91,7 +91,7 @@ export default class TagService extends SequelizeService {
   }
 
   /**
-   * Get all tags in a specific image
+   * Get all tags associated with a specific image
    * 
    * @param imageId unique id of image to search for
    * @param limit number of items to return
@@ -116,7 +116,7 @@ export default class TagService extends SequelizeService {
   }
 
   /**
-   * Remove tags from the specified group
+   * Disassociate a list of tags from the specified group
    * 
    * @param groupId unique id of group to delete tags from
    * @param tagIds array of tag ids to remove from group
@@ -126,10 +126,8 @@ export default class TagService extends SequelizeService {
     for (let i = 0; i < tagIds.length; i++) {
       const tagId = tagIds[i];
       try {
-        // @ts-ignore-next-line
-        const response = await this.model.removeTagFromGroup(groupId, tagId, this.groupTagModel);
-        if (response > 0) bulkResponse.addSuccess(tagId);
-        else bulkResponse.addError(tagId, 'Tag does not exist in group');
+        await this.removeTagFromGroup(groupId, tagId);
+        bulkResponse.addSuccess(tagId);
       } catch (error) {
         bulkResponse.addError(tagId, error.message);
       }
@@ -138,20 +136,36 @@ export default class TagService extends SequelizeService {
   }
 
   /**
-   * Remove tags from the specified image
+   * Disassociate a tag from the specified group
    * 
-   * @param imageId unique id of image to delete tags from
-   * @param tagIds array of tag ids to remove from image
+   * @param groupId unique id of group to disassociate from tag
+   * @param tagId unique id of tag to disassociate from group
+   */
+  public async removeTagFromGroup(groupId: string, tagId: string): Promise<any> {
+    try {
+      // When the sequelize models are in Typescript, this could be a SequelizeService<GroupTag>
+      // @ts-ignore
+      const response = await this.groupTagModel.destroy({ where: { groupId, tagId } })
+      if (response > 0) return response;
+      else throw this.getApiError(HttpStatus.CONFLICT, 'Tag is not associated with group');
+    } catch (error) {
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to disassociate tag from group', error);
+    }
+  }
+
+  /**
+   * Disassociate a list of tags from the specified image
+   * 
+   * @param imageId unique id of image to disassociate from tag
+   * @param tagIds array of tag ids to disassociate from image
    */
   public async removeTagsFromImage(imageId: string, tagIds: string[]): Promise<BulkResponse> {
     const bulkResponse = new BulkResponse();
     for (let i = 0; i < tagIds.length; i++) {
       const tagId = tagIds[i];
       try {
-        // @ts-ignore-next-line
-        const response = await this.model.removeTagFromImage(imageId, tagId, this.imageTagModel);
-        if (response > 0) bulkResponse.addSuccess(tagId);
-        else bulkResponse.addError(tagId, 'Tag is not associated to image');
+        await this.removeTagFromImage(imageId, tagId);
+        bulkResponse.addSuccess(tagId);
       } catch (error) {
         bulkResponse.addError(tagId, error.message);
       }
@@ -160,50 +174,104 @@ export default class TagService extends SequelizeService {
   }
 
   /**
-   * Add tags to the specified group
+   * Disassociate a tag from the specified image
    * 
-   * @param groupId unique id of group to associate tags to
-   * @param tagIds array of tag ids to associate with group
+   * @param imageId unique id of image to disassociate from tag
+   * @param tagId unique id of tag to disassociate from image
+   */
+  public async removeTagFromImage(imageId: string, tagId: string): Promise<any> {
+    try {
+      // When the sequelize models are in Typescript, this could be a SequelizeService<ImageTag>
+      // @ts-ignore
+      const response = await this.imageTagModel.destroy({ where: { imageId, tagId } })
+      if (response > 0) return response;
+      else throw this.getApiError(HttpStatus.CONFLICT, 'Image is not associated with tag');
+    } catch (error) {
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to disassociate image from tag', error);
+    }
+  }
+
+  /**
+   * Associate a list of tags to the specified group
+   * 
+   * @param groupId unique id of group to associate to tags
+   * @param tagIds array of tag ids to associate to group
    */
   public async addTagsToGroup(groupId: string, tagIds: string[]): Promise<BulkResponse> {
     const bulkResponse = new BulkResponse();
     for (let i = 0; i < tagIds.length; i++) {
       const tagId = tagIds[i];
       try {
-        const tag = await this.getTagInGroup(groupId, tagId);
-        if (!tag) {
-          // @ts-ignore-next-line
-          await this.model.addTagToGroup(groupId, tagId, this.groupTagModel);
-          bulkResponse.addSuccess(tagId);
-        } else {
-          bulkResponse.addError(tagId, 'Tag already exists in group');
-        }
-      } catch (error) { bulkResponse.addError(tagId, error.message); }
+        await this.addTagToGroup(groupId, tagId);
+        bulkResponse.addSuccess(tagId);
+      } catch (error) {
+        bulkResponse.addError(tagId, error.message);
+      }
     }
     return bulkResponse;
   }
 
   /**
-   * Associate tags to a specific image
+   * Associate a tag to a group
    * 
-   * @param imageId unique id of image to associate tags to
-   * @param tagIds array of tag ids to associate with image
+   * @param groupId unique id of group to associate to tag
+   * @param tagId unique id of tag to associate to group
+   */
+  public async addTagToGroup(groupId: string, tagId: string): Promise<any> {
+    try {
+      const group = await this.getTagInGroup(groupId, tagId);
+      if (!group) {
+        const model = { groupId, tagId };
+        // When the sequelize models are in Typescript, this could be a SequelizeService<GroupTag>
+        // @ts-ignore-next-line
+        const result = await this.groupTagModel.create(model);
+        return result;
+      } else {
+        throw this.getApiError(HttpStatus.CONFLICT, 'Tag is already associated with group');
+      }
+    } catch (error) {
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to associate tag to group', error);
+    }
+  }
+
+  /**
+   * Associate a list of tags to the specific image
+   * 
+   * @param imageId unique id of image to associate to tags
+   * @param tagIds array of tag ids to associate to image
    */
   public async addTagsToImage(imageId: string, tagIds: string[]): Promise<BulkResponse> {
     const bulkResponse = new BulkResponse();
     for (let i = 0; i < tagIds.length; i++) {
       const tagId = tagIds[i];
       try {
-        const tag = await this.getTagInImage(imageId, tagId);
-        if (!tag) {
-          // @ts-ignore-next-line
-          await this.model.addTagToImage(imageId, tagId, this.imageTagModel);
-          bulkResponse.addSuccess(tagId);
-        } else {
-          bulkResponse.addError(tagId, 'Tag already associated with image');
-        }
+        await this.addTagToImage(imageId, tagId);
+        bulkResponse.addSuccess(tagId);
       } catch (error) { bulkResponse.addError(tagId, error.message); }
     }
     return bulkResponse;
+  }
+
+  /**
+   * Associate a tag to an image
+   * 
+   * @param imageId unique id of image to associate to tag
+   * @param tagId unique id of tag to associate to image
+   */
+  public async addTagToImage(imageId: string, tagId: string): Promise<any> {
+    try {
+      const image = this.getTagInImage(imageId, tagId);
+      if (!image) {
+        const model = { imageId, tagId };
+        // When the sequelize models are in Typescript, this could be a SequelizeService<ImageTag>
+        // @ts-ignore-next-line
+        const result = await this.imageTagModel.create(model);
+        return result;
+      } else {
+        throw this.getApiError(HttpStatus.CONFLICT, 'Tag is already associated with image');
+      }
+    } catch (error) {
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to associate tag to image', error);
+    }
   }
 }
