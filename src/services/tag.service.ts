@@ -260,7 +260,7 @@ export default class TagService extends SequelizeService {
    */
   public async addTagToImage(imageId: string, tagId: string): Promise<any> {
     try {
-      const image = this.getTagInImage(imageId, tagId);
+      const image = await this.getTagInImage(imageId, tagId);
       if (!image) {
         const model = { imageId, tagId };
         // When the sequelize models are in Typescript, this could be a SequelizeService<ImageTag>
