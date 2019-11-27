@@ -11,8 +11,8 @@ export default class ImageController extends SequelizeController {
   /**
    * Construct a new image controller
    * 
-   * @param model image model definition
-   * @param groupModel group model definition
+   * @param sequelizeService service for interacting with generic sequelize functions
+   * @param imageService service for interacting with the image model
    */
   constructor(sequelizeService: SequelizeService, imageService: ImageService) {
     super(sequelizeService);
@@ -20,7 +20,7 @@ export default class ImageController extends SequelizeController {
   }
 
   /**
-   * Get all images in a specific group
+   * Get all images associated with a specific group
    * 
    * @param req Express Request object
    * @param res Express Response object
@@ -40,7 +40,7 @@ export default class ImageController extends SequelizeController {
   }
 
   /**
-   * Remove images from the specified group
+   * Disassociate images from the specified group
    * 
    * @param req Express Request object
    * @param res Express Response object
@@ -49,8 +49,7 @@ export default class ImageController extends SequelizeController {
   public async removeImagesFromGroup(req: Request, res: Response, next: NextFunction) {
     try {
       const groupId = req.params.id;
-      let imageIds = req.query.imageId ? req.query.imageId : [];
-      if (!Array.isArray(imageIds)) imageIds = [imageIds];
+      let imageIds = this.getRequestParamsArray(req.query.imageId);
       const response = await this.imageService.removeImagesFromGroup(groupId, imageIds);
       res.status(HttpStatus.OK);
       res.json(response);
@@ -60,7 +59,7 @@ export default class ImageController extends SequelizeController {
   }
 
   /**
-   * Add images from the specified group
+   * Associate images to the specified group
    * 
    * @param req Express Request object
    * @param res Express Response object
@@ -69,13 +68,26 @@ export default class ImageController extends SequelizeController {
   public async addImagesToGroup(req: Request, res: Response, next: NextFunction) {
     try {
       const groupId = req.params.id;
-      let imageIds = req.query.imageId ? req.query.imageId : [];
-      if (!Array.isArray(imageIds)) imageIds = [imageIds];
+      let imageIds = this.getRequestParamsArray(req.query.imageId);
       const response = await this.imageService.addImagesToGroup(groupId, imageIds);
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {
       next(error);
     }
+  }
+
+  /**
+   * Convert parameter values to array
+   * 
+   * @param params string or list of parameter values
+   */
+  private getRequestParamsArray(params: string | string[]): string[] {
+    let values: string[] = [];
+    if (params) {
+      if (!Array.isArray(params)) values = [params];
+      else values = params;
+    }
+    return values;
   }
 }

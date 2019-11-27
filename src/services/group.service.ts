@@ -86,7 +86,7 @@ export default class GroupService extends SequelizeService {
    * Disassociate a group from the specified image
    * 
    * @param imageId unique id of image to disassociate from groups
-   * @param groupId unique id of group to disassociate to image
+   * @param groupId unique id of group to disassociate from image
    */
   public async removeGroupFromImage(imageId: string, groupId: string) {
     try {
@@ -123,7 +123,7 @@ export default class GroupService extends SequelizeService {
   /**
    * Associate a group to an image
    * 
-   * @param imageId unique id of image to associate to groups
+   * @param imageId unique id of image to associate to group
    * @param groupId unique id of group to associate to image
    */
   public async addGroupToImage(imageId: string, groupId: string): Promise<any> {

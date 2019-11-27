@@ -175,7 +175,7 @@ imageRouter
    *  get:
    *    tags:
    *      - Images
-   *    description: Find all groups associated with an image
+   *    description: Find all groups associated with specified image
    *    parameters:
    *      - $ref: '#/components/parameters/path/imageId'
    *      - $ref: '#/components/parameters/query/limit'
@@ -200,7 +200,7 @@ imageRouter
    *      - bearerAuth: []
    *    tags:
    *      - Images
-   *    description: Associate groups to an image
+   *    description: Associate groups to image
    *    parameters:
    *      - $ref: '#/components/parameters/path/imageId'
    *      - $ref: '#/components/parameters/query/groupId'
@@ -224,7 +224,7 @@ imageRouter
    *      - bearerAuth: []
    *    tags:
    *      - Images
-   *    description: Remove group associations from an image. This endpoint breaks the image and group association. It does not delete any image or group from the database.
+   *    description: Disassociate group from specified image. This endpoint breaks the image and group association. It does not delete any image or group from the database.
    *    parameters:
    *      - $ref: '#/components/parameters/path/imageId'
    *      - $ref: '#/components/parameters/query/groupId'
@@ -249,7 +249,7 @@ imageRouter
    *  get:
    *    tags:
    *      - Images
-   *    description: Find all tags associated with an image
+   *    description: Find all tags associated with specified image
    *    parameters:
    *      - $ref: '#/components/parameters/path/imageId'
    *      - $ref: '#/components/parameters/query/limit'
@@ -270,7 +270,7 @@ imageRouter
    *      - bearerAuth: []
    *    tags:
    *      - Images
-   *    description: Associate groups to an image
+   *    description: Associate tags to image
    *    parameters:
    *      - $ref: '#/components/parameters/path/imageId'
    *      - $ref: '#/components/parameters/query/tagId'
@@ -294,7 +294,7 @@ imageRouter
    *      - bearerAuth: []
    *    tags:
    *      - Images
-   *    description: Remove tag associations from an image. This endpoint breaks the image and tag association. It does not delete any image or tag from the database.
+   *    description: Disassociate tags from image. This endpoint breaks the tag and image association. It does not delete any tag or image from the database.
    *    parameters:
    *      - $ref: '#/components/parameters/path/imageId'
    *      - $ref: '#/components/parameters/query/tagId'

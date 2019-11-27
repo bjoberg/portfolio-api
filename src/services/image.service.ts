@@ -23,15 +23,15 @@ export default class ImageService extends SequelizeService {
   }
 
   /**
-   * Get image in a specific group
+   * Get image associated with group
    * 
    * @param groupId unique id of group to search for
    * @param imageId unique id of image to search for
    */
-  public async getImageInGroup(groupId: string, imageId: string): Promise<any> {
+  public async getImageGroup(groupId: string, imageId: string): Promise<any> {
     try {
       // @ts-ignore-next-line
-      const response = await this.model.getImageInGroup(groupId, imageId, this.groupModel);
+      const response = await this.model.getImageGroup(groupId, imageId, this.groupModel);
       return response;
     } catch (error) {
       throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving images from group (${groupId})`, error);
@@ -39,7 +39,7 @@ export default class ImageService extends SequelizeService {
   }
 
   /**
-   * Get all images in a specific group
+   * Get all images associated with a specific group
    * 
    * @param groupId unique id of group to search for
    * @param limit number of items to return
@@ -64,20 +64,18 @@ export default class ImageService extends SequelizeService {
   }
 
   /**
-   * Remove images from the specified group
+   * Disassociate a list of images from the specified group
    * 
-   * @param groupId unique id of group to delete images from
-   * @param imageIds array of image ids to remove from group
+   * @param groupId unique id of group to disassociate from images
+   * @param imageIds array of image ids to disassociate from group
    */
   public async removeImagesFromGroup(groupId: string, imageIds: string[]): Promise<BulkResponse> {
     const bulkResponse = new BulkResponse();
     for (let i = 0; i < imageIds.length; i++) {
       const imageId = imageIds[i];
       try {
-        // @ts-ignore-next-line
-        const response = await this.model.removeImageFromGroup(groupId, imageId, this.imageGroupModel);
-        if (response > 0) bulkResponse.addSuccess(imageId);
-        else bulkResponse.addError(imageId, 'Image does not exist in group');
+        await this.removeImageFromGroup(groupId, imageId);
+        bulkResponse.addSuccess(imageId);
       } catch (error) {
         bulkResponse.addError(imageId, error.message);
       }
@@ -86,20 +84,37 @@ export default class ImageService extends SequelizeService {
   }
 
   /**
-   * Add images to the specified group
+   * Disassociate an image from the specified group
    * 
-   * @param groupId unique id of group to add images to
-   * @param imageIds array of image ids to add to group
+   * @param groupId unique id of group to disassociate from images
+   * @param imageId unique id of image to disassociate from groups
+   */
+  public async removeImageFromGroup(groupId: string, imageId: string) {
+    try {
+      // When the sequelize models are in Typescript, this could be a SequelizeService<ImageGroup>
+      // @ts-ignore
+      const response = await this.model.imageGroupModel.destroy({ where: { imageId, groupId } })
+      if (response > 0) return response;
+      else throw this.getApiError(HttpStatus.CONFLICT, 'Image is not associated with group');
+    } catch (error) {
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to disassociate image from group', error);
+    }
+  }
+
+  /**
+   * Associate a list of images to the specified group
+   * 
+   * @param groupId unique id of group to associate to images
+   * @param imageIds array of image ids to associate to group
    */
   public async addImagesToGroup(groupId: string, imageIds: string[]): Promise<BulkResponse> {
     const bulkResponse = new BulkResponse();
     for (let i = 0; i < imageIds.length; i++) {
       const imageId = imageIds[i];
       try {
-        const image = await this.getImageInGroup(groupId, imageId);
+        const image = await this.getImageGroup(groupId, imageId);
         if (!image) {
-          // @ts-ignore-next-line
-          await this.model.addImageToGroup(groupId, imageId, this.imageGroupModel);
+          await this.addImageToGroup(groupId, imageId);
           bulkResponse.addSuccess(imageId);
         } else {
           bulkResponse.addError(imageId, 'Image already exists in group');
@@ -107,5 +122,28 @@ export default class ImageService extends SequelizeService {
       } catch (error) { bulkResponse.addError(imageId, error.message); }
     }
     return bulkResponse;
+  }
+
+  /**
+   * Associate an image to a group
+   * 
+   * @param groupId unique id of group to associate to image
+   * @param imageId unique id of image to associate to groups
+   */
+  public async addImageToGroup(groupId: string, imageId: string): Promise<any> {
+    try {
+      const image = await this.getImageGroup(groupId, imageId);
+      if (!image) {
+        const model = { groupId, imageId };
+        // When the sequelize models are in Typescript, this could be a SequelizeService<ImageGroup>
+        // @ts-ignore-next-line
+        const result = await this.imageGroupModel.create(model);
+        return result;
+      } else {
+        throw this.getApiError(HttpStatus.CONFLICT, 'Image is already associated with group');
+      }
+    } catch (error) {
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to associate image to group', error);
+    }
   }
 }

@@ -162,7 +162,7 @@ module.exports = (sequelize, DataTypes) => {
    * @returns image item
    * @throws error if query fails
    */
-  image.getImageInGroup = async (groupId, imageId, groupModel) => {
+  image.getImageGroup = async (groupId, imageId, groupModel) => {
     try {
       const where = { id: imageId };
       const include = [{
@@ -174,48 +174,6 @@ module.exports = (sequelize, DataTypes) => {
       }];
       const options = { where, include };
       return image.findOne(options);
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  /**
-   * Remove image from the specified group
-   * 
-   * @param {string} groupId unique group id of group to search for
-   * @param {number} imageId unique image id to remove from group
-   * @param {any} imageGroupModel sequelize model to query on
-   * @returns number of images that were removed from group
-   * @throws error if query fails
-   */
-  image.removeImageFromGroup = async (groupId, imageId, imageGroupModel) => {
-    try {
-      const response = await imageGroupModel.destroy({
-        where: {
-          imageId,
-          groupId
-        }
-      });
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  /**
-   * Add image to the specified group
-   * 
-   * @param {string} groupId unique group id of group to search for
-   * @param {number} imageId unique image id to remove from group
-   * @param {any} imageGroupModel sequelize model to query on
-   * @returns number of images that were added to the group
-   * @throws error if query fails
-   */
-  image.addImageToGroup = async (groupId, imageId, imageGroupModel) => {
-    try {
-      const imageGroup = { groupId, imageId };
-      const response = await imageGroupModel.create(imageGroup);
-      return response;
     } catch (error) {
       throw error;
     }
