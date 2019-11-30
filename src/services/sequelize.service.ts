@@ -22,8 +22,9 @@ export default class SequelizeService {
    */
   public async list(limit: number, page: number, query: any): Promise<PaginationResponse> {
     try {
+      const offset = this.getOffset(limit, page);
       // @ts-ignore-next-line
-      const result = await this.model.list(limit, page, query);
+      const result = await this.model.list(limit, offset, query);
       const response: PaginationResponse = {
         limit,
         page,
@@ -110,6 +111,16 @@ export default class SequelizeService {
     } catch (error) {
       throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Error deleting item', error);
     }
+  }
+
+  /**
+   * Get the offset query value 
+   * 
+   * @param limit number of items to return
+   * @param page range of items to return
+   */
+  protected getOffset(limit: number, page: number) {
+    return limit * page;
   }
 
   /**

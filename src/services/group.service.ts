@@ -47,8 +47,9 @@ export default class GroupService extends SequelizeService {
    */
   public async listGroupsForImage(imageId: string, limit: number, page: number, filter: any): Promise<PaginationResponse> {
     try {
+      const offset = this.getOffset(limit, page);
       // @ts-ignore
-      const result = await this.model.listGroupsForImage(imageId, this.imageModel, limit, page, filter);
+      const result = await this.model.listGroupsForImage(imageId, this.imageModel, limit, offset, filter);
       const response: PaginationResponse = {
         limit,
         page,
