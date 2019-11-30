@@ -75,8 +75,9 @@ export default class TagService extends SequelizeService {
    */
   public async listTagsForGroup(groupId: string, limit: number, page: number, filter: any): Promise<PaginationResponse> {
     try {
+      const offset = this.getOffset(limit, page);
       // @ts-ignore-next-line
-      const result = await this.model.listTagsForGroup(groupId, this.groupModel, limit, page, filter);
+      const result = await this.model.listTagsForGroup(groupId, this.groupModel, limit, offset, filter);
       const response: PaginationResponse = {
         limit,
         page,
@@ -100,8 +101,9 @@ export default class TagService extends SequelizeService {
    */
   public async listTagsForImage(imageId: string, limit: number, page: number, filter: any): Promise<PaginationResponse> {
     try {
+      const offset = this.getOffset(limit, page);
       // @ts-ignore-next-line
-      const result = await this.model.listTagsForImage(imageId, this.imageModel, limit, page, filter);
+      const result = await this.model.listTagsForImage(imageId, this.imageModel, limit, offset, filter);
       const response: PaginationResponse = {
         limit,
         page,
