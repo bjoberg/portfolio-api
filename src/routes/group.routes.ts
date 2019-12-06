@@ -239,6 +239,31 @@ groupRouter
   );
 
 groupRouter
+  .route("/group/:id/!/images")
+  /**
+   * @swagger
+   * /group/{id}/!/images:
+   *  get:
+   *    tags:
+   *      - Groups
+   *    description: Find all images not associated with specified group
+   *    parameters:
+   *      - $ref: '#/components/parameters/path/groupId'
+   *      - $ref: '#/components/parameters/query/limit'
+   *      - $ref: '#/components/parameters/query/page'
+   *      - $ref: '#/components/parameters/query/thumbnailUrl'
+   *      - $ref: '#/components/parameters/query/imageUrl'
+   *      - $ref: '#/components/parameters/query/title'
+   *      - $ref: '#/components/parameters/query/description'
+   *    responses:
+   *      200:
+   *        $ref: '#/components/responses/ok'
+   *      404:
+   *        $ref: '#/components/responses/notFound'
+   */
+  .get((req: Request, res: Response, next: NextFunction) => imageController.listImagesNotForGroup(req, res, next));
+
+groupRouter
   .route("/group/:id/tags")
   /**
    * @swagger
