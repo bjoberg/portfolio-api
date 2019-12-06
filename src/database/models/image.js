@@ -5,6 +5,7 @@ const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 const LIMIT_DEFAULT = require('../../utils/models/defaults').LIMIT_DEFAULT;
 const PAGE_DEFAULT = require('../../utils/models/defaults').PAGE_DEFAULT;
+const Op = require('sequelize').Op;
 
 module.exports = (sequelize, DataTypes) => {
   const image = sequelize.define('image', {
@@ -135,6 +136,34 @@ module.exports = (sequelize, DataTypes) => {
       throw error;
     }
   };
+
+  /**
+   * Get all of the images not associated with a specific group that matches a certain query
+   * 
+   * @param {string} groupId unique id of group to find images not associated with
+   * @param {any} groupModel sequelize model to query on
+   * @param {number} limit number of items to return
+   * @param {number} offset range of items to return
+   * @param {Object} filter object with properties to query with
+   * @returns all of the images not associated with a specific group containing the specified query items
+   * @throws error if query fails
+   */
+  image.listImagesNotForGroup = async (groupId, groupModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+    try {
+      const innerJoin = `(SELECT "imageId" FROM images as i JOIN public."imageGroups" as ig ON i.id = ig."imageId" JOIN public."groups" as g ON ig."groupId" = g.id WHERE ig."groupId" = '${groupId}')`;
+      const where = {
+        ...getWhere(filter),
+        id: {
+          [Op.notIn]: sequelize.literal(innerJoin)
+        }
+      };
+      const options = { limit, offset, where };
+
+      return image.findAndCountAll(options);
+    } catch (error) {
+      throw error;
+    }
+  }
 
   /**
    * Try and find an image by its id.

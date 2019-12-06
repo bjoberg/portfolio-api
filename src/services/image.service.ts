@@ -65,6 +65,32 @@ export default class ImageService extends SequelizeService {
   }
 
   /**
+   * Get all images not associated with a specific group
+   * 
+   * @param groupId unique id of group to find images not associated with
+   * @param limit number of items to return
+   * @param page range of items to return
+   * @param filter object with properties to query with
+   */
+  public async listImagesNotForGroup(groupId: string, limit: number, page: number, filter: any): Promise<PaginationResponse> {
+    try {
+      const offset = this.getOffset(limit, page);
+      // @ts-ignore-next-line
+      const result = await this.model.listImagesNotForGroup(groupId, this.groupModel, limit, offset, filter);
+      const response: PaginationResponse = {
+        limit,
+        page,
+        totalItems: result.count,
+        pageCount: result.rows.length,
+        rows: result.rows
+      };
+      return response;
+    } catch (error) {
+      throw this.getApiError(HttpStatus.INTERNAL_SERVER_ERROR, `Error retrieving images not for group (${groupId})`, error);
+    }
+  }
+
+  /**
    * Disassociate a list of images from the specified group
    * 
    * @param groupId unique id of group to disassociate from image

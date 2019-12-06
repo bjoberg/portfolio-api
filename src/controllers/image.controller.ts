@@ -40,6 +40,26 @@ export default class ImageController extends SequelizeController {
   }
 
   /**
+   * Get all images not associated with a specific group
+   * 
+   * @param req Express Request object
+   * @param res Express Response object
+   * @param next Express Next function
+   */
+  public async listImagesNotForGroup(req: Request, res: Response, next: NextFunction) {
+    try {
+      const page = this.getPage(req.query.page);
+      const limit = this.getLimit(req.query.limit);
+      const groupId = req.params.id;
+      const response = await this.imageService.listImagesNotForGroup(groupId, limit, page, req.query);
+      res.status(HttpStatus.OK);
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Disassociate images from the specified group
    * 
    * @param req Express Request object
