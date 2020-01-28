@@ -14,7 +14,8 @@ module.exports = {
           model: 'groups',
           key: 'id'
         },
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        onDelete: 'CASCADE'
       },
       tagId: {
         allowNull: false,
@@ -22,7 +23,8 @@ module.exports = {
           model: 'tags',
           key: 'id'
         },
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
