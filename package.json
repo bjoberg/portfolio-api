@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npm run build && concurrently \"./node_modules/.bin/tsc -w\" \"./node_modules/.bin/nodemon\"",
     "build": "./node_modules/.bin/tsc --project ./tsconfig.json",
-    "lint": "./node_modules/.bin/eslint .",
+    "lint": "echo linting not enabled",
     "start": "node ./dist/server.js",
     "test": "echo no tests"
   },
