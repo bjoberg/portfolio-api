@@ -28,8 +28,8 @@ export default class ImageController extends SequelizeController {
    */
   public async listImagesForGroup(req: Request, res: Response, next: NextFunction) {
     try {
-      const page = this.getPage(req.query.page);
-      const limit = this.getLimit(req.query.limit);
+      const page = this.getPage(req.query.page as string);
+      const limit = this.getLimit(req.query.limit as string);
       const groupId = req.params.id;
       const response = await this.imageService.listImagesForGroup(groupId, limit, page, req.query);
       res.status(HttpStatus.OK);
@@ -48,8 +48,8 @@ export default class ImageController extends SequelizeController {
    */
   public async listImagesNotForGroup(req: Request, res: Response, next: NextFunction) {
     try {
-      const page = this.getPage(req.query.page);
-      const limit = this.getLimit(req.query.limit);
+      const page = this.getPage(req.query.page as string);
+      const limit = this.getLimit(req.query.limit as string);
       const groupId = req.params.id;
       const response = await this.imageService.listImagesNotForGroup(groupId, limit, page, req.query);
       res.status(HttpStatus.OK);
@@ -69,7 +69,7 @@ export default class ImageController extends SequelizeController {
   public async removeImagesFromGroup(req: Request, res: Response, next: NextFunction) {
     try {
       const groupId = req.params.id;
-      const imageIds = this.getRequestParamsArray(req.query.imageId);
+      const imageIds = this.getRequestParamsArray(req.query.imageId as string);
       const response = await this.imageService.removeImagesFromGroup(groupId, imageIds);
       res.status(HttpStatus.OK);
       res.json(response);
@@ -88,7 +88,7 @@ export default class ImageController extends SequelizeController {
   public async addImagesToGroup(req: Request, res: Response, next: NextFunction) {
     try {
       const groupId = req.params.id;
-      let imageIds = this.getRequestParamsArray(req.query.imageId);
+      let imageIds = this.getRequestParamsArray(req.query.imageId as string);
       const response = await this.imageService.addImagesToGroup(groupId, imageIds);
       res.status(HttpStatus.OK);
       res.json(response);

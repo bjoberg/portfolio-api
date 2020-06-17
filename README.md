@@ -51,7 +51,7 @@ docker inspect <CONTAINER_ID>
 ## Production Build
 
 ```bash
-docker build -t "<tag_name>"
+docker build -t "<tag_name>" .
 docker run -p 8080:8080 -d "<tag_name>"
 ```
 

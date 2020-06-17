@@ -120,7 +120,7 @@ export default class ImageService extends SequelizeService {
     try {
       // When the sequelize models are in Typescript, this could be a SequelizeService<ImageGroup>
       // @ts-ignore
-      const response = await this.imageGroupModel.destroy({ where: { imageId, groupId } })
+      const response = await this.imageGroupModel.destroy({ where: { imageId, groupId } }) as number;
       if (response > 0) return response;
       else throw this.getApiError(HttpStatus.CONFLICT, 'Image is not associated with group');
     } catch (error) {
