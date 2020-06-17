@@ -28,8 +28,8 @@ export default class TagController extends SequelizeController {
    */
   public async listTagsForGroup(req: Request, res: Response, next: NextFunction) {
     try {
-      const page = this.getPage(req.query.page);
-      const limit = this.getLimit(req.query.limit);
+      const page = this.getPage(req.query.page as string);
+      const limit = this.getLimit(req.query.limit as string);
       const groupId = req.params.id;
       const response = await this.tagService.listTagsForGroup(groupId, limit, page, req.query);
       res.status(HttpStatus.OK);
@@ -48,8 +48,8 @@ export default class TagController extends SequelizeController {
    */
   public async listTagsForImage(req: Request, res: Response, next: NextFunction) {
     try {
-      const page = this.getPage(req.query.page);
-      const limit = this.getLimit(req.query.limit);
+      const page = this.getPage(req.query.page as string);
+      const limit = this.getLimit(req.query.limit as string);
       const imageId = req.params.id;
       const response = await this.tagService.listTagsForImage(imageId, limit, page, req.query);
       res.status(HttpStatus.OK);
@@ -69,7 +69,7 @@ export default class TagController extends SequelizeController {
   public async removeTagsFromGroup(req: Request, res: Response, next: NextFunction) {
     try {
       const groupId = req.params.id;
-      const tagIds = this.getRequestParamsArray(req.query.tagId);
+      const tagIds = this.getRequestParamsArray(req.query.tagId as string);
       const response = await this.tagService.removeTagsFromGroup(groupId, tagIds);
       res.status(HttpStatus.OK);
       res.json(response);
@@ -88,7 +88,7 @@ export default class TagController extends SequelizeController {
   public async removeTagsFromImage(req: Request, res: Response, next: NextFunction) {
     try {
       const imageId = req.params.id;
-      const tagIds = this.getRequestParamsArray(req.query.tagId);
+      const tagIds = this.getRequestParamsArray(req.query.tagId as string);
       const response = await this.tagService.removeTagsFromImage(imageId, tagIds);
       res.status(HttpStatus.OK);
       res.json(response);
@@ -107,7 +107,7 @@ export default class TagController extends SequelizeController {
   public async addTagsToGroup(req: Request, res: Response, next: NextFunction) {
     try {
       const groupId = req.params.id;
-      const tagIds = this.getRequestParamsArray(req.query.tagId);
+      const tagIds = this.getRequestParamsArray(req.query.tagId as string);
       const response = await this.tagService.addTagsToGroup(groupId, tagIds);
       res.status(HttpStatus.OK);
       res.json(response);
@@ -126,7 +126,7 @@ export default class TagController extends SequelizeController {
   public async addTagsToImage(req: Request, res: Response, next: NextFunction) {
     try {
       const imageId = req.params.id;
-      const tagIds = this.getRequestParamsArray(req.query.tagId);
+      const tagIds = this.getRequestParamsArray(req.query.tagId as string);
       const response = await this.tagService.addTagsToImage(imageId, tagIds);
       res.status(HttpStatus.OK);
       res.json(response);

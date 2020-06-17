@@ -26,8 +26,8 @@ export default class SequelizeController {
    */
   public async list(req: Request, res: Response, next: NextFunction) {
     try {
-      const page = this.getPage(req.query.page);
-      const limit = this.getLimit(req.query.limit);
+      const page = this.getPage(req.query.page as string);
+      const limit = this.getLimit(req.query.limit as string);
       const response = await this.sequelizeService.list(limit, page, req.query);
       res.status(HttpStatus.OK);
       res.json(response);

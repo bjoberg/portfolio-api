@@ -147,7 +147,7 @@ export default class TagService extends SequelizeService {
     try {
       // When the sequelize models are in Typescript, this could be a SequelizeService<GroupTag>
       // @ts-ignore
-      const response = await this.groupTagModel.destroy({ where: { groupId, tagId } })
+      const response = await this.groupTagModel.destroy({ where: { groupId, tagId } }) as number;
       if (response > 0) return response;
       else throw this.getApiError(HttpStatus.CONFLICT, 'Tag is not associated with group');
     } catch (error) {
@@ -185,7 +185,7 @@ export default class TagService extends SequelizeService {
     try {
       // When the sequelize models are in Typescript, this could be a SequelizeService<ImageTag>
       // @ts-ignore
-      const response = await this.imageTagModel.destroy({ where: { imageId, tagId } })
+      const response = await this.imageTagModel.destroy({ where: { imageId, tagId } }) as number;
       if (response > 0) return response;
       else throw this.getApiError(HttpStatus.CONFLICT, 'Image is not associated with tag');
     } catch (error) {

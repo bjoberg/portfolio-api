@@ -28,8 +28,8 @@ export default class GroupController extends SequelizeController {
    */
   public async listGroupsForImage(req: Request, res: Response, next: NextFunction) {
     try {
-      const page = this.getPage(req.query.page);
-      const limit = this.getLimit(req.query.limit);
+      const page = this.getPage(req.query.page as string);
+      const limit = this.getLimit(req.query.limit as string);
       const imageId = req.params.id;
       const response = await this.groupService.listGroupsForImage(imageId, limit, page, req.query);
       res.status(HttpStatus.OK);
@@ -49,7 +49,7 @@ export default class GroupController extends SequelizeController {
   public async removeGroupsFromImage(req: Request, res: Response, next: NextFunction) {
     try {
       const imageId = req.params.id;
-      const groupIds = this.getRequestParamsArray(req.query.groupId);
+      const groupIds = this.getRequestParamsArray(req.query.groupId as string);
       const response = await this.groupService.removeGroupsFromImage(imageId, groupIds);
       res.status(HttpStatus.OK);
       res.json(response);
@@ -68,7 +68,7 @@ export default class GroupController extends SequelizeController {
   public async addGroupsToImage(req: Request, res: Response, next: NextFunction) {
     try {
       const imageId = req.params.id;
-      const groupIds = this.getRequestParamsArray(req.query.groupId);
+      const groupIds = this.getRequestParamsArray(req.query.groupId as string);
       const response = await this.groupService.addGroupsToImage(imageId, groupIds);
       res.status(HttpStatus.OK);
       res.json(response);
