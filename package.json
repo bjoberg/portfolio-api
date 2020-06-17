@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "npm run build && concurrently \"./node_modules/.bin/tsc -w\" \"./node_modules/.bin/nodemon\"",
     "build": "./node_modules/.bin/tsc --project ./tsconfig.json",
-    "start": "node ./dist/server.js"
+    "lint": "./node_modules/.bin/eslint .",
+    "start": "node ./dist/server.js",
+    "test": "echo no tests"
   },
   "author": "Brett Oberg | brett.oberg8@gmail.com",
   "license": "MIT",
