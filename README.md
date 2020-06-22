@@ -1,4 +1,7 @@
-# Portfolio API
+# Brett Oberg Photography API
+
+![Production](https://github.com/bjoberg/bo-portfolio-api/workflows/Production/badge.svg)
+![Release](https://github.com/bjoberg/bo-portfolio-api/workflows/Release/badge.svg)
 
 API for accessing Brett Oberg Studio portfolio items
 
