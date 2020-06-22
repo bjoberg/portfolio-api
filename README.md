@@ -1,4 +1,4 @@
-# Portfolio API
+# Brett Oberg Photographt API
 
 ![Production](https://github.com/bjoberg/bo-portfolio-api/workflows/Production/badge.svg)
 ![Release](https://github.com/bjoberg/bo-portfolio-api/workflows/Release/badge.svg)
