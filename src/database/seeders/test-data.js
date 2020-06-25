@@ -9,19 +9,19 @@ module.exports = {
 
       // Create users
       await helper.bulkInsertUsers();
-      console.log('created users: ', helper.userIds);
+      console.log(`✅ created ${helper.userIds.length} users`);
 
       // Create tags
       await helper.bulkInsertTags(10);
-      console.log('created tags', helper.tagIds);
+      console.log(`✅ created ${helper.tagIds.length} tags`);
 
       // Create groups
       await helper.bulkInsertGroups(4);
-      console.log('created groups', helper.groupIds);
+      console.log(`✅ created ${helper.groupIds.length} groups`);
 
       // TODO: Create image and save all ids in array
       await helper.bulkInsertImages(100);
-      console.log('created images', helper.imageIds);
+      console.log(`✅ created ${helper.imageIds.length} images`);
 
       // TODO: Create group tags using group ids and tag ids
       // await helper.createGroupTags();
@@ -30,7 +30,9 @@ module.exports = {
       // await helper.createImageTags();
 
       // TODO: Create image groups using image ids and group ids
-      // return await helper.createImageGroups();
+      await helper.bulkInsertImageGroups();
+      console.log(`✅ created ${helper.imageGroupIds.length} image-group associations`);
+
       return;
     } catch (error) {
       console.log(error);

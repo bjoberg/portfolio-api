@@ -20,6 +20,7 @@ module.exports = class SeederHelper {
     this.tagIds = [];
     this.groupIds = [];
     this.imageIds = [];
+    this.imageGroupIds = [];
   }
 
   async deleteAll() {
@@ -165,55 +166,36 @@ module.exports = class SeederHelper {
     return this.queryInterface.bulkInsert("images", images, {});
   }
 
-  async createImageGroups() {
-    let groupId1 = await this.getIdByTitle("groups", "Natural Landscape");
-    let groupId2 = await this.getIdByTitle("groups", "Urban Landscape");
-    let imageId1 = await this.getIdByTitle("images", "Test Image");
-    let imageId2 = await this.getIdByTitle("images", "Test Image 2");
-    let imageId3 = await this.getIdByTitle("images", "Test Image 3");
-    let imageId4 = await this.getIdByTitle("images", "Test Image 4");
+  /**
+   * Create a new image group.
+   * 
+   * @param {string} imageId id of the image to associate to group
+   * @param {string} groupId id of the group to associate to image
+   * @returns {object}
+   */
+  createImageGroup(imageId, groupId) {
+    const id = uuidv4();
+    const createdAt = new Date();
+    const updatedAt = new Date();
+    return {
+      id, imageId, groupId, createdAt, updatedAt
+    }
+  }
 
-    return this.queryInterface.bulkInsert(
-      "imageGroups",
-      [
-        {
-          id: uuidv4(),
-          imageId: imageId1,
-          groupId: groupId1,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: uuidv4(),
-          imageId: imageId2,
-          groupId: groupId1,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: uuidv4(),
-          imageId: imageId3,
-          groupId: groupId2,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: uuidv4(),
-          imageId: imageId4,
-          groupId: groupId1,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: uuidv4(),
-          imageId: imageId4,
-          groupId: groupId2,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ],
-      {}
-    );
+  /**
+   * Bulk insert image groups into the db.
+   */
+  bulkInsertImageGroups() {
+    const imageGroups = [];
+    this.imageIds.forEach(id => {
+      const randGroupIndex = randomIntFromInterval(0, this.groupIds.length - 1);
+      const groupId = this.groupIds[randGroupIndex];
+      const imageGroup = this.createImageGroup(id, groupId);
+      imageGroups.push(imageGroup);
+      this.imageGroupIds.push(imageGroup.id);
+    })
+
+    return this.queryInterface.bulkInsert("imageGroups", imageGroups, {});
   }
 
   async createGroupTags() {
