@@ -15,12 +15,13 @@ module.exports = {
       await helper.bulkInsertTags(10);
       console.log('created tags', helper.tagIds);
 
-      // TODO: Create groups and save all ids in array
+      // Create groups
       await helper.bulkInsertGroups(4);
       console.log('created groups', helper.groupIds);
 
       // TODO: Create image and save all ids in array
-      // return await helper.createImages();
+      await helper.bulkInsertImages(100);
+      console.log('created images', helper.imageIds);
 
       // TODO: Create group tags using group ids and tag ids
       // await helper.createGroupTags();

@@ -2,12 +2,24 @@
 
 const uuidv4 = require("uuid/v4");
 
+/**
+ * Get random number between provided min and max.
+ * 
+ * @param {number} min minimum possivle value of random number
+ * @param {number} max maximum possible valud of random number
+ * @returns {number}
+ */
+const randomIntFromInterval = (min = 0, max = 10) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 module.exports = class SeederHelper {
   constructor(queryInterface) {
     this.queryInterface = queryInterface;
     this.userIds = [];
     this.tagIds = [];
     this.groupIds = [];
+    this.imageIds = [];
   }
 
   async deleteAll() {
@@ -55,7 +67,7 @@ module.exports = class SeederHelper {
    * Create a new tag.
    * 
    * @param {string} tagName Name of the new tag
-   * @returns {{id: string, title: string, createdAt: Date, updatedAt: Date}} new tag
+   * @returns {object}
    */
   createTag(tagName) {
     const id = uuidv4();
@@ -86,16 +98,16 @@ module.exports = class SeederHelper {
    * Create a new group.
    * 
    * @param {string} groupName Name of the new group
-   * @returns {{id: string, thumbnailUrl: string, imageUrl: string, description: string, title: string, createdAt: Date, updatedAt: Date}}
+   * @returns {object}
    */
   createGroup(groupName) {
     const id = uuidv4();
-    const width = this.randomIntFromInterval(100, 1000);
-    const height = this.randomIntFromInterval(100, 1000);
+    const width = randomIntFromInterval(100, 1000);
+    const height = randomIntFromInterval(100, 1000);
     const thumbnailUrl = `https://picsum.photos/${width}/${height}`;
     const imageUrl = `https://picsum.photos/${width}/${height}`;
     const title = `Group ${groupName}`;
-    const description = `This is a super awesome image ${id}!`;
+    const description = `This is super awesome group ${groupName}!`;
     const createdAt = new Date();
     const updatedAt = new Date();
     return { id, thumbnailUrl, imageUrl, title, description, createdAt, updatedAt };
@@ -116,18 +128,20 @@ module.exports = class SeederHelper {
     return this.queryInterface.bulkInsert("groups", groups, {});
   }
 
-  randomIntFromInterval(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
-  createImage() {
+  /**
+   * Create a new image.
+   * 
+   * @param {string} imageName Name of the new image
+   * @returns {object}
+   */
+  createImage(imageName) {
     const id = uuidv4();
-    const width = this.randomIntFromInterval(100, 1000);
-    const height = this.randomIntFromInterval(100, 1000);
+    const width = randomIntFromInterval(100, 1000);
+    const height = randomIntFromInterval(100, 1000);
     const thumbnailUrl = `https://picsum.photos/${width}/${height}`;
     const imageUrl = `https://picsum.photos/${width}/${height}`;
-    const title = `Test Image ${id}`;
-    const description = `This is a super awesome image ${id}!`;
+    const title = `Test Image ${imageName}`;
+    const description = `This is super awesome image ${id}!`;
     const location = "";
     const createdAt = new Date();
     const updatedAt = new Date();
@@ -136,16 +150,19 @@ module.exports = class SeederHelper {
     }
   }
 
-  createImages() {
+  /**
+   * Bulk insert images into the db.
+   * 
+   * @param {number} numImages Number of images to create and insert
+   */
+  bulkInsertImages(numImages) {
     const images = [];
-    for (let i = 0; i < 100; i += 1) {
-      images.push(this.createImage());
+    for (let i = 0; i < numImages; i += 1) {
+      const image = this.createImage(i);
+      images.push(image);
+      this.imageIds.push(image.id);
     }
-    return this.queryInterface.bulkInsert(
-      "images",
-      images,
-      {}
-    );
+    return this.queryInterface.bulkInsert("images", images, {});
   }
 
   async createImageGroups() {
