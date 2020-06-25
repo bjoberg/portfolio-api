@@ -7,6 +7,7 @@ module.exports = class SeederHelper {
     this.queryInterface = queryInterface;
     this.userIds = [];
     this.tagIds = [];
+    this.groupIds = [];
   }
 
   async deleteAll() {
@@ -27,7 +28,10 @@ module.exports = class SeederHelper {
     return id[0][0].id;
   }
 
-  createUsers() {
+  /**
+   * Bulk insert users into the db.
+   */
+  bulkInsertUsers() {
     const id = uuidv4();
     this.userIds = [id];
     return this.queryInterface.bulkInsert(
@@ -68,43 +72,48 @@ module.exports = class SeederHelper {
    * 
    * @param {number} numTags Number of tags to create and insert
    */
-  createTags(numTags) {
-    const tagIds = [];
+  bulkInsertTags(numTags) {
     const tags = [];
     for (let i = 0; i < numTags; i += 1) {
       const tag = this.createTag(i);
       tags.push(tag);
-      tagIds.push(tag.id);
+      this.tagIds.push(tag.id);
     }
-    this.tagIds = tagIds;
     return this.queryInterface.bulkInsert("tags", tags, {});
   }
 
-  createGroups() {
-    return this.queryInterface.bulkInsert(
-      "groups",
-      [
-        {
-          id: uuidv4(),
-          thumbnailUrl: "https://www.testUrl.com",
-          imageUrl: "https://www.testUrl.com",
-          title: "Natural Landscape",
-          description: "This is a group",
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: uuidv4(),
-          thumbnailUrl: "https://www.testUrl.com",
-          imageUrl: "https://www.testUrl.com",
-          title: "Urban Landscape",
-          description: "This is a group",
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ],
-      {}
-    );
+  /**
+   * Create a new group.
+   * 
+   * @param {string} groupName Name of the new group
+   * @returns {{id: string, thumbnailUrl: string, imageUrl: string, description: string, title: string, createdAt: Date, updatedAt: Date}}
+   */
+  createGroup(groupName) {
+    const id = uuidv4();
+    const width = this.randomIntFromInterval(100, 1000);
+    const height = this.randomIntFromInterval(100, 1000);
+    const thumbnailUrl = `https://picsum.photos/${width}/${height}`;
+    const imageUrl = `https://picsum.photos/${width}/${height}`;
+    const title = `Group ${groupName}`;
+    const description = `This is a super awesome image ${id}!`;
+    const createdAt = new Date();
+    const updatedAt = new Date();
+    return { id, thumbnailUrl, imageUrl, title, description, createdAt, updatedAt };
+  }
+
+  /**
+   * Bulk insert groups into the db.
+   * 
+   * @param {number} numGroups Number of groups to create and insert
+   */
+  bulkInsertGroups(numGroups) {
+    const groups = [];
+    for (let i = 0; i < numGroups; i += 1) {
+      const group = this.createGroup(i);
+      groups.push(group);
+      this.groupIds.push(group.id);
+    }
+    return this.queryInterface.bulkInsert("groups", groups, {});
   }
 
   randomIntFromInterval(min, max) {

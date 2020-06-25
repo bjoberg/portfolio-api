@@ -14,10 +14,10 @@ module.exports = {
       // Create tags
       await helper.bulkInsertTags(10);
       console.log('created tags', helper.tagIds);
-      return;
 
       // TODO: Create groups and save all ids in array
-      // await helper.createGroups();
+      await helper.bulkInsertGroups(4);
+      console.log('created groups', helper.groupIds);
 
       // TODO: Create image and save all ids in array
       // return await helper.createImages();
@@ -30,6 +30,7 @@ module.exports = {
 
       // TODO: Create image groups using image ids and group ids
       // return await helper.createImageGroups();
+      return;
     } catch (error) {
       console.log(error);
     }
