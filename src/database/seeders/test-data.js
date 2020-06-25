@@ -7,17 +7,20 @@ module.exports = {
     try {
       const helper = new SeederHelper(queryInterface);
 
-      // TODO: Create users and save user ids in array
-      // await helper.createUsers();
+      // Create users
+      await helper.bulkInsertUsers();
+      console.log('created users: ', helper.userIds);
 
-      // TODO: Create tags and save all ids in array
-      // await helper.createTags();
+      // Create tags
+      await helper.bulkInsertTags(10);
+      console.log('created tags', helper.tagIds);
+      return;
 
       // TODO: Create groups and save all ids in array
       // await helper.createGroups();
 
       // TODO: Create image and save all ids in array
-      return await helper.createImages();
+      // return await helper.createImages();
 
       // TODO: Create group tags using group ids and tag ids
       // await helper.createGroupTags();

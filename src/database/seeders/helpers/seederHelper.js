@@ -5,6 +5,8 @@ const uuidv4 = require("uuid/v4");
 module.exports = class SeederHelper {
   constructor(queryInterface) {
     this.queryInterface = queryInterface;
+    this.userIds = [];
+    this.tagIds = [];
   }
 
   async deleteAll() {
@@ -26,11 +28,13 @@ module.exports = class SeederHelper {
   }
 
   createUsers() {
+    const id = uuidv4();
+    this.userIds = [id];
     return this.queryInterface.bulkInsert(
       "users",
       [
         {
-          id: uuidv4(),
+          id,
           googleId: "105501578802074596671",
           email: "brett.oberg8@gmail.com",
           firstName: "Brett",
@@ -43,37 +47,37 @@ module.exports = class SeederHelper {
     );
   }
 
-  createTags() {
-    return this.queryInterface.bulkInsert(
-      "tags",
-      [
-        {
-          id: uuidv4(),
-          title: "landscape",
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: uuidv4(),
-          title: "urban",
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: uuidv4(),
-          title: "mountians",
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: uuidv4(),
-          title: "water",
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ],
-      {}
-    );
+  /**
+   * Create a new tag.
+   * 
+   * @param {string} tagName Name of the new tag
+   * @returns {{id: string, title: string, createdAt: Date, updatedAt: Date}} new tag
+   */
+  createTag(tagName) {
+    const id = uuidv4();
+    const title = `tag: ${tagName}`;
+    const createdAt = new Date();
+    const updatedAt = new Date();
+    return {
+      id, title, createdAt, updatedAt
+    }
+  }
+
+  /**
+   * Bulk insert tags into the db.
+   * 
+   * @param {number} numTags Number of tags to create and insert
+   */
+  createTags(numTags) {
+    const tagIds = [];
+    const tags = [];
+    for (let i = 0; i < numTags; i += 1) {
+      const tag = this.createTag(i);
+      tags.push(tag);
+      tagIds.push(tag.id);
+    }
+    this.tagIds = tagIds;
+    return this.queryInterface.bulkInsert("tags", tags, {});
   }
 
   createGroups() {
