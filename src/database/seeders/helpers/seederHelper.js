@@ -38,15 +38,6 @@ module.exports = class SeederHelper {
     await this.queryInterface.bulkDelete("images", null, {});
   }
 
-  // TODO: DELETE THIS FUNCTION
-  async getIdByTitle(table, title) {
-    const id = await this.queryInterface.sequelize.query(
-      `SELECT id from "${table}"
-      WHERE title='${title}';`
-    );
-    return id[0][0].id;
-  }
-
   /**
    * Bulk insert users into the db.
    */
