@@ -103,59 +103,34 @@ module.exports = class SeederHelper {
     );
   }
 
+  randomIntFromInterval(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  createImage() {
+    const id = uuidv4();
+    const width = this.randomIntFromInterval(100, 1000);
+    const height = this.randomIntFromInterval(100, 1000);
+    const thumbnailUrl = `https://picsum.photos/${width}/${height}`;
+    const imageUrl = `https://picsum.photos/${width}/${height}`;
+    const title = `Test Image ${id}`;
+    const description = `This is a super awesome image ${id}!`;
+    const location = "";
+    const createdAt = new Date();
+    const updatedAt = new Date();
+    return {
+      id, width, height, thumbnailUrl, imageUrl, title, description, location, createdAt, updatedAt
+    }
+  }
+
   createImages() {
+    const images = [];
+    for (let i = 0; i < 100; i += 1) {
+      images.push(this.createImage());
+    }
     return this.queryInterface.bulkInsert(
       "images",
-      [
-        {
-          id: uuidv4(),
-          thumbnailUrl: "https://picsum.photos/200/300",
-          imageUrl: "https://picsum.photos/200/300",
-          title: "Test Image",
-          description: "This is a super awesome image!",
-          location: "Chicago, IL",
-          width: 200,
-          height: 300,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: uuidv4(),
-          thumbnailUrl: "https://picsum.photos/200/300",
-          imageUrl: "https://picsum.photos/200/300",
-          title: "Test Image 2",
-          description: "This is a super awesome image!",
-          location: "Test, IL",
-          width: 200,
-          height: 300,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: uuidv4(),
-          thumbnailUrl: "https://picsum.photos/200/300",
-          imageUrl: "https://picsum.photos/200/300",
-          title: "Test Image 3",
-          description: "This is a super awesome image!",
-          location: "Test, IL",
-          width: 200,
-          height: 300,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: uuidv4(),
-          thumbnailUrl: "https://picsum.photos/200/300",
-          imageUrl: "https://picsum.photos/200/300",
-          title: "Test Image 4",
-          description: "This is a super awesome image!",
-          location: "Test, IL",
-          width: 200,
-          height: 300,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ],
+      images,
       {}
     );
   }
