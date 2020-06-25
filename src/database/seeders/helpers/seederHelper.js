@@ -21,8 +21,12 @@ module.exports = class SeederHelper {
     this.groupIds = [];
     this.imageIds = [];
     this.imageGroupIds = [];
+    this.groupTagIds = [];
   }
 
+  /**
+   * Delete all data from every table in the db
+   */
   async deleteAll() {
     await this.queryInterface.bulkDelete("users", null, {});
     await this.queryInterface.bulkDelete("imageGroups", null, {});
@@ -33,6 +37,7 @@ module.exports = class SeederHelper {
     await this.queryInterface.bulkDelete("images", null, {});
   }
 
+  // TODO: DELETE THIS FUNCTION
   async getIdByTitle(table, title) {
     const id = await this.queryInterface.sequelize.query(
       `SELECT id from "${table}"
@@ -193,28 +198,41 @@ module.exports = class SeederHelper {
       const imageGroup = this.createImageGroup(id, groupId);
       imageGroups.push(imageGroup);
       this.imageGroupIds.push(imageGroup.id);
-    })
+    });
 
     return this.queryInterface.bulkInsert("imageGroups", imageGroups, {});
   }
 
-  async createGroupTags() {
-    let groupId = await this.getIdByTitle("groups", "Natural Landscape");
-    let tagId = await this.getIdByTitle("tags", "landscape");
+  /**
+   * Create a new group tag.
+   * 
+   * @param {string} groupId id of the group to associate to tag
+   * @param {string} tagId id of the tag to associate to group
+   * @returns {object}
+   */
+  createGroupTag(groupId, tagId) {
+    const id = uuidv4();
+    const createdAt = new Date();
+    const updatedAt = new Date();
+    return {
+      id, groupId, tagId, createdAt, updatedAt
+    }
+  }
 
-    return this.queryInterface.bulkInsert(
-      "groupTags",
-      [
-        {
-          id: uuidv4(),
-          tagId: tagId,
-          groupId: groupId,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ],
-      {}
-    );
+  /**
+   * Bulk insert group tags into the db.
+   */
+  bulkInsertGroupTags() {
+    const groupTags = [];
+    this.groupIds.forEach(id => {
+      const randTagIndex = randomIntFromInterval(0, this.tagIds.length - 1);
+      const tagId = this.tagIds[randTagIndex];
+      const groupTag = this.createGroupTag(id, tagId);
+      groupTags.push(groupTag);
+      this.groupTagIds.push(groupTag.id);
+    });
+
+    return this.queryInterface.bulkInsert("groupTags", groupTags, {});
   }
 
   async createImageTags() {

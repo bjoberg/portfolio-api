@@ -24,7 +24,8 @@ module.exports = {
       console.log(`✅ created ${helper.imageIds.length} images`);
 
       // TODO: Create group tags using group ids and tag ids
-      // await helper.createGroupTags();
+      await helper.bulkInsertGroupTags();
+      console.log(`✅ created ${helper.groupTagIds.length} group-tag associations`);
 
       // TODO: Create image tags using image ids and tag ids
       // await helper.createImageTags();
