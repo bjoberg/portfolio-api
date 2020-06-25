@@ -19,18 +19,19 @@ module.exports = {
       await helper.bulkInsertGroups(4);
       console.log(`✅ created ${helper.groupIds.length} groups`);
 
-      // TODO: Create image and save all ids in array
+      // Create image and save all ids in array
       await helper.bulkInsertImages(100);
       console.log(`✅ created ${helper.imageIds.length} images`);
 
-      // TODO: Create group tags using group ids and tag ids
+      // Create group tags using group ids and tag ids
       await helper.bulkInsertGroupTags();
       console.log(`✅ created ${helper.groupTagIds.length} group-tag associations`);
 
-      // TODO: Create image tags using image ids and tag ids
-      // await helper.createImageTags();
+      // Create image tags using image ids and tag ids
+      await helper.bulkInsertImageTags();
+      console.log(`✅ created ${helper.imageTagIds.length} image-tag associations`);
 
-      // TODO: Create image groups using image ids and group ids
+      // Create image groups using image ids and group ids
       await helper.bulkInsertImageGroups();
       console.log(`✅ created ${helper.imageGroupIds.length} image-group associations`);
 

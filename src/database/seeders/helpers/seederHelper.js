@@ -22,6 +22,7 @@ module.exports = class SeederHelper {
     this.imageIds = [];
     this.imageGroupIds = [];
     this.groupTagIds = [];
+    this.imageTagIds = [];
   }
 
   /**
@@ -235,22 +236,35 @@ module.exports = class SeederHelper {
     return this.queryInterface.bulkInsert("groupTags", groupTags, {});
   }
 
-  async createImageTags() {
-    let imageId = await this.getIdByTitle("images", "Test Image");
-    let tagId = await this.getIdByTitle("tags", "landscape");
+  /**
+   * Create a new image tag.
+   * 
+   * @param {string} imageId id of the image to associate to tag
+   * @param {string} tagId id of the tag to associate to image
+   * @returns {object}
+   */
+  createImageTag(imageId, tagId) {
+    const id = uuidv4();
+    const createdAt = new Date();
+    const updatedAt = new Date();
+    return {
+      id, imageId, tagId, createdAt, updatedAt
+    }
+  }
 
-    return this.queryInterface.bulkInsert(
-      "imageTags",
-      [
-        {
-          id: uuidv4(),
-          tagId: tagId,
-          imageId: imageId,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ],
-      {}
-    );
+  /**
+   * Bulk insert image tags into the db.
+   */
+  bulkInsertImageTags() {
+    const imageTags = [];
+    this.imageIds.forEach(id => {
+      const randTagIndex = randomIntFromInterval(0, this.tagIds.length - 1);
+      const tagId = this.tagIds[randTagIndex];
+      const imageTag = this.createImageTag(id, tagId);
+      imageTags.push(imageTag);
+      this.imageTagIds.push(imageTag.id);
+    });
+
+    return this.queryInterface.bulkInsert("imageTags", imageTags, {});
   }
 };
