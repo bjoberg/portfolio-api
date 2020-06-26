@@ -17,20 +17,22 @@ export default class SequelizeService {
    * @param limit number of items to return
    * @param page range of items to return
    * @param query object with properties to query with
+   * @param sort sort order of request
    * @returns list of all the model's data
    * @throws ApiError if query fails
    */
-  public async list(limit: number, page: number, query: any): Promise<PaginationResponse> {
+  public async list(limit: number, page: number, query: any, sort: string[] | undefined): Promise<PaginationResponse> {
     try {
       const offset = this.getOffset(limit, page);
       // @ts-ignore-next-line
-      const result = await this.model.list(limit, offset, query);
+      const result = await this.model.list(limit, offset, query, sort);
       const response: PaginationResponse = {
         limit,
         page,
-        totalItems: result.count,
-        pageCount: result.rows.length,
-        rows: result.rows
+        sort: result.sort,
+        totalItems: result.data.count,
+        pageCount: result.data.rows.length,
+        rows: result.data.rows
       };
       return response;
     } catch (error) {

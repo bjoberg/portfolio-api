@@ -1,10 +1,9 @@
 'use strict';
 
 const httpStatus = require('http-status');
+const { IMAGES, LIMIT_DEFAULT, PAGE_DEFAULT } = require('../../utils/models/defaults');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
-const LIMIT_DEFAULT = require('../../utils/models/defaults').LIMIT_DEFAULT;
-const PAGE_DEFAULT = require('../../utils/models/defaults').PAGE_DEFAULT;
 const Op = require('sequelize').Op;
 
 module.exports = (sequelize, DataTypes) => {
@@ -100,16 +99,28 @@ module.exports = (sequelize, DataTypes) => {
    * 
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
-   * @param {any} filter object with properties to query with
-   * @returns all of the images containing the specified query items
+   * @param {object} filter object with properties to query with
+   * @param {string[]} sort sort order array (EX: [sortField, sortDirection])
+   * @returns list of images
    * @throws error if query fails
    */
-  image.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+  image.list = async (
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = {},
+    sort = [IMAGES.DEAFULT_SORT_FIELD, IMAGES.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
-      const options = { where, limit, offset };
-
-      return image.findAndCountAll(options);
+      const order = [sort];
+      const options = { where, limit, offset, order };
+      const data = await image.findAndCountAll(options);
+      return {
+        sort: {
+          sortField: sort[0],
+          sortDirection: sort[1]
+        },
+        data
+      }
     } catch (error) {
       throw error;
     }

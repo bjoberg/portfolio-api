@@ -50,6 +50,7 @@ groupRouter
    *      - Groups
    *    description: Gets all groups based on query
    *    parameters:
+   *      - $ref: '#/components/parameters/query/groupListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/thumbnailUrl'

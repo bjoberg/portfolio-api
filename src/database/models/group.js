@@ -1,10 +1,9 @@
 'use strict';
 
 const httpStatus = require('http-status');
+const { GROUPS, LIMIT_DEFAULT, PAGE_DEFAULT } = require('../../utils/models/defaults');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
-const LIMIT_DEFAULT = require('../../utils/models/defaults').LIMIT_DEFAULT;
-const PAGE_DEFAULT = require('../../utils/models/defaults').PAGE_DEFAULT;
 
 module.exports = (sequelize, DataTypes) => {
   const group = sequelize.define('group', {
@@ -75,14 +74,27 @@ module.exports = (sequelize, DataTypes) => {
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
    * @param {any} filter object with properties to filter with
+   * @param {string[]} sort sort order array (EX: [sortField, sortDirection])
    * @returns list of groups
    * @throws error if query fails
    */
-  group.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+  group.list = async (
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = {},
+    sort = [GROUPS.DEAFULT_SORT_FIELD, GROUPS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
+      const order = [sort];
       const options = { where, limit, offset };
-      return group.findAndCountAll(options);
+      const data = await group.findAndCountAll(options);
+      return {
+        sort: {
+          sortField: sort[0],
+          sortDirection: sort[1]
+        },
+        data
+      }
     } catch (error) {
       throw error;
     }
