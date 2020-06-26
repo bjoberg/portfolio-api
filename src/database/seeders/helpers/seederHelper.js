@@ -141,10 +141,11 @@ module.exports = class SeederHelper {
     const title = `Test Image ${imageName}`;
     const description = `This is super awesome image ${id}!`;
     const location = "";
+    const captureDate = new Date();
     const createdAt = new Date();
     const updatedAt = new Date();
     return {
-      id, width, height, thumbnailUrl, imageUrl, title, description, location, createdAt, updatedAt
+      id, width, height, thumbnailUrl, imageUrl, title, description, location, createdAt, updatedAt, captureDate
     }
   }
 
