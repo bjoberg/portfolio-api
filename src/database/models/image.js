@@ -61,6 +61,13 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: true
       }
+    },
+    captureDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      validate: {
+        notEmpty: true
+      }
     }
   }, {});
 
@@ -83,8 +90,8 @@ module.exports = (sequelize, DataTypes) => {
    * @returns object defining where clause for image model
    */
   const getWhere = (filter) => {
-    const { thumbnailUrl, imageUrl, title, description, location } = filter;
-    const where = omitBy({ thumbnailUrl, imageUrl, title, description, location }, isNil);
+    const { thumbnailUrl, imageUrl, title, description, location, captureDate } = filter;
+    const where = omitBy({ thumbnailUrl, imageUrl, title, description, location, captureDate }, isNil);
     return where;
   }
 

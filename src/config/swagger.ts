@@ -120,6 +120,14 @@ const swaggerDefinition = {
             type: "string"
           },
           required: false
+        },
+        captureDate: {
+          in: "query",
+          name: "captureDate",
+          schema: {
+            type: "string"
+          },
+          required: false
         }
       },
       path: {

@@ -57,6 +57,7 @@ imageRouter
    *      - $ref: '#/components/parameters/query/title'
    *      - $ref: '#/components/parameters/query/description'
    *      - $ref: '#/components/parameters/query/location'
+   *      - $ref: '#/components/parameters/query/captureDate'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
