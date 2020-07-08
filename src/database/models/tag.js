@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
     limit = LIMIT_DEFAULT,
     offset = PAGE_DEFAULT,
     filter = {},
-    sort = [TAGS.DEAFULT_SORT_FIELD, TAGS.DEFAULT_SORT_DIRECTION]) => {
+    sort = [TAGS.DEFAULT_SORT_FIELD, TAGS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
       const order = [sort];

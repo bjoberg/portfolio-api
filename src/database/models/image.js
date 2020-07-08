@@ -108,7 +108,7 @@ module.exports = (sequelize, DataTypes) => {
     limit = LIMIT_DEFAULT,
     offset = PAGE_DEFAULT,
     filter = {},
-    sort = [IMAGES.DEAFULT_SORT_FIELD, IMAGES.DEFAULT_SORT_DIRECTION]) => {
+    sort = [IMAGES.DEFAULT_SORT_FIELD, IMAGES.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
       const order = [sort];

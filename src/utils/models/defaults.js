@@ -13,15 +13,15 @@ export const SORT = {
 
 export const IMAGES = {
   DEFAULT_SORT_DIRECTION: SORT.ASCENDING,
-  DEAFULT_SORT_FIELD: 'createdAt'
+  DEFAULT_SORT_FIELD: 'createdAt'
 }
 
 export const GROUPS = {
   DEFAULT_SORT_DIRECTION: SORT.ASCENDING,
-  DEAFULT_SORT_FIELD: 'createdAt'
+  DEFAULT_SORT_FIELD: 'createdAt'
 }
 
 export const TAGS = {
   DEFAULT_SORT_DIRECTION: SORT.ASCENDING,
-  DEAFULT_SORT_FIELD: 'createdAt'
+  DEFAULT_SORT_FIELD: 'createdAt'
 }
