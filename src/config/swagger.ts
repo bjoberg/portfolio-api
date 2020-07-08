@@ -1,5 +1,6 @@
 import SwaggerJSDoc from "swagger-jsdoc";
 import path from "path";
+import { SORT } from "../utils/models/defaults";
 
 const swaggerDefinition = {
   openapi: "3.0.1",
@@ -128,7 +129,55 @@ const swaggerDefinition = {
             type: "string"
           },
           required: false
-        }
+        },
+        imageListSort: {
+          in: 'query',
+          name: 'sort',
+          description: 'Sort field and direction',
+          schema: {
+            type: "string",
+            enum: [
+              `title${SORT.SPLITTER}${SORT.ASCENDING}`,
+              `title${SORT.SPLITTER}${SORT.DESCENDING}`,
+              `description${SORT.SPLITTER}${SORT.ASCENDING}`,
+              `description${SORT.SPLITTER}${SORT.DESCENDING}`,
+              `captureDate${SORT.SPLITTER}${SORT.ASCENDING}`,
+              `captureDate${SORT.SPLITTER}${SORT.DESCENDING}`,
+              `createdAt${SORT.SPLITTER}${SORT.ASCENDING}`,
+              `createdAt${SORT.SPLITTER}${SORT.DESCENDING}`,
+            ]
+          }
+        },
+        groupListSort: {
+          in: 'query',
+          name: 'sort',
+          description: 'Sort field and direction',
+          schema: {
+            type: "string",
+            enum: [
+              `title${SORT.SPLITTER}${SORT.ASCENDING}`,
+              `title${SORT.SPLITTER}${SORT.DESCENDING}`,
+              `description${SORT.SPLITTER}${SORT.ASCENDING}`,
+              `description${SORT.SPLITTER}${SORT.DESCENDING}`,
+              `createdAt${SORT.SPLITTER}${SORT.ASCENDING}`,
+              `createdAt${SORT.SPLITTER}${SORT.DESCENDING}`,
+            ]
+          }
+        },
+        tagListSort: {
+          in: 'query',
+          name: 'sort',
+          description: 'Sort field and direction',
+          schema: {
+            type: "string",
+            enum: [
+              `title${SORT.SPLITTER}${SORT.ASCENDING}`,
+              `title${SORT.SPLITTER}${SORT.DESCENDING}`,
+              `createdAt${SORT.SPLITTER}${SORT.ASCENDING}`,
+              `createdAt${SORT.SPLITTER}${SORT.DESCENDING}`,
+            ]
+          }
+        },
       },
       path: {
         imageId: {

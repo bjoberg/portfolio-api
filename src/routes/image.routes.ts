@@ -50,6 +50,7 @@ imageRouter
    *      - Images
    *    description: Gets all images based on query
    *    parameters:
+   *      - $ref: '#/components/parameters/query/imageListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/thumbnailUrl'

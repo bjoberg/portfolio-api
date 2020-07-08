@@ -28,6 +28,7 @@ tagRouter
    *      - Tags
    *    description: Gets all tags based on query
    *    parameters:
+   *      - $ref: '#/components/parameters/query/tagListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/title'
