@@ -177,6 +177,7 @@ groupRouter
    *    description: Find all images associated with specified group
    *    parameters:
    *      - $ref: '#/components/parameters/path/groupId'
+   *      - $ref: '#/components/parameters/query/imageListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/thumbnailUrl'
