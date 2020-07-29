@@ -67,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
     try {
       const where = getWhere(filter);
       const order = [sort];
-      const options = { where, limit, offset };
+      const options = { where, limit, offset, order };
       const data = await tag.findAndCountAll(options);
       return {
         sort: {
