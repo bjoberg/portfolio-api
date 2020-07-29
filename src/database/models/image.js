@@ -175,14 +175,19 @@ module.exports = (sequelize, DataTypes) => {
    * Get all of the images not associated with a specific group that matches a certain query
    * 
    * @param {string} groupId unique id of group to find images not associated with
-   * @param {any} groupModel sequelize model to query on
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
    * @param {Object} filter object with properties to query with
+   * @param {string[]} sort sort order array (EX: [sortField, sortDirection])
    * @returns all of the images not associated with a specific group containing the specified query items
    * @throws error if query fails
    */
-  image.listImagesNotForGroup = async (groupId, groupModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+  image.listImagesNotForGroup = async (
+    groupId,
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = {},
+    sort = [IMAGES.DEFAULT_SORT_FIELD, IMAGES.DEFAULT_SORT_DIRECTION]) => {
     try {
       const innerJoin = `(SELECT "imageId" FROM images as i JOIN public."imageGroups" as ig ON i.id = ig."imageId" JOIN public."groups" as g ON ig."groupId" = g.id WHERE ig."groupId" = '${groupId}')`;
       const where = {
@@ -191,9 +196,18 @@ module.exports = (sequelize, DataTypes) => {
           [Op.notIn]: sequelize.literal(innerJoin)
         }
       };
-      const options = { limit, offset, where };
+      const order = [sort];
+      const options = { limit, offset, where, order };
 
-      return image.findAndCountAll(options);
+      const data = await image.findAndCountAll(options);
+
+      return {
+        sort: {
+          sortField: sort[0],
+          sortDirection: sort[1]
+        },
+        data
+      }
     } catch (error) {
       throw error;
     }
