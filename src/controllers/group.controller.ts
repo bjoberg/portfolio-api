@@ -30,8 +30,9 @@ export default class GroupController extends SequelizeController {
     try {
       const page = this.getPage(req.query.page as string);
       const limit = this.getLimit(req.query.limit as string);
+      const sort = this.getSort(req.query.sort as string);
       const imageId = req.params.id;
-      const response = await this.groupService.listGroupsForImage(imageId, limit, page, req.query);
+      const response = await this.groupService.listGroupsForImage(imageId, limit, page, req.query, sort);
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {

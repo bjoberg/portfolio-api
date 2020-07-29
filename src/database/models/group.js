@@ -108,12 +108,20 @@ module.exports = (sequelize, DataTypes) => {
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
    * @param {Object} filter object with properties to query with
+   * @param {string[]} sort sort order array (EX: [sortField, sortDirection])
    * @returns list of groups
    * @throws error if query fails
    */
-  group.listGroupsForImage = async (imageId, imageModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+  group.listGroupsForImage = async (
+    imageId,
+    imageModel,
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = {},
+    sort = [GROUPS.DEFAULT_SORT_FIELD, GROUPS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
+      const order = [sort];
       const include = [{
         model: imageModel,
         attributes: [],
@@ -121,8 +129,17 @@ module.exports = (sequelize, DataTypes) => {
           id: imageId
         }
       }];
-      const options = { limit, offset, where, include };
-      return group.findAndCountAll(options);
+      const options = { limit, offset, where, include, order };
+
+      const data = await group.findAndCountAll(options);
+
+      return {
+        sort: {
+          sortField: sort[0],
+          sortDirection: sort[1]
+        },
+        data
+      }
     } catch (error) {
       throw error;
     }
