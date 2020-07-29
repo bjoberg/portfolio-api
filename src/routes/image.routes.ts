@@ -180,6 +180,7 @@ imageRouter
    *    description: Find all groups associated with specified image
    *    parameters:
    *      - $ref: '#/components/parameters/path/imageId'
+   *      - $ref: '#/components/parameters/query/groupListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/thumbnailUrl'
