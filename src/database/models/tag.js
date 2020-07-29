@@ -89,12 +89,20 @@ module.exports = (sequelize, DataTypes) => {
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
    * @param {Object} filter object with properties to query with
+   * @param {string[]} sort sort order array (EX: [sortField, sortDirection])
    * @returns all of the tags in a specific group containing the specified query items
    * @throws error if query fails
    */
-  tag.listTagsForGroup = async (groupId, groupModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+  tag.listTagsForGroup = async (
+    groupId,
+    groupModel,
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = {},
+    sort = [TAGS.DEFAULT_SORT_FIELD, TAGS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
+      const order = [sort];
       const include = [{
         model: groupModel,
         attributes: [],
@@ -102,9 +110,17 @@ module.exports = (sequelize, DataTypes) => {
           id: groupId
         }
       }];
-      const options = { limit, offset, where, include };
+      const options = { limit, offset, where, include, order };
 
-      return tag.findAndCountAll(options);
+      const data = await tag.findAndCountAll(options);
+
+      return {
+        sort: {
+          sortField: sort[0],
+          sortDirection: sort[1]
+        },
+        data
+      }
     } catch (error) {
       throw error;
     }

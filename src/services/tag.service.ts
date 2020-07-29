@@ -72,18 +72,20 @@ export default class TagService extends SequelizeService {
    * @param limit number of items to return
    * @param page range of items to return
    * @param filter object with properties to query with
+   * @param sort sort order of request
    */
-  public async listTagsForGroup(groupId: string, limit: number, page: number, filter: any): Promise<PaginationResponse> {
+  public async listTagsForGroup(groupId: string, limit: number, page: number, filter: any, sort: string[] | undefined): Promise<PaginationResponse> {
     try {
       const offset = this.getOffset(limit, page);
       // @ts-ignore-next-line
-      const result = await this.model.listTagsForGroup(groupId, this.groupModel, limit, offset, filter);
+      const result = await this.model.listTagsForGroup(groupId, this.groupModel, limit, offset, filter, sort);
       const response: PaginationResponse = {
         limit,
         page,
-        totalItems: result.count,
-        pageCount: result.rows.length,
-        rows: result.rows
+        sort: result.sort,
+        totalItems: result.data.count,
+        pageCount: result.data.rows.length,
+        rows: result.data.rows
       };
       return response;
     } catch (error) {
