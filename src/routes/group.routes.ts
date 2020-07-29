@@ -276,6 +276,7 @@ groupRouter
    *    description: Find all tags associated with specified group
    *    parameters:
    *      - $ref: '#/components/parameters/path/groupId'
+   *      - $ref: '#/components/parameters/query/tagListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/title'
