@@ -1,10 +1,9 @@
 'use strict';
 
 const httpStatus = require('http-status');
+const { TAGS, LIMIT_DEFAULT, PAGE_DEFAULT } = require('../../utils/models/defaults');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
-const LIMIT_DEFAULT = require('../../utils/models/defaults').LIMIT_DEFAULT;
-const PAGE_DEFAULT = require('../../utils/models/defaults').PAGE_DEFAULT;
 
 module.exports = (sequelize, DataTypes) => {
   const tag = sequelize.define('tag', {
@@ -57,15 +56,26 @@ module.exports = (sequelize, DataTypes) => {
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
    * @param {any} filter object with properties to filter with
-   * @returns all of the tags containing the specified query items
+   * @returns list of tags
    * @throws error if query fails
    */
-  tag.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+  tag.list = async (
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = {},
+    sort = [TAGS.DEFAULT_SORT_FIELD, TAGS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
-      const options = { where, limit, offset };
-
-      return tag.findAndCountAll(options);
+      const order = [sort];
+      const options = { where, limit, offset, order };
+      const data = await tag.findAndCountAll(options);
+      return {
+        sort: {
+          sortField: sort[0],
+          sortDirection: sort[1]
+        },
+        data
+      }
     } catch (error) {
       throw error;
     }
@@ -79,12 +89,20 @@ module.exports = (sequelize, DataTypes) => {
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
    * @param {Object} filter object with properties to query with
+   * @param {string[]} sort sort order array (EX: [sortField, sortDirection])
    * @returns all of the tags in a specific group containing the specified query items
    * @throws error if query fails
    */
-  tag.listTagsForGroup = async (groupId, groupModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+  tag.listTagsForGroup = async (
+    groupId,
+    groupModel,
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = {},
+    sort = [TAGS.DEFAULT_SORT_FIELD, TAGS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
+      const order = [sort];
       const include = [{
         model: groupModel,
         attributes: [],
@@ -92,9 +110,17 @@ module.exports = (sequelize, DataTypes) => {
           id: groupId
         }
       }];
-      const options = { limit, offset, where, include };
+      const options = { limit, offset, where, include, order };
 
-      return tag.findAndCountAll(options);
+      const data = await tag.findAndCountAll(options);
+
+      return {
+        sort: {
+          sortField: sort[0],
+          sortDirection: sort[1]
+        },
+        data
+      }
     } catch (error) {
       throw error;
     }
@@ -108,12 +134,20 @@ module.exports = (sequelize, DataTypes) => {
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
    * @param {Object} filter object with properties to query with
+   * @param {string[]} sort sort order array (EX: [sortField, sortDirection])
    * @returns all of the tags associated with a specific image containing the specified query items
    * @throws error if query fails
    */
-  tag.listTagsForImage = async (imageId, imageModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+  tag.listTagsForImage = async (
+    imageId,
+    imageModel,
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = {},
+    sort = [TAGS.DEFAULT_SORT_FIELD, TAGS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
+      const order = [sort];
       const include = [{
         model: imageModel,
         attributes: [],
@@ -121,9 +155,17 @@ module.exports = (sequelize, DataTypes) => {
           id: imageId
         }
       }];
-      const options = { limit, offset, where, include };
+      const options = { limit, offset, where, include, order };
 
-      return tag.findAndCountAll(options);
+      const data = await tag.findAndCountAll(options);
+
+      return {
+        sort: {
+          sortField: sort[0],
+          sortDirection: sort[1]
+        },
+        data
+      }
     } catch (error) {
       throw error;
     }

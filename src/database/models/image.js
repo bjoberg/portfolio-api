@@ -1,10 +1,9 @@
 'use strict';
 
 const httpStatus = require('http-status');
+const { IMAGES, LIMIT_DEFAULT, PAGE_DEFAULT } = require('../../utils/models/defaults');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
-const LIMIT_DEFAULT = require('../../utils/models/defaults').LIMIT_DEFAULT;
-const PAGE_DEFAULT = require('../../utils/models/defaults').PAGE_DEFAULT;
 const Op = require('sequelize').Op;
 
 module.exports = (sequelize, DataTypes) => {
@@ -61,6 +60,13 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: true
       }
+    },
+    captureDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      validate: {
+        notEmpty: true
+      }
     }
   }, {});
 
@@ -83,8 +89,8 @@ module.exports = (sequelize, DataTypes) => {
    * @returns object defining where clause for image model
    */
   const getWhere = (filter) => {
-    const { thumbnailUrl, imageUrl, title, description, location } = filter;
-    const where = omitBy({ thumbnailUrl, imageUrl, title, description, location }, isNil);
+    const { thumbnailUrl, imageUrl, title, description, location, captureDate } = filter;
+    const where = omitBy({ thumbnailUrl, imageUrl, title, description, location, captureDate }, isNil);
     return where;
   }
 
@@ -93,16 +99,28 @@ module.exports = (sequelize, DataTypes) => {
    * 
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
-   * @param {any} filter object with properties to query with
-   * @returns all of the images containing the specified query items
+   * @param {object} filter object with properties to query with
+   * @param {string[]} sort sort order array (EX: [sortField, sortDirection])
+   * @returns list of images
    * @throws error if query fails
    */
-  image.list = async (limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+  image.list = async (
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = {},
+    sort = [IMAGES.DEFAULT_SORT_FIELD, IMAGES.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
-      const options = { where, limit, offset };
-
-      return image.findAndCountAll(options);
+      const order = [sort];
+      const options = { where, limit, offset, order };
+      const data = await image.findAndCountAll(options);
+      return {
+        sort: {
+          sortField: sort[0],
+          sortDirection: sort[1]
+        },
+        data
+      }
     } catch (error) {
       throw error;
     }
@@ -116,12 +134,20 @@ module.exports = (sequelize, DataTypes) => {
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
    * @param {Object} filter object with properties to query with
+   * @param {string[]} sort sort order array (EX: [sortField, sortDirection])
    * @returns all of the images in a specific group containing the specified query items
    * @throws error if query fails
    */
-  image.listImagesForGroup = async (groupId, groupModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+  image.listImagesForGroup = async (
+    groupId,
+    groupModel,
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = {},
+    sort = [IMAGES.DEFAULT_SORT_FIELD, IMAGES.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
+      const order = [sort];
       const include = [{
         model: groupModel,
         attributes: [],
@@ -129,9 +155,17 @@ module.exports = (sequelize, DataTypes) => {
           id: groupId
         }
       }];
-      const options = { limit, offset, where, include };
+      const options = { limit, offset, where, include, order };
 
-      return image.findAndCountAll(options);
+      const data = await image.findAndCountAll(options);
+
+      return {
+        sort: {
+          sortField: sort[0],
+          sortDirection: sort[1]
+        },
+        data
+      }
     } catch (error) {
       throw error;
     }
@@ -141,14 +175,19 @@ module.exports = (sequelize, DataTypes) => {
    * Get all of the images not associated with a specific group that matches a certain query
    * 
    * @param {string} groupId unique id of group to find images not associated with
-   * @param {any} groupModel sequelize model to query on
    * @param {number} limit number of items to return
    * @param {number} offset range of items to return
    * @param {Object} filter object with properties to query with
+   * @param {string[]} sort sort order array (EX: [sortField, sortDirection])
    * @returns all of the images not associated with a specific group containing the specified query items
    * @throws error if query fails
    */
-  image.listImagesNotForGroup = async (groupId, groupModel, limit = LIMIT_DEFAULT, offset = PAGE_DEFAULT, filter) => {
+  image.listImagesNotForGroup = async (
+    groupId,
+    limit = LIMIT_DEFAULT,
+    offset = PAGE_DEFAULT,
+    filter = {},
+    sort = [IMAGES.DEFAULT_SORT_FIELD, IMAGES.DEFAULT_SORT_DIRECTION]) => {
     try {
       const innerJoin = `(SELECT "imageId" FROM images as i JOIN public."imageGroups" as ig ON i.id = ig."imageId" JOIN public."groups" as g ON ig."groupId" = g.id WHERE ig."groupId" = '${groupId}')`;
       const where = {
@@ -157,9 +196,18 @@ module.exports = (sequelize, DataTypes) => {
           [Op.notIn]: sequelize.literal(innerJoin)
         }
       };
-      const options = { limit, offset, where };
+      const order = [sort];
+      const options = { limit, offset, where, order };
 
-      return image.findAndCountAll(options);
+      const data = await image.findAndCountAll(options);
+
+      return {
+        sort: {
+          sortField: sort[0],
+          sortDirection: sort[1]
+        },
+        data
+      }
     } catch (error) {
       throw error;
     }

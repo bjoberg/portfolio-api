@@ -4,6 +4,7 @@ import HttpStatus from 'http-status';
 import { LIMIT_DEFAULT, PAGE_DEFAULT } from '../utils/models/defaults';
 import SequelizeService from '../services/sequelize.service';
 import ApiError from '../utils/models/api-error.interface';
+import { SORT } from '../utils/models/defaults';
 
 export default class SequelizeController {
   protected limitDefault: number = LIMIT_DEFAULT;
@@ -28,7 +29,8 @@ export default class SequelizeController {
     try {
       const page = this.getPage(req.query.page as string);
       const limit = this.getLimit(req.query.limit as string);
-      const response = await this.sequelizeService.list(limit, page, req.query);
+      const sort = this.getSort(req.query.sort as string);
+      const response = await this.sequelizeService.list(limit, page, req.query, sort);
       res.status(HttpStatus.OK);
       res.json(response);
     } catch (error) {
@@ -132,6 +134,20 @@ export default class SequelizeController {
     const limitAsInt = parseInt(limit);
     if (!limit || Number.isNaN(limitAsInt)) return this.limitDefault;
     return limitAsInt;
+  }
+
+  /**
+   * Get the sort order array [sortField, sortDirection] for the provided request.
+   *
+   * @param sort sort string (EX: 'sortField:sortDirect')
+   */
+  protected getSort(sort: string): string[] | undefined {
+    if (!sort || !sort.includes(SORT.SPLITTER)) return undefined;
+    const sortArr = sort.split(SORT.SPLITTER);
+    if (sortArr.length !== 2) return undefined;
+    const sortDirection = sortArr[1].toUpperCase();
+    if (sortDirection !== SORT.ASCENDING && sortDirection !== SORT.DESCENDING) return undefined;
+    return sortArr;
   }
 
   /**

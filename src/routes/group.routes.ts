@@ -50,6 +50,7 @@ groupRouter
    *      - Groups
    *    description: Gets all groups based on query
    *    parameters:
+   *      - $ref: '#/components/parameters/query/groupListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/thumbnailUrl'
@@ -176,6 +177,7 @@ groupRouter
    *    description: Find all images associated with specified group
    *    parameters:
    *      - $ref: '#/components/parameters/path/groupId'
+   *      - $ref: '#/components/parameters/query/imageListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/thumbnailUrl'
@@ -249,6 +251,7 @@ groupRouter
    *    description: Find all images not associated with specified group
    *    parameters:
    *      - $ref: '#/components/parameters/path/groupId'
+   *      - $ref: '#/components/parameters/query/imageListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/thumbnailUrl'
@@ -274,6 +277,7 @@ groupRouter
    *    description: Find all tags associated with specified group
    *    parameters:
    *      - $ref: '#/components/parameters/path/groupId'
+   *      - $ref: '#/components/parameters/query/tagListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/title'

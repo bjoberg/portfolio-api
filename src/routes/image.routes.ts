@@ -50,6 +50,7 @@ imageRouter
    *      - Images
    *    description: Gets all images based on query
    *    parameters:
+   *      - $ref: '#/components/parameters/query/imageListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/thumbnailUrl'
@@ -57,6 +58,7 @@ imageRouter
    *      - $ref: '#/components/parameters/query/title'
    *      - $ref: '#/components/parameters/query/description'
    *      - $ref: '#/components/parameters/query/location'
+   *      - $ref: '#/components/parameters/query/captureDate'
    *    responses:
    *      200:
    *        $ref: '#/components/responses/ok'
@@ -178,6 +180,7 @@ imageRouter
    *    description: Find all groups associated with specified image
    *    parameters:
    *      - $ref: '#/components/parameters/path/imageId'
+   *      - $ref: '#/components/parameters/query/groupListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/thumbnailUrl'
@@ -252,6 +255,7 @@ imageRouter
    *    description: Find all tags associated with specified image
    *    parameters:
    *      - $ref: '#/components/parameters/path/imageId'
+   *      - $ref: '#/components/parameters/query/tagListSort'
    *      - $ref: '#/components/parameters/query/limit'
    *      - $ref: '#/components/parameters/query/page'
    *      - $ref: '#/components/parameters/query/title'

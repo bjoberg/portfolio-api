@@ -4,4 +4,8 @@ export default interface PaginationResponse {
   page: number;
   limit: number;
   rows: [];
+  sort?: {
+    sortField: string,
+    sortDirection: string
+  };
 }
