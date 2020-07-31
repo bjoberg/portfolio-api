@@ -1,7 +1,7 @@
 'use strict';
 
 const httpStatus = require('http-status');
-const { GROUPS, LIMIT_DEFAULT, PAGE_DEFAULT } = require('../../utils/models/defaults');
+const { GROUPS, LIMIT_DEFAULT, PAGE_DEFAULT, SORT } = require('../../utils/models/defaults');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 
@@ -85,7 +85,8 @@ module.exports = (sequelize, DataTypes) => {
     sort = [GROUPS.DEFAULT_SORT_FIELD, GROUPS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
-      const order = [sort];
+      const secondarySort = ["title", SORT.ASCENDING]
+      const order = [sort, secondarySort];
       const options = { where, limit, offset, order };
       const data = await group.findAndCountAll(options);
       return {
@@ -121,7 +122,8 @@ module.exports = (sequelize, DataTypes) => {
     sort = [GROUPS.DEFAULT_SORT_FIELD, GROUPS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
-      const order = [sort];
+      const secondarySort = ["title", SORT.ASCENDING]
+      const order = [sort, secondarySort];
       const include = [{
         model: imageModel,
         attributes: [],
