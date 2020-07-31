@@ -1,7 +1,7 @@
 'use strict';
 
 const httpStatus = require('http-status');
-const { TAGS, LIMIT_DEFAULT, PAGE_DEFAULT } = require('../../utils/models/defaults');
+const { TAGS, LIMIT_DEFAULT, PAGE_DEFAULT, SORT } = require('../../utils/models/defaults');
 const omitBy = require('lodash').omitBy;
 const isNil = require('lodash').isNil;
 
@@ -66,7 +66,8 @@ module.exports = (sequelize, DataTypes) => {
     sort = [TAGS.DEFAULT_SORT_FIELD, TAGS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
-      const order = [sort];
+      const secondarySort = ["title", SORT.ASCENDING];
+      const order = [sort, secondarySort];
       const options = { where, limit, offset, order };
       const data = await tag.findAndCountAll(options);
       return {
@@ -102,7 +103,8 @@ module.exports = (sequelize, DataTypes) => {
     sort = [TAGS.DEFAULT_SORT_FIELD, TAGS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
-      const order = [sort];
+      const secondarySort = ["title", SORT.ASCENDING];
+      const order = [sort, secondarySort];
       const include = [{
         model: groupModel,
         attributes: [],
@@ -147,7 +149,8 @@ module.exports = (sequelize, DataTypes) => {
     sort = [TAGS.DEFAULT_SORT_FIELD, TAGS.DEFAULT_SORT_DIRECTION]) => {
     try {
       const where = getWhere(filter);
-      const order = [sort];
+      const secondarySort = ["title", SORT.ASCENDING];
+      const order = [sort, secondarySort];
       const include = [{
         model: imageModel,
         attributes: [],
